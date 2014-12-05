@@ -1,0 +1,47 @@
+extends layout
+
+block content
+    script(type='text/javascript', src='/javascripts/create.js')
+    nav
+        .logo
+        .right-actions
+            .save Save Design
+    .content
+        .tote-wrap.black.small
+            .actual-tote
+            .text-wrap.tool(data-y='0')
+                textarea(placeholder='Type Something.')
+                .corner.tl
+                .corner.tr
+                .corner.bl
+                .corner.br
+                .text-controls
+                    .justification
+                        .left-j.sel(data-just='left')
+                        .center-j(data-just='center')
+                        .right-j(data-just='right')
+                    .type-control-wrap
+                        .type-control.size
+                            .icon
+                            input(type='range', min='3', max='10', step='.025', value='5')
+                        .type-control.kerning
+                            .icon
+                            input(type='range', min='-0.1', max='0.1', step='0.01', value='-0.04')
+                        .type-control.leading
+                            .icon
+                            input(type='range', min='0.5', max='1.5', step='0.1', value='1')
+            .clone-text Type Something.
+            .tote-shadow
+        .color-control-wrap
+            .color-control
+                .color-wrap.black.checked(data-color='black')
+                    .color
+                .color-wrap.white(data-color='white')
+                    .color
+                .color-wrap.red(data-color='red')
+                    .color
+        .bag-size-wrap
+            .small-bag.icon.sel(data-size='small')
+            .big-bag.icon(data-size='big')
+
+

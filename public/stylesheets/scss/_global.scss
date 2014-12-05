@@ -1,0 +1,176 @@
+@include font-face(HugeAvantGarde, '/fonts/huge_agb_v5', normal, $asset-pipeline: false);
+
+html, body{
+    margin: 0;
+    padding: 0;
+    font-family: HugeAvantGarde;
+    font-size:16px;
+}
+
+body.lock-scroll{
+    height: 100%;
+    overflow: hidden;
+}
+
+$navHeight : 80px;
+nav{
+    height: $navHeight;
+    width: 100%;
+    background-color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    opacity: 0.95;
+
+    .logo{
+        background: url("/images/logo.svg") no-repeat center center;
+        width: 40px;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 20px;
+        cursor: pointer;
+    }
+
+    .right-actions{
+        height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        & > div{
+            display: inline-block;
+            padding: 0 30px;
+            line-height: $navHeight;
+            @include prefix (transition, 0.3s $easing-curve);
+            cursor: pointer;
+            border-left: 1px solid rgba(0,0,0,0.2);
+
+            &:hover{
+                background-color: $magenta;
+                color: #fff;
+            }
+        }
+
+        .sort {
+            position: relative;
+            padding: 0;
+
+            &:hover{
+                background-color: inherit;
+                color: inherit;
+            }
+            
+            .selected-sort{
+                padding: 0 50px 0 30px;
+                width: 200px;
+                @include prefix (transition, 0.3s $easing-curve);
+                position: relative;
+
+                &:hover{
+                    background-color: $magenta;
+                    color: #fff;
+
+                    &:after{
+                        border-top: 7px solid rgba(255,255,255,0.95);
+                    }
+
+                    & + ul{
+                        height: $navHeight * 3;
+                        opacity: 1;
+                        pointer-events: auto;
+                        @include prefix (transform, translateY(0));
+                    }
+                }
+
+                .name{
+                    padding: 0 10px;
+                }
+
+                &:after{
+                    content: "";
+                    width: 0;
+                    height: 0;
+                    border-left: 5px solid transparent;
+                    border-right: 5px solid transparent;
+                    border-top: 5px solid rgba(0,0,0,0.95);
+                    position: absolute;
+                    top: 50%;
+                    margin-top: -3px;
+                    right: 30px;
+                    margin-left: -5px;
+                }
+            }
+            
+            ul {
+                display: block;
+                position: absolute;
+                background-color: rgba(0, 0, 0, 0.95);
+                top: 100%;
+                right: 0;
+                margin: 0;
+                padding: 0;
+                height: 0;
+                opacity: 0;
+                width: 100%;
+                pointer-events: none;
+                //width: 250px;
+                
+                @include prefix (transition, 0.5s $easing-curve);
+                @include prefix (transform, translateY(-10px));
+
+                &:hover {
+                    height: $navHeight * 3;
+                    pointer-events: auto;
+                    opacity: 1;
+                    @include prefix (transform, translateY(0));
+                }
+
+                &:before{
+                    content: "";
+                    width: 0;
+                    height: 0;
+                    border-left: 10px solid transparent;
+                    border-right: 10px solid transparent;
+                    border-bottom: 10px solid rgba(0,0,0,0.95);
+                    position: absolute;
+                    top: -10px;
+                    left: 50%;
+                    margin-left: -5px;
+                }
+
+                &.open{
+                    height: $navHeight * 3;
+                    opacity: 1;
+                    @include prefix (transform, translateY(0));
+                }
+                
+                li{
+                    color: #fff;
+                    display: block;
+                    margin: 0;
+                    box-sizing: border-box;
+                    padding: 0 30px;
+                    //width: 250px;
+                    border-top: 1px solid rgba(255,255,255,0.2);
+                    @include prefix (transition, 0.3s $easing-curve);
+
+                    &:hover{
+                        background-color: $magenta;
+                    }
+                }
+            }
+        }
+    }
+}
+.content{
+    width: 100%;
+    margin-top: $navHeight;
+    position: relative;
+}
+.clearfix{
+    clear: both;
+    float: none;
+}

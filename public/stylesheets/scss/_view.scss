@@ -1,0 +1,441 @@
+
+$circleButtonSize   :   60px;
+$circleStrokeSize   :   4px;
+$circleMargins      :   30px;
+$circleOpacity      :   0.2;
+$circleHoverOpacity :   0.4;
+$positioningMargin  :   2*$circleMargins + $circleButtonSize + 2*$circleStrokeSize;
+
+.featured-carousel{
+    width: 100%;
+    height: 100vh;
+    padding-top: $navHeight;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.97);
+    z-index: 300;
+    opacity: 0;
+    pointer-events: none;
+    @include prefix (transform, translateY(100%));
+    @include prefix (transition, 0.7s $easing-curve);
+    overflow: hidden;
+    
+    &.on{
+        @include prefix (transform, translateY(0));
+        opacity: 1;
+        pointer-events: auto;       
+    }
+
+    &.no-transition{
+        @include prefix (transition, none);
+    }
+
+    .arrow{
+        position: absolute;
+        top: 50%;
+        margin-top: -$circleButtonSize / 2;
+        width: $circleButtonSize;
+        height: $circleButtonSize;
+        @include prefix (border-radius, 50%);
+        border: $circleStrokeSize solid rgba(0,0,0,1);
+        z-index: 50;
+        opacity: $circleOpacity;
+        cursor: pointer;
+        @include prefix (transition, 0.2s $easing-curve);
+
+        &.left{
+            left: $circleMargins;
+            background: url("/images/left-black-arrow.svg") center center no-repeat;
+            background-size: 50% 50%;
+
+            &:hover{
+                @include prefix (transform, translate3d(-($circleButtonSize * .05), -($circleButtonSize * .05), 0));
+            }
+        }
+        
+        &.right{
+            right: $circleMargins;
+            background: url("/images/right-black-arrow.svg") center center no-repeat;
+            background-size: 50% 50%;
+
+            &:hover{
+                @include prefix (transform, translate3d(($circleButtonSize * .05), -($circleButtonSize * .05), 0));
+            }
+        }
+
+        &.disabled{
+            opacity: 0;
+
+            &:hover{
+                opacity: 0;
+            }
+        }
+
+        &:hover{
+            width: $circleButtonSize * 1.1;
+            height: $circleButtonSize * 1.1;
+            opacity: $circleHoverOpacity;
+        }
+
+    }
+    .close-overlay{
+        position: absolute;
+        top: $circleMargins;
+        left: $circleMargins;
+        z-index: 50;
+        width: $circleButtonSize;
+        height: $circleButtonSize;
+        cursor: pointer;
+        opacity: $circleHoverOpacity;
+        @include prefix (transition, 0.2s $easing-curve);
+        background: url("/images/x-close.svg") center center no-repeat;
+
+        &:hover{
+            opacity: 0.8;
+            @include prefix (transform, scale(1.2) );
+        }
+    }
+    .heart-wrap{
+        position: absolute;
+        bottom: $circleMargins + 10px;
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+        border: $circleStrokeSize solid rgba(0,0,0,$circleOpacity);
+        @include prefix (border-radius, 50%);
+        width: $circleButtonSize;
+        height: $circleButtonSize;
+        z-index: 50;
+        cursor:pointer;
+        @include prefix (transition, 0.3s $easing-curve);
+
+        &:hover{
+            width: $circleButtonSize * 1.2;
+            height: $circleButtonSize * 1.2;
+            border: $circleStrokeSize solid rgba(0,0,0,$circleHoverOpacity);
+            @include prefix (transform, translate3d(-($circleButtonSize * 0.05), ($circleButtonSize * 0.1), 0));
+
+            .heart{
+                @include prefix (transform, translateY(-48%) scale(1.1)); 
+                opacity: 1;
+            }
+        }
+
+        .heart{
+            width: $circleButtonSize * 0.5;
+            height: $circleButtonSize * 0.5;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            top: 50%;
+            opacity: 0.5;
+            @include prefix (transform, translateY(-49%));
+            @include prefix (transition, 0.3s $easing-curve);
+            
+            .inner-heart{
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                
+                &.grey{
+                    background: url("/images/heart-grey.svg") center center no-repeat;
+                    background-size: contain;
+                    @include prefix (transition, 0.3s $easing-curve);
+                }
+                &.white{
+                    background: url("/images/heart-white.svg") center center no-repeat;
+                    background-size: contain;
+                }
+            }
+        }
+        .heart-circle{
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            top: 50%;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            background-color: #fe3232;
+            opacity: 0;
+            @include prefix (transform, translateY(-50%));
+            @include prefix (transition, 0.3s $easing-curve);
+            @include prefix (border-radius, 50%);
+        }
+
+        &.favorited{
+            opacity: 0.85;
+            border: 1px solid rgba(0,0,0,0);
+            width: $circleButtonSize * 1.2;
+            height: $circleButtonSize * 1.2;
+            @include prefix (transform, translate3d(-($circleButtonSize * 0.05), ($circleButtonSize * 0.1), 0));
+            
+            &:hover{
+                opacity: 1;
+            }
+
+            .heart-circle{
+                width: 100%;
+                height: 100%;
+                opacity: 0.95;
+                @include prefix (box-shadow, 0 3px 5px rgba(0,0,0,0.2));
+            }
+            
+            .heart{
+                opacity: 0.95;
+                @include prefix (transform, translateY(-49%) scale(1.1));
+
+                .grey{
+                    opacity: 0;
+                }
+            }
+        }
+    }
+
+    .featured-carousel-wrap{
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+
+        &.animating{
+            width: 200%;
+
+            .overlay-tote{
+                width: 50%;
+            }
+            
+            &.next{
+                .overlay-tote{
+                    left: 0;
+                    
+                    .actual-tote{
+                        @include prefix (transform, rotate(-5deg));
+
+                        .tote-shadow{
+                            @include prefix (transform, rotate(5deg) scaleX(1.1));
+                        }
+                    }
+    
+                    &.next{
+                        left: 50%;
+                    }
+                }
+            }
+            &.prev{
+                right: 0;
+                left: auto;
+
+                .overlay-tote{
+                    left: 50%;
+                    
+                    .actual-tote{
+                        @include prefix (transform, rotate(5deg));
+
+                        .tote-shadow{
+                            @include prefix (transform, rotate(-5deg) scaleX(1.1));
+                        }
+                    }
+
+                    &.prev{
+                        left: 0;
+                    }
+                }
+            }
+        }
+        
+        .overlay-tote{
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+
+            &:hover{
+                .grid-wrap{
+                    //background-color: rgba(255, 255, 255, 1);
+                    //@include prefix (transform, scale(1.1));
+                }
+            }
+
+            .grid-wrap{
+                @include prefix (user-select, none);
+                position: relative;
+                height: 100%;
+
+                // black totes: text area color and big/small sizes
+                &.black{
+                    .text-wrap{
+                        color: #fff;
+                    }
+                    &.small .actual-tote{
+                        background-image: url("/images/bag-small-black.svg");
+                    }
+                    &.big .actual-tote{
+                        background-image: url("/images/bag-big-black.svg");
+                    }
+                }
+
+                // white totes: text area color big/small sizes
+                &.white{
+                    .text-wrap{
+                        color: #000;
+                    }
+                    &.small .actual-tote{
+                        background-image: url("/images/bag-small-white.svg");
+                    }
+                    &.big .actual-tote{
+                        background-image: url("/images/bag-big-white.svg");
+                    }
+                }
+
+                // red totes: text area color big/small sizes
+                &.red{
+                    .text-wrap{
+                        color: #fff;
+                    }
+                    &.small .actual-tote{
+                        background-image: url("/images/bag-small-red.svg");
+                    }
+                    &.big .actual-tote{
+                        background-image: url("/images/bag-big-red.svg");
+                    }
+                }
+
+                // all small sizes, define size/centering 
+                &.small{  
+                    @include centered-max-width( 600px );
+                    width: 70%;
+                    @include calc (width, calc(100% - 2*#{$positioningMargin}) );
+
+                    .actual-tote{
+                        // determined through aspect ratio 177:100
+                        padding-bottom: 177%;
+                    }
+
+                    // positioning of text area
+                    .text-wrap{
+                        width: 72%;
+                        left: 14%;
+                        top: 50%;
+                    }
+                }
+
+                // all big sizes, define size/centering 
+                &.big{
+                    @include centered-max-width( 750px );
+                    width: 80%;
+                    @include calc (width, calc(100% - 2*#{$positioningMargin}) );
+
+                    .actual-tote{
+                        // determined through aspect ratio 150:100
+                        padding-bottom: 150%;
+                    }
+
+                    // positioning of text area
+                    .text-wrap{
+                        width: 80%;
+                        left: 10%;
+                        top: 52%;
+                    }
+                }
+
+                .actual-tote{
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    z-index: 20;
+                    bottom: $positioningMargin + 50;
+
+                    height: 0;
+                    width: 100%;
+
+                    margin: 0 auto;
+                    cursor: default;
+                    // padding-bottom: 100%;
+
+                    background: url("/images/bag-small-black.svg") center center no-repeat;
+                    background-size: contain;
+                    @include prefix (transform-origin, top center);
+                    @include prefix (transition, 0.3s $easing-curve);
+
+                    &:hover{
+                        @include prefix (animation, swing 2s infinite ease-in-out);
+                    
+                        .tote-shadow{
+                            @include prefix (animation, shadow-swing 2s infinite ease-in-out);
+                        }
+                    }
+
+                    // text area wrap
+                    .text-wrap{
+                        height: 1.3em;
+                        position: absolute;
+                        font-size: 5em;
+                        line-height: 1em;
+                        letter-spacing: -3px;
+                        z-index: 200;
+                        margin: 0 auto;
+                        left: 0;
+                        right: 0;
+                    }
+                    .shadow-blur{
+                        @include prefix (filter, blur(2px));
+                        position: absolute;
+                        left: 0;
+                        bottom: 0;
+                        width: 100%;
+                        height: 35px;
+                        z-index: -1;
+
+                        .tote-shadow{
+                            background: rgba(0,0,0,0.2);
+                            background: radial-gradient(50% center, ellipse farthest-side, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0));
+
+                            @include prefix (border-radius, 50%);
+                            width: 100%;
+                            height: 100%;
+                            box-sizing: border-box;
+                            padding: 0 5%;
+
+                            position: absolute;
+                            left: 0;
+                            right: 0;
+                            margin: 0 auto;
+                            bottom: -50px;
+
+                            @include prefix (transition, 0.3s $easing-curve);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+@media screen and (max-width: 768px) {
+    .featured-carousel{
+        .arrow{
+            display:none;
+        }
+        .featured-carousel-wrap .overlay-tote{
+            .grid-wrap{
+                &.small{
+                    @include calc (width, calc(100% - 2*#{$circleMargins}) );
+                }
+                &.big{
+                    @include calc (width, calc(100% - 2*#{$circleMargins}) );
+                }
+            }
+        }
+    }
+}
+
+

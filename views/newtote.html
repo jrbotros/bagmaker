@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="/stylesheets/min/style.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/plugins/CSSPlugin.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/easing/EasePack.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenLite.min.js"></script>
+    <script type="text/javascript" src="https://hammerjs.github.io/dist/hammer.min.js"></script>
+    <script type="text/javascript" src="/javascripts/jquery.hammer.js"></script>
+    <script type="text/javascript" src="/javascripts/min/main.min.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="/javascripts/min/create.min.js"></script>
+    <nav>
+      <div class="logo"></div>
+      <div class="right-actions">
+        <div class="back">Go Back</div>
+        <div class="save">Save Design</div>
+      </div>
+    </nav>
+    <div class="content">
+      <div color="black" class="tote-wrap black small">
+        <div class="actual-tote"></div>
+        <div class="text-wrap tool">
+          <textarea placeholder="Type Something."></textarea>
+          <div class="corner tl"></div>
+          <div class="corner tr"></div>
+          <div class="corner bl"></div>
+          <div class="corner br"></div>
+          <div class="text-controls">
+            <div class="justification">
+              <div class="left-j sel"></div>
+              <div class="center-j"></div>
+              <div class="right-j"></div>
+            </div>
+            <div class="type-control-wrap">
+              <div class="type-control size">
+                <div class="icon"></div>
+                <input type="range" min="30" max="85" step="0.25" value="50">
+              </div>
+              <div class="type-control kerning">
+                <div class="icon"></div>
+                <input type="range" min="-10" max="10" value="-3">
+              </div>
+              <div class="type-control leading">
+                <div class="icon"></div>
+                <input type="range" min="0.5" max="1.5" step="0.1" value="1">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clone-text">Type Something.</div>
+        <div class="tote-shadow"></div>
+      </div>
+      <div class="color-control-wrap">
+        <div class="color-control">
+          <div color="black" class="color-wrap black checked">
+            <div class="color"></div>
+          </div>
+          <div color="white" class="color-wrap white">
+            <div class="color"></div>
+          </div>
+          <div color="red" class="color-wrap red">
+            <div class="color"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bag-size-wrap">
+        <div class="small-bag icon sel"></div>
+        <div class="big-bag icon"></div>
+      </div>
+    </div>
+  </body>
+</html>

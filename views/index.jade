@@ -1,0 +1,36 @@
+extends layout
+
+block content
+    script(type='text/javascript', src='/javascripts/browse.js')
+    script(type='text/javascript', src='/javascripts/view.js')
+    script(type='text/javascript').
+        $(document).ready(function(){
+            theTote = !{tote}
+            var bagNum = theTote.bagNum;
+            if (bagNum != -1){
+                showTote(bagNum, theTote);
+            }
+        });
+    nav
+        .logo
+        .right-actions
+            .sort
+                .selected-sort Sort By:
+                    span.name Newest
+                ul
+                    li.item(data-attr='timestamp', data-dir='desc') Newest
+                    li.item(data-attr='timestamp', data-dir='asc') Oldest
+                    li.item(data-attr='likes', data-dir='desc') Most Popular
+            .create Create New Design
+    .content
+        .browse-tote-wrap
+        .featured-carousel.tote
+            .featured-carousel-wrap
+            .arrow.left
+            .arrow.right
+            .heart-wrap
+                .heart-circle
+                .heart
+                    .inner-heart.grey
+                    .inner-heart.white
+            .close-overlay

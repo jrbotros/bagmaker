@@ -1,0 +1,525 @@
+$multiplier : 1.1;
+$maxColumns : 4;
+$oneColumnMax : 800px;
+$twoColumnMax : 1150px;
+$threeColumnMax : 1500px;
+$shadowOpacity : 0.3;
+
+@media screen and (max-width: $oneColumnMax) {
+    $numColumns : 1;
+    $ratio : $numColumns / $maxColumns;
+
+    .tote-grid-element{
+        width: (1 / $numColumns) * 100%;
+        padding-bottom: (1 / $numColumns) * 100%;
+
+        .grid-wrap{
+            font-size: (1 / $numColumns) * $multiplier * $ratio * 1em;
+            
+            .actual-tote{
+                &.small{
+                    @include centered-max-width( 600px * $ratio * $multiplier / $numColumns );
+                }
+
+                &.big{
+                    @include centered-max-width( 750px * $ratio * $multiplier / $numColumns );
+                }
+            }
+            .tote-shadow{
+                height: 50px * $multiplier / $numColumns * $ratio;
+            }
+        }
+    }
+}
+
+@media screen and (min-width: $oneColumnMax + 1px) and (max-width: $twoColumnMax) {
+    $numColumns : 2;
+    $ratio : $numColumns / $maxColumns;
+
+    .tote-grid-element{
+        width: (1 / $numColumns) * 100%;
+        padding-bottom: (1 / $numColumns) * 100%;
+
+        .grid-wrap{
+            font-size: (1 / $numColumns) * $multiplier * $ratio * 1em;
+            
+            .actual-tote{
+                &.small{
+                    @include centered-max-width( 600px * $ratio * $multiplier / $numColumns );
+                }
+
+                &.big{
+                    @include centered-max-width( 750px * $ratio * $multiplier / $numColumns );
+                }
+            }
+            .tote-shadow{
+                height: 50px * $multiplier / $numColumns * $ratio;
+            }
+        }
+    }
+}
+
+@media screen and (min-width: $twoColumnMax + 1px) and (max-width: $threeColumnMax) {
+    $numColumns : 3;
+    $ratio : $numColumns / $maxColumns;
+
+    .tote-grid-element{
+        width: (1 / $numColumns) * 100%;
+        padding-bottom: (1 / $numColumns) * 100%;
+
+        .grid-wrap{
+            font-size: (1 / $numColumns) * $multiplier * $ratio * 1em;
+            
+            .actual-tote{
+                &.small{
+                    @include centered-max-width( 600px * $ratio * $multiplier / $numColumns );
+                }
+
+                &.big{
+                    @include centered-max-width( 750px * $ratio * $multiplier / $numColumns );
+                }
+            }
+            .tote-shadow{
+                height: 50px * $multiplier / $numColumns * $ratio;
+            }
+        }
+    }
+}
+@media screen and (min-width: $threeColumnMax + 1px) {
+    $numColumns : 4;
+    $ratio : $numColumns / $maxColumns;
+
+    .tote-grid-element{
+        width: (1 / $numColumns) * 100%;
+        padding-bottom: (1 / $numColumns) * 100%;
+
+        .grid-wrap{
+            font-size: (1 / $numColumns) * $multiplier * $ratio * 1em;
+            
+            .actual-tote{
+                &.small{
+                    @include centered-max-width( 600px * $ratio * $multiplier / $numColumns );
+                }
+
+                &.big{
+                    @include centered-max-width( 750px * $ratio * $multiplier / $numColumns );
+                }
+            }
+            .tote-shadow{
+                height: 50px * $multiplier / $numColumns * $ratio;
+            }
+        }
+    }
+}
+
+@include keyframe(swing) {
+    0%{
+        @include prefix(transform, rotate(0deg));
+    }
+    25% {
+        @include prefix(transform, rotate(3deg));
+    }
+    75% {
+        @include prefix(transform, rotate(-3deg));
+    }
+    100%{
+        @include prefix(transform, rotate(0deg));
+    }
+}
+@include keyframe(shadow-swing) {
+    0%{
+        @include prefix(transform, rotate(0deg) scaleX(1));
+        //background: radial-gradient(50% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    }
+    // 2.5%{
+    //     background: radial-gradient(51% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 5%{
+    //     background: radial-gradient(52% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 7.5%{
+    //     background: radial-gradient(53% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 10%{
+    //     background: radial-gradient(54% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 12.5%{
+    //     background: radial-gradient(55% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 15%{
+    //     background: radial-gradient(56% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 17.5%{
+    //     background: radial-gradient(57.5% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 20%{
+    //     background: radial-gradient(59.5% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 22.5%{
+    //     background: radial-gradient(62% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    25% {
+        @include prefix(transform, rotate(-2deg) scaleX(1.1));
+        //background: radial-gradient(65% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    }
+    // 27.5%{
+    //     background: radial-gradient(62% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 30%{
+    //     background: radial-gradient(59.5% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 32.5%{
+    //     background: radial-gradient(57.5% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 35%{
+    //     background: radial-gradient(56% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 37.5%{
+    //     background: radial-gradient(55% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 40%{
+    //     background: radial-gradient(54% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 42.5%{
+    //     background: radial-gradient(53% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 45%{
+    //     background: radial-gradient(52% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 47.5%{
+    //     background: radial-gradient(51% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    50%{
+        @include prefix(transform, rotate(0deg) scaleX(1));
+        //background: radial-gradient(50% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    }
+    // 52.5%{
+    //     background: radial-gradient(49% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 55%{
+    //     background: radial-gradient(48% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 57.5%{
+    //     background: radial-gradient(47% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 60%{
+    //     background: radial-gradient(46% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 62.5%{
+    //     background: radial-gradient(45% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 65%{
+    //     background: radial-gradient(44% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 67.5%{
+    //     background: radial-gradient(42.5% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 70%{
+    //     background: radial-gradient(40.5% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 72.5%{
+    //     background: radial-gradient(38% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    75% {
+        @include prefix(transform, rotate(2deg) scaleX(1.1));
+        //background: radial-gradient(35% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    }
+    // 77.5%{
+    //     background: radial-gradient(38% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 80%{
+    //     background: radial-gradient(40.5% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 82.5%{
+    //     background: radial-gradient(42.5% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 85%{
+    //     background: radial-gradient(44% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 87.5%{
+    //     background: radial-gradient(45% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 90%{
+    //     background: radial-gradient(46% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 92.5%{
+    //     background: radial-gradient(47% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 95%{
+    //     background: radial-gradient(48% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    // 97.5%{
+    //     background: radial-gradient(49% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    // }
+    100%{
+        @include prefix(transform, rotate(0deg) scaleX(1));
+        //background: radial-gradient(50% center, ellipse farthest-side, rgba(0, 0, 0, $shadowOpacity), rgba(0, 0, 0, 0));
+    }
+}
+.content{
+    float: left;
+
+    .browse-tote-wrap{
+        width: 100%;
+        float: left;
+
+        .tote-grid-element{
+            float: left;
+            box-sizing: border-box;
+            position: relative;
+            height: 0;
+            cursor: pointer;
+            overflow: hidden;
+            @include linear-gradient ( -45deg, #ececec, #ffffff );
+            @include prefix (transition, 0.4s $easing-curve);
+
+            &.start{
+                @include prefix (transform, translateY(100%));
+                opacity:0;
+            }
+            &.no-transition{
+                @include prefix (transition, none);
+            }
+
+            &:hover{
+                .grid-wrap{
+                    background-color: rgba(255, 255, 255, 1);
+                    @include prefix (transform, scale(1.1));
+                }
+                .actual-tote{
+                    @include prefix (animation, swing 2s infinite ease-in-out);
+                }
+                .tote-shadow{
+                    @include prefix (animation, shadow-swing 2s infinite ease-in-out);
+                }
+                .heart-wrap{
+                    opacity: 1;
+                }
+            }
+            .heart-wrap{
+                position: absolute;
+                top: 30px;
+                right: 30px;
+                border: 2px solid rgba(0,0,0,0.2);
+                @include prefix (border-radius, 40px);
+                width: 50px;
+                height: 50px;
+                z-index: 50;
+                @include prefix (transition, 0.3s $easing-curve);
+                opacity:0;
+
+                &:hover{
+                    width: 60px;
+                    height: 60px;
+                    border: 2px solid rgba(0,0,0,0.4);
+                    @include prefix (transform, translate3d(5px, -5px, 0));
+
+                    .heart{
+                        @include prefix (transform, translateY(-48%) scale(1.1)); 
+                        opacity: 1;
+                    }
+                }
+
+                .heart{
+                    width: 30px;
+                    height: 30px;
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    margin: 0 auto;
+                    top: 50%;
+                    opacity: 0.5;
+                    @include prefix (transform, translateY(-49%));
+                    @include prefix (transition, 0.3s $easing-curve);
+                    
+                    .inner-heart{
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        
+                        &.grey{
+                            background: url("/images/heart-grey.svg") center center no-repeat;
+                            background-size: contain;
+                            @include prefix (transition, 0.3s $easing-curve);
+                        }
+                        &.white{
+                            background: url("/images/heart-white.svg") center center no-repeat;
+                            background-size: contain;
+                        }
+                    }
+                }
+                .heart-circle{
+                    position: absolute;
+                    width: 2px;
+                    height: 2px;
+                    top: 50%;
+                    left: 0;
+                    right: 0;
+                    margin: 0 auto;
+                    background-color: #fe3232;
+                    opacity: 0;
+                    @include prefix (transform, translateY(-50%));
+                    @include prefix (transition, 0.3s $easing-curve);
+                    @include prefix (border-radius, 40px);
+                }
+
+                &.favorited{
+                    opacity: 0.85;
+                    border: 1px solid rgba(0,0,0,0);
+                    width: 60px;
+                    height: 60px;
+                    @include prefix (transform, translate3d(5px, -5px, 0));
+                    
+                    &:hover{
+                        opacity: 1;
+                    }
+
+                    .heart-circle{
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0.95;
+                        @include prefix (box-shadow, 0 3px 5px rgba(0,0,0,0.2));
+                    }
+                    
+                    .heart{
+                        opacity: 0.95;
+                        @include prefix (transform, translateY(-49%) scale(1.1));
+
+                        .grey{
+                            opacity: 0;
+                        }
+                    }
+                }
+            }
+
+            .grid-wrap{
+                @include prefix (user-select, none);
+                position: relative;
+                height: 0;
+                width: 100%;
+                padding-bottom: 100%;
+                background-color: rgba(255, 255, 255, 0);
+                @include prefix (transition, 0.5s $easing-curve);
+
+                .actual-tote{
+                    top: 45%;
+
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    margin: 0 auto;
+                    margin-top: -50%;
+                    z-index: 10;
+
+                    height: 0;
+                    width: 100%;
+                    padding-bottom: 100%;
+
+                    background: url("/images/bag-small-black.svg") center center no-repeat;
+                    background-size: contain;
+                    @include prefix (transform-origin, top center);
+                    @include prefix (transition, 0.3s $easing-curve);
+
+                    // black totes: text area color and big/small sizes
+                    &.black{
+                        .text-wrap{
+                            color: #fff;
+                        }
+                        &.small{
+                            background-image: url("/images/bag-small-black.svg");
+                        }
+                        &.big{
+                            background-image: url("/images/bag-big-black.svg");
+                        }
+                    }
+
+                    // white totes: text area color big/small sizes
+                    &.white{
+                        .text-wrap{
+                            color: #000;
+                        }
+                        &.small{
+                            background-image: url("/images/bag-small-white.svg");
+                        }
+                        &.big{
+                            background-image: url("/images/bag-big-white.svg");
+                        }
+                    }
+
+                    // red totes: text area color big/small sizes
+                    &.red{
+                        .text-wrap{
+                            color: #fff;
+                        }
+                        &.small{
+                            background-image: url("/images/bag-small-red.svg");
+                        }
+                        &.big{
+                            background-image: url("/images/bag-big-red.svg");
+                        }
+                    }
+
+                    // all small sizes, define size/centering 
+                    &.small{  
+                        width: 80%;
+
+                        // determined through aspect ratio 177:100
+                        //padding-bottom: 177%;
+
+                        // positioning of text area
+                        .text-wrap{
+                            width: 72%;
+                            left: 14%;
+                            top: 50%;
+                        }
+                    }
+
+                    // all big sizes, define size/centering 
+                    &.big{
+                        width: 90%;
+                        
+                        // determined through aspect ratio 150:100
+                        //padding-bottom: 150%;
+
+                        // positioning of text area
+                        .text-wrap{
+                            width: 80%;
+                            left: 10%;
+                            top: 52%;
+                        }
+                    }
+
+                    // text area wrap
+                    .text-wrap{
+                        height: 1.3em;
+                        position: absolute;
+                        font-size: 5em;
+                        line-height: 1em;
+                        letter-spacing: -3px;
+                        z-index: 200;
+                    }
+                    .shadow-blur{
+                        @include prefix (filter, blur(2px));
+                        position: absolute;
+                        left: -10%;
+                        bottom: 3%;
+                        width: 120%;
+
+                        .tote-shadow{
+                            background: rgba(0,0,0,0.2);
+                            background: radial-gradient(50% center, ellipse farthest-side, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0));
+                            
+                            @include prefix (border-radius, 50%);
+                            width: 100%;
+                            box-sizing: border-box;
+                            padding: 0 5%;
+                            opacity: 0.8;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

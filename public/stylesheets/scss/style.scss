@@ -1,0 +1,97 @@
+@mixin font-face($font-family, $file-path, $weight: normal, $style: normal, $asset-pipeline: $asset-pipeline) {
+  @font-face {
+    font-family: $font-family;
+    font-weight: $weight;
+    font-style: $style;
+
+    @if $asset-pipeline == true {
+      src: font-url('#{$file-path}.eot');
+      src: font-url('#{$file-path}.eot?#iefix')          format('embedded-opentype'),
+           font-url('#{$file-path}.woff')                format('woff'),
+           font-url('#{$file-path}.ttf')                 format('truetype'),
+           font-url('#{$file-path}.svg##{$font-family}') format('svg');
+    } @else {
+      src: url('#{$file-path}.eot');
+      src: url('#{$file-path}.eot?#iefix')               format('embedded-opentype'),
+           url('#{$file-path}.woff')                     format('woff'),
+           url('#{$file-path}.ttf')                      format('truetype'),
+           url('#{$file-path}.svg##{$font-family}')      format('svg');
+    }
+  }
+}
+@mixin prefix ( $property, $value... ) {
+  -webkit-#{$property}: $value;
+     -moz-#{$property}: $value;
+      -ms-#{$property}: $value;
+       -o-#{$property}: $value;
+          #{$property}: $value;
+}
+@mixin calc ( $property, $value... ) {
+  #{$property}: -moz-#{$value};
+  #{$property}: -webkit-#{$value};
+  #{$property}: -o-#{$value};
+  #{$property}: #{$value};
+}
+@mixin centered-max-width( $maxW ){
+    width:100%;
+    max-width: $maxW;
+    margin:0 auto;
+}
+@mixin linear-gradient ($pos, $startColor, $endColor...){
+  background: $startColor; /* Old browsers */
+  background: -moz-linear-gradient($pos, $startColor,$endColor); /* FF3.6+ */
+  background: -webkit-linear-gradient($pos, $startColor,$endColor); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient($pos, $startColor,$endColor); /* Opera 11.10+ */
+  background: -ms-linear-gradient($pos, $startColor,$endColor); /* IE10+ */
+  background: linear-gradient(to $pos, $endColor,$startColor); /* W3C */
+}
+@mixin radial-gradient($from, $to, $start: 0%, $end: 100%) {
+    background: -moz-radial-gradient(center, cover, $from $start, $to $end);
+    background: -webkit-gradient(radial, center center, 0px, center center, $end, color-stop($start, $from), color-stop($end, $to));
+    background: -webkit-radial-gradient(center, cover, $from $start, $to $end);
+    background: -o-radial-gradient(center, cover, $from $start, $to $end);
+    background: -ms-radial-gradient(center, cover, $from $start, $to $end);
+    background: radial-gradient(center, cover, $from $start, $to $end);
+    background-color: $to;
+}
+
+@mixin placeholder {
+  $placeholders: ":-webkit-input" ":-moz" "-moz" "-ms-input";
+  @each $placeholder in $placeholders {
+    &:#{$placeholder}-placeholder {
+      @content;
+    }
+  }
+}
+@mixin keyframe ($animation_name) {
+    @-webkit-keyframes $animation_name {
+        @content;
+    }
+ 
+    @-moz-keyframes $animation_name {
+        @content;
+    }
+ 
+    @-o-keyframes $animation_name {
+        @content;
+    }
+ 
+    @keyframes $animation_name {
+        @content;
+    }
+}
+
+$magenta      :   #D93182;
+$red          :   #FF0000;
+$easing-curve :   cubic-bezier(.7,0,.3,1);
+$navHeight    :   80px;
+// $maxWidth   :   1400px;
+// $smallBP    :   650px;
+// $largeBP    :   960px;
+
+@import     'global';
+@import     'create';
+@import     'browse';
+@import     'view';
+
+
