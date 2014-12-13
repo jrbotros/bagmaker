@@ -52,6 +52,12 @@ nav{
                 background-color: $magenta;
                 color: #fff;
             }
+
+            a{
+                color: inherit;
+                text-decoration: none;
+                padding: $navHeight/2 0;
+            }
         }
 
         .sort {
