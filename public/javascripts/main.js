@@ -69,5 +69,9 @@ $(document).ready(function(){
         $.cookie("likes", "");
     }
 
+    $(document).hammer().on("tap", ".logo", function(){
+        window.location.href = "/";
+    });
+
     ga('send', 'pageview');
 });

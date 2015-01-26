@@ -85,7 +85,7 @@ function saveTote(){
         // Check for successful (blank) response
         if (response.msg === '') {
             // what to do if we did it successfully
-            alert("added");
+            window.location.href = "/";
         }
         else {
             // If something goes wrong, alert the error message that our service returned
