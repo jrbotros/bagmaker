@@ -65,6 +65,7 @@ function showTote(bagNum, theTote, callback){
 
     // change the url without reloading!
     window.history.pushState("html", "Title", "/totes/" + bagNum);
+    ga('send', 'pageview');
     window.onpopstate = function(e){
         location.reload();
     };

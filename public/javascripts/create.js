@@ -5,7 +5,7 @@ var dataSize = "small";
 var dataColor = "black";
 var dataJustify = "left";
 var dataFontSize = 5;           //em
-var dataKerning = -3;           //em
+var dataKerning = -0.03;        //em
 var dataLeading = 1;            //em
 
 // show when a tool is selected  + focus it(textarea/image)

@@ -101,7 +101,7 @@ function buildBagGrid(data){
         },300);
     }
     else{
-        animateIn(start, $.noop);        
+        animateIn(start, $.noop);
     }
 
 }
@@ -125,7 +125,7 @@ function animateIn(startIndex, callback){
 }
 function animateInHelper(ind, callback){
     var totalGridElements = $(".tote-grid-element").length;
-    if (ind > totalGridElements) {
+    if (ind >= totalGridElements) {
         setTimeout(function(){
             if (callback && callback != undefined){
                 callback();
@@ -136,6 +136,11 @@ function animateInHelper(ind, callback){
     else{
         setTimeout(function(){
             var output = gridOrderHelper(ind);
+
+            if ( $(".tote-grid-element").eq(output).length == 0 )
+                output = ind;
+
+            //console.log(ind, output);
             $(".tote-grid-element").eq(output).removeClass("start");
             animateInHelper(ind+1, callback);
 
@@ -264,10 +269,11 @@ $(document).ready(function(){
         var scrollPos = $(window).scrollTop();
         var bottomView = scrollPos + $(window).height();
         
-        var docHeight = $(document).height();
+        var docHeight = $(".browse-tote-wrap").height();
         var cardHeight = $(".tote-grid-element").height();
         var threshold = docHeight - cardHeight;
 
+        //console.log(currPage, totalPages, bottomView, threshold);
         if ( currPage < totalPages && bottomView > threshold ){
             buildBagGrid(toteBags);
         }
