@@ -1,3 +1,7 @@
 **/.sass-cache
 **/.sass-cache/*
 node_modules
+bag-maker-key.pem
+data/*
+npm-debug.log
+min/
