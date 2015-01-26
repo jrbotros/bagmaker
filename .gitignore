@@ -5,3 +5,4 @@ bag-maker-key.pem
 data/*
 npm-debug.log
 min/
+bin/www
