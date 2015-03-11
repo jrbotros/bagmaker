@@ -13,8 +13,8 @@
     <script type="text/javascript" src="/javascripts/libs/jquery.cookie.js"></script>
     <script type="text/javascript" src="/javascripts/libs/jquery.hammer.min.js"></script>
     <script type="text/javascript" src="/javascripts/libs/underscore.min.js"></script>
-    <script type="text/javascript" src="/javascripts/libs/mustache.min.js"></script>
-    <script type="text/javascript" src="/javascripts/min/main-min.js"></script>
+    <script type="text/javascript" src="/javascripts/libs/handlebars-v3.0.0.js"></script>
+    <script type="text/javascript" src="/javascripts/main.js"></script>
   </head>
   <body>
     <script type="text/javascript" src="/javascripts/create.js"></script>
@@ -24,21 +24,16 @@
         <div class="save">Save Design</div>
       </div>
     </nav>
-    <div class="content">
-      <div class="tote-wrap big cyan">
-        <div class="actual-tote">
-          <div class="handle"></div>
-          <div class="bag-body">
-            <div class="text">This is a test bag.</div>
-          </div>
-          <div class="bag-bottom">
-            <div class="bl-corner"></div>
-            <div class="bottom"></div>
-            <div class="br-corner"></div>
-          </div>
+    <div class="content create-page">
+      <div class="bag-wrap"></div>
+      <div class="bottom-bar">
+        <div class="color-control-wrap"></div>
+        <div class="addTextfield"></div>
+        <div class="bag-size-wrap">
+          <div data-size="small" class="small-bag icon sel"></div>
+          <div data-size="big" class="big-bag icon"></div>
         </div>
       </div>
-      
     </div>
   </body>
 </html>
