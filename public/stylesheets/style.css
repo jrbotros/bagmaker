@@ -404,6 +404,7 @@ nav .right-actions .sort ul li:hover {
   width: 100%;
   padding-bottom: 10%;
   position: relative;
+  margin-top: -1px;
 }
 .tote-wrap .actual-tote .bag-bottom > * {
   display: inline-block;
@@ -839,118 +840,6 @@ nav .right-actions .sort ul li:hover {
   background-image: url("/images/big-bag-icon.svg");
 }
 
-@-webkit-keyframes swing {
-  0% {
-    -webkit-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-
-  25% {
-    -webkit-transform: rotate(3deg);
-    -ms-transform: rotate(3deg);
-    transform: rotate(3deg);
-  }
-
-  75% {
-    -webkit-transform: rotate(-3deg);
-    -ms-transform: rotate(-3deg);
-    transform: rotate(-3deg);
-  }
-
-  100% {
-    -webkit-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-}
-@keyframes swing {
-  0% {
-    -webkit-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-
-  25% {
-    -webkit-transform: rotate(3deg);
-    -ms-transform: rotate(3deg);
-    transform: rotate(3deg);
-  }
-
-  75% {
-    -webkit-transform: rotate(-3deg);
-    -ms-transform: rotate(-3deg);
-    transform: rotate(-3deg);
-  }
-
-  100% {
-    -webkit-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-}
-@-webkit-keyframes shadow-swing {
-  0% {
-    -webkit-transform: rotate(0deg) scaleX(1);
-    -ms-transform: rotate(0deg) scaleX(1);
-    transform: rotate(0deg) scaleX(1);
-  }
-
-  25% {
-    -webkit-transform: rotate(-2deg) scaleX(1.1);
-    -ms-transform: rotate(-2deg) scaleX(1.1);
-    transform: rotate(-2deg) scaleX(1.1);
-  }
-
-  50% {
-    -webkit-transform: rotate(0deg) scaleX(1);
-    -ms-transform: rotate(0deg) scaleX(1);
-    transform: rotate(0deg) scaleX(1);
-  }
-
-  75% {
-    -webkit-transform: rotate(2deg) scaleX(1.1);
-    -ms-transform: rotate(2deg) scaleX(1.1);
-    transform: rotate(2deg) scaleX(1.1);
-  }
-
-  100% {
-    -webkit-transform: rotate(0deg) scaleX(1);
-    -ms-transform: rotate(0deg) scaleX(1);
-    transform: rotate(0deg) scaleX(1);
-  }
-}
-@keyframes shadow-swing {
-  0% {
-    -webkit-transform: rotate(0deg) scaleX(1);
-    -ms-transform: rotate(0deg) scaleX(1);
-    transform: rotate(0deg) scaleX(1);
-  }
-
-  25% {
-    -webkit-transform: rotate(-2deg) scaleX(1.1);
-    -ms-transform: rotate(-2deg) scaleX(1.1);
-    transform: rotate(-2deg) scaleX(1.1);
-  }
-
-  50% {
-    -webkit-transform: rotate(0deg) scaleX(1);
-    -ms-transform: rotate(0deg) scaleX(1);
-    transform: rotate(0deg) scaleX(1);
-  }
-
-  75% {
-    -webkit-transform: rotate(2deg) scaleX(1.1);
-    -ms-transform: rotate(2deg) scaleX(1.1);
-    transform: rotate(2deg) scaleX(1.1);
-  }
-
-  100% {
-    -webkit-transform: rotate(0deg) scaleX(1);
-    -ms-transform: rotate(0deg) scaleX(1);
-    transform: rotate(0deg) scaleX(1);
-  }
-}
 .content.browse-page .tote-grid-element {
   display: inline-block;
   float: left;
@@ -961,7 +850,7 @@ nav .right-actions .sort ul li:hover {
   cursor: pointer;
   overflow: hidden;
   background-color: #ececec;
-  background: linear-gradient(135deg, white, #efefef);
+  background: linear-gradient(135deg, white, #e3e3e3);
   transition: 0.4s cubic-bezier(0.7, 0, 0.3, 1);
 }
 .content.browse-page .tote-grid-element.start {
@@ -989,17 +878,9 @@ nav .right-actions .sort ul li:hover {
   opacity: 1;
 }
 .content.browse-page .tote-grid-element:hover .tote-wrap {
-  max-width: 65%;
-}
-.content.browse-page .tote-grid-element:hover .actual-tote {
-  -webkit-animation: swing 2s infinite ease-in-out;
-  -ms-animation: swing 2s infinite ease-in-out;
-  animation: swing 2s infinite ease-in-out;
-}
-.content.browse-page .tote-grid-element:hover .tote-shadow {
-  -webkit-animation: shadow-swing 2s infinite ease-in-out;
-  -ms-animation: shadow-swing 2s infinite ease-in-out;
-  animation: shadow-swing 2s infinite ease-in-out;
+  -webkit-transform: scale(1.1) translateY(-45%);
+  -ms-transform: scale(1.1) translateY(-45%);
+  transform: scale(1.1) translateY(-45%);
 }
 .content.browse-page .tote-grid-element:hover .heart-wrap {
   opacity: 1;
@@ -1114,6 +995,7 @@ nav .right-actions .sort ul li:hover {
   z-index: 101;
 }
 .content.browse-page .tote-grid-element .tote-wrap .actual-tote {
+  transition: 0s cubic-bezier(0.7, 0, 0.3, 1);
   -webkit-transform-origin: top center;
   -ms-transform-origin: top center;
   transform-origin: top center;

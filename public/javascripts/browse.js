@@ -1,5 +1,6 @@
 var browse = {
-    toteBags : [],
+    toteBags : [], // array of tote objects
+
     sort : function(attr, dir){
         browse.toteBags = _.sortBy(browse.toteBags, attr);
         if (dir === "desc")
@@ -76,27 +77,35 @@ var browse = {
             }, (elementNum - ind) * 10);
         }
     },
+    // grab tote data
     loadBags : function(){
         $.getJSON('/totes', function( data ){
+            // sort it by time - newest
             browse.toteBags = _.sortBy(data, function(tote){
                 return tote.timestamp;
             });
             browse.toteBags = browse.toteBags.reverse();
+
+            // build grid.
             //totalPages = Math.ceil(toteBags.length / loadChunk);
             browse.buildBagGrid();
         });
     },
     buildBagGrid : function(){
         _.each(browse.toteBags, function(tote){
+
+            // temporary hack for not being able to save json properly
             if (typeof tote.textfields === "string")
                 tote.textfields = JSON.parse(tote.textfields);
+            tote.swingTimer = null;
             var toteObj = {bags : [tote]};
 
+            // create a slightly modified bag template html for each (add favoriting)
             $.get("/templates/_bag.html", function(html) {
                 var template = Handlebars.compile(html);
                 var rendered = template(toteObj);
                 var $tote = $("<div />", {
-                    id : "tote-" + toteObj._id,
+                    //id : "tote-" + tote._id,
                     class : "tote-grid-element start",
                     html :  "<div class='heart-wrap'>" +
                                 "<div class='heart-circle'></div>" +
@@ -107,12 +116,64 @@ var browse = {
                             "</div>" + rendered
                 }).appendTo(".browse-page.content .browse-tote-wrap");
 
+                // on the last one, update the type sizing and animate it in.
                 if (tote == browse.toteBags[browse.toteBags.length-1]){
                     site.refreshTypeOnTotes();
                     browse.animateIn();
                 }
             });
         });        
+    },
+    swingOnce : function(index){
+        var $bag = $(".tote-grid-element").eq(index);
+        var $tote = $bag.find(".actual-tote");
+        var $shadow = $bag.find(".tote-shadow");
+
+        //start at 0
+        // swing to the left
+        TweenLite.to($shadow, 0.5, { rotation : "-4deg", scaleX : 0.9, ease : gridBagBezier });
+        TweenLite.to($tote, 0.5, {
+            rotation : "5deg",
+            ease : gridBagBezier,
+            onComplete : function(){
+                // swing to the right, double the distance, double the time.
+                TweenLite.to($shadow, 0.5, {
+                    rotation : "0deg",
+                    scaleX : 1,
+                    ease : gridBagBezier,
+                    onComplete: function(){
+                        TweenLite.to($shadow, 0.5, {
+                            rotation : "4deg",
+                            scaleX : 0.9,
+                            ease : gridBagBezier
+                        });
+                    }
+                });
+                TweenLite.to($tote, 1, {
+                    rotation : "-5deg",
+                    ease : gridBagBezier,
+                    onComplete : function(){
+                        // swing back to 0
+                        TweenLite.to($shadow, 0.5, { rotation : "0deg", scaleX : 1, ease : gridBagBezier });
+                        TweenLite.to($tote, 0.5, {
+                            rotation : "0deg",
+                            ease : gridBagBezier
+                        });
+                    }
+                });    
+            }
+        });
+    },
+    swing : function(index){
+        if ( !$(".tote-grid-element").eq(index).hasClass("swinging") ){
+            browse.swingOnce(index);
+            $(".tote-grid-element").eq(index).addClass("swinging");
+            browse.toteBags[index].swingTimer = setInterval(function(){browse.swingOnce(index)}, 1900);    
+        }
+    },
+    stopSwing : function(index){
+        $(".tote-grid-element").eq(index).removeClass("swinging");
+        clearInterval(browse.toteBags[index].swingTimer);
     }
 };
 
@@ -123,7 +184,7 @@ var gridElement = {
 $(document).ready(function(){
     browse.loadBags();
 
-    $(document).hammer().on("tap", ".sort ul li", function(){
+    $(".sort ul li").hammer().on("tap", function(){
         var attr = $(this).attr("data-attr");
         var dir = $(this).attr("data-dir");
         browse.sort(attr, dir);
@@ -134,5 +195,22 @@ $(document).ready(function(){
         e.stopPropagation();
 
         $(this).toggleClass("favorited");
+    });
+
+    $(document).on("mouseenter", ".tote-grid-element", function(){
+        var index = $(this).index();
+        browse.swing(index);
+    });
+    $(document).on("mouseleave", ".tote-grid-element", function(){
+        var index = $(this).index();
+        browse.stopSwing(index);
+    });
+
+    $(".tote-grid-element").hover(function(){
+        var index = $(this).index();
+        browse.swing(index);
+    }, function(){
+        var index = $(this).index();
+        browse.stopSwing(index);
     });
 });
