@@ -6,12 +6,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 // mongodb
+// var mongoose = require('mongoose');
+// mongoose.connect('mongodb://localhost:27017/totebags');
+// var db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'connection error:'));
+// db.once('open', function (callback) { });
 var mongo = require('mongoskin');
 var db = mongo.db('mongodb://localhost:27017/totebags', {native_parser:true});
-
-// grabzit
-var grabzit = require('grabzit');
-var client = new grabzit("MGNmY2I5YzE3NzZiNGQ0NThjMzQ5ZDUxYmY1MjU0MTA=", "PlM/PyZSPz8/Uz9fPz8/PzZFZCk/P0o1Pz8/YRc/P1I=");
 
 var routes = require('./routes/index');
 var users = require('./routes/users');

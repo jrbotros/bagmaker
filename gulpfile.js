@@ -46,13 +46,13 @@ gulp.task('images', function() {
 });
 
 // //templates
-// gulp.task('jade', function(){
-//   return gulp.src('views/*.jade')
-//     .pipe(jade({
-//         pretty : true
-//     }))
-//     .pipe(gulp.dest('public/pages/'))
-// });
+gulp.task('jade', function(){
+  return gulp.src('views/*.jade')
+    .pipe(jade({
+        pretty : true
+    }))
+    .pipe(gulp.dest('public/pages/'))
+});
 
 // Clean
 gulp.task('clean', function(cb) {
@@ -77,8 +77,8 @@ gulp.task('watch', function() {
   // Watch image files
   //gulp.watch('public/images/**/*', ['images']);
 
-  // // Watch jade files
-  // gulp.watch('views/*.jade', ['jade']);
+  // Watch jade files
+  gulp.watch('views/*.jade', ['jade']);
  
   // Create LiveReload server
   livereload.listen();

@@ -90,6 +90,9 @@
         "e"         : true,
         "ev"        : true,
         "event"     : true,
-        "sortByKey" : true
+        "sortByKey" : true,
+        "_"         : true,
+        "Handlebars": true,
+        "ga"        : true
     }                           // additional predefined global variables
 }
