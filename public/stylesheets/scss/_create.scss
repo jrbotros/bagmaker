@@ -1,6 +1,53 @@
+button{
+    position: fixed;
+    z-index: $z-second-level;
+
+    &.close{
+        top: $body-padding;
+        left: $body-padding;
+        @include prefix (box-shadow, none);
+        background-color: transparent;
+
+        &:after{
+            width: 50%;
+            height: 50%;
+            background: url("/images/x-close.svg") center center no-repeat;
+            background-size: contain;
+            opacity: 0.3;
+            content: "";
+            @include centerAbsV;
+            @include centerAbsH;
+            @include prefix (transition, 0.3s $easing-curve);
+        }
+
+        &:hover:after{
+            opacity: 0.6;
+        }
+    }
+    &.save{
+        top: $body-padding;
+        right: $body-padding;
+        background-color: $fadedRed;
+
+        &:after, &:before{
+            content: "";
+            position: absolute;
+            @include centerAbsV;
+            @include centerAbsH;
+            width: 50%;
+            height: 50%;
+            background: url("/images/check-white.svg") center center no-repeat;
+            background-size: contain;
+        }
+    }
+
+}
+
+
 .content.create-page{
     position: relative;
     min-height: 100vh;
+    background-color: $lightestGrey;
 
     .tote-wrap{
         max-width: 80vw;
@@ -9,7 +56,12 @@
 
         .actual-tote{
             padding-bottom: $navHeight * 1.5;
-
+            
+            .handle{
+                &:before{
+                    background-color: $lightestGrey;
+                }
+            }
             .bag-body{
                 .editable-field{
                     position: absolute;
@@ -45,7 +97,7 @@
                         .text-controls{
                             opacity: 1;
                             pointer-events: auto;
-                            @include prefix (transform, translateY(0));
+                            @include prefix (transform, translate3d(-50%, 0, 0));
                             margin-bottom: $navHeight + 20px;
                         }
                     }
@@ -108,9 +160,10 @@
                     @include prefix (transition, 0.5s $easing-curve);
 
                     //centered below:
-                    @include prefix (transform, translateY(-50px));
+                    position: absolute;
+                    left: 50%;
+                    @include prefix (transform, translate3d(-50%, -50px, 0));
                     @include calc (top, calc(100% + 25px));
-                    @include centerAbsH;
                     
                     //centered right:
                     // @include prefix (transform, translateY(-50px));
@@ -230,12 +283,18 @@
 
                     @include placeholder {
                         font-family: HugeAvantGarde;
-                        color: rgba(225, 225, 225, 0.5);
+                        color: rgba(205, 205, 205, 0.5);
                     }
                 }
                 .clone-text{
                     pointer-events: none;
                     opacity: 0;
+                }
+            }
+            .bag-bottom{
+                .bl-corner, .br-corner{
+                    border-left-color: $lightestGrey;
+                    border-bottom-color: $lightestGrey;
                 }
             }
         }
@@ -244,10 +303,10 @@
     // keep for when we want to make a bottom tool bar
     .bottom-bar{
         width: 100%;
-        height: $navHeight;
+        height: $body-padding * 2 + $button-size;
        
         //border-top: 1px solid $stroke-color;
-        background-color: rgba(255, 255, 255, 0.95);
+        background-color: rgba(248, 248, 248, 0.9);
        
         position: fixed;
         z-index: $z-third-level;
@@ -256,51 +315,144 @@
     }
 
     .color-control-wrap{
-        width: 40px;
-        height: 40px;
-        background: url("/images/color-wheel.svg") center center no-repeat;
-        background-size: contain;
-        
-        @include centerAbsV;
+        position: absolute;
+
+        bottom: $body-padding;
         right: $body-padding;
-        cursor: pointer;
+        width: $button-size;
+        height: $button-size;
         @include prefix (transition, 0.3s $easing-curve);
 
-        &:hover{
-            @include prefix (transform, translateY(-50%) scale(1.2));
+        &.expand{
+            height: ($button-size + 15px) * 2 + $button-size;
+            
+            .colors{
+                @include prefix (transform, translateY(-#{$button-size + 15px}));
+                
+                .color{
+                    width: $button-size;
+                    height: $button-size;
+
+                    &[rel=red]{
+                        @include prefix (transition, 0.3s 0.2s $easing-curve);
+                        border: 3px solid #fff;
+                    }
+                    &[rel=black]{
+                        @include prefix (transition, 0.3s 0.15s $easing-curve);
+                        border: 3px solid #fff;
+                    }
+                    &[rel=white]{
+                        @include prefix (transition, 0.3s 0.1s $easing-curve);
+                        border: 3px solid transparent;
+                    }
+                }
+            }
+            .color-control{
+                @include prefix (transform, scale(0.5));
+                background-color: #000;
+
+                &:before{
+                    opacity: 0;
+                }
+                &:after{
+                    opacity: 1;
+                }
+
+                &:hover{
+                    @include prefix (transform, scale(0.65));
+                }
+            }
+        }
+    }
+
+    .color-control{
+        bottom: 0;
+        left: 0;
+        position: absolute;
+        background-color: #fff;
+        @include prefix (transition, 0.3s $easing-curve);
+
+        &:before, &:after{
+            content: "";
+            @include centerAbsH;
+            @include centerAbsV;
+            width: 100%;
+            height: 100%;
+            @include prefix (border-radius, 50%);
+            @include prefix (transition, 0.15s $easing-curve);
+        }
+
+        &:before{
+            background: url("/images/color-wheel.svg") center center no-repeat;
+        }
+        &:after{
+            background: url("/images/x-close-white.svg") center center no-repeat;
+            opacity: 0;
+            width: 50%;
+            height: 50%;
+        }
+    }
+    .colors{
+        height: 100%;
+        @include prefix (transition, 0.3s $easing-curve);
+        
+        .color{
+            @include centerAbsH;
+            width: $button-size * 0.25;
+            height: $button-size * 0.25;
+            @include prefix (border-radius, 50%);
+            border: 3px solid transparent;
+            @include prefix (transition, 0.15s $easing-curve);
+            cursor: pointer;
+            @include prefix (box-shadow, 0 2px 4px 2px rgba(0,0,0,0.15));
+
+            &:hover .color-wrap{
+                @include prefix (box-shadow, 0 2px 6px 2px rgba(0,0,0,0.2));
+            }
+
+            &[rel=red]{
+                background-color: $red;
+                top: 0;
+            }
+            &[rel=black]{
+                background-color: #000;
+                bottom: 0;
+            }
+            &[rel=white]{
+                background-color: #fff;
+                @include prefix (transform, translateY(-50%));
+                top: 50%;
+            }
+            .color-wrap{
+                @include prefix (transition, 0.3s $easing-curve);
+                width: 100%;
+                height: 100%;
+                position: absolute; 
+                top: 0;
+                left: 0;
+                @include prefix (border-radius, 50%);
+            }
         }
     }
 
     .addTextfield{
-        width: 45px;
-        height: 45px;
-        @include centerAbsH;
         @include centerAbsV;
-        cursor: pointer;
-        @include prefix (transition, 0.3s $easing-curve);
-        @include prefix (border-radius, 50%);
-        // @include prefix (box-shadow, 0 0 10px 2px rgba(0,0,0,0.3));
-        background-color: $magenta;
+        left: $body-padding;
 
         &:not(.disabled):hover{
             @include prefix (transform, translateY(-50%) scale(1.1));
         }
 
-        &:before, &:after{
+        &:before{
             content: "";
             position: absolute;
             @include centerAbsH;
             @include centerAbsV;
-            background-color: #fff;
-            height: 3px;
-            width: 3px;
-        }
-
-        &:before{
-            height: 50%;
-        }
-        &:after{
-            width: 50%;
+            background: url("/images/x-close.svg") center center no-repeat;
+            background-size: contain;
+            @include prefix (transform, translateY(-50%) rotate(45deg) );
+            width: 40%;
+            height: 40%;
         }
 
         &.disabled{
@@ -311,38 +463,98 @@
 
     .bag-size-wrap{
         @include centerAbsV;
-        left: $body-padding;
+        @include centerAbsH;
+        @include prefix (border-top-right-radius, 25% 50%);
+        @include prefix (border-top-left-radius, 25% 50%);
+        @include prefix (border-bottom-left-radius, 25% 50%);
+        @include prefix (border-bottom-right-radius, 25% 50%);
+        height: $button-size;
+        width: $button-size * 2;
+        background-color: $lightGrey;
+        border: 1px solid $grey;
+        @include prefix (box-shadow, 0 1px 2px 1px rgba(0,0,0,0.2));
+        
+        .selector{
+            width: $button-size;
+            height: $button-size;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #fff;
+            border: 1px solid $grey;
+            @include prefix (border-radius, 50%);
+            @include prefix (box-shadow, 0 3px 6px 2px rgba(0,0,0,0.15));
+            cursor: pointer;
+            z-index: $z-second-level;
+            @include prefix (transition, 0.3s $easing-curve);
+
+            &:hover{
+                // @include prefix (transform, scale(1.1));
+                @include prefix (box-shadow, 0 4px 6px 3px rgba(0,0,0,0.2));
+                // background-color: $lightestGrey;
+            }
+        }
+
+        &.small{
+            .selector{
+                @include prefix (transform, translateX(0));
+            }
+            .icon.small-bag{
+                opacity: 0.5;
+            }
+        }
+        &.big{
+            .selector{
+                @include prefix (transform, translateX(#{$button-size}));
+            }
+            .icon.big-bag{
+                opacity: 0.5;
+            }
+        }
 
         .icon{
-            width: 30px;
-            height: 30px;
+            width: 50%;
+            height: $button-size;
             display: inline-block;
+            vertical-align: middle;
+            margin-top: -2px;
 
             background-position: center center;
             background-repeat: no-repeat;
-            background-size: contain;
-            cursor: pointer;
+            background-image: url("/images/small-bag-icon.svg");
+            background-size: ($button-size - 15px) (($button-size - 15px) / 2);
             opacity: 0.3;
-            @include prefix (transition, 0.2s $easing-curve);
+            position: relative;
+            @include prefix (transition, 0s 0.4s $easing-curve);
 
-            &:first-child{
-                margin-right: 10px;
-            }
-            &.sel{
-                opacity: 1;
-                
-                &:hover{
-                    opacity: 1;
-                }
-            }
-            &:hover{
-                opacity: 0.6;
+            &:before, &:after{
+                content: "";
+                @include centerAbsV;
+                background-size: contain;
+                width: 10px;
+                height: 10px;
+                background-repeat: no-repeat;
+                background-position: center center;
             }
             &.small-bag{
-                background-image: url("/images/small-bag-icon.svg");
+                &:before{
+                    background-image: url("/images/arrow-right.svg");
+                    right: 6px;
+                }
+                &:after{
+                    background-image: url("/images/arrow-left.svg");
+                    left: 6px;
+                }
             }
             &.big-bag{
-                background-image: url("/images/big-bag-icon.svg");   
+                &:after{
+                    background-image: url("/images/arrow-right.svg");
+                    left: 6px;
+                }
+                &:before{
+                    background-image: url("/images/arrow-left.svg");
+                    right: 6px;
+                }
             }
         }
     }

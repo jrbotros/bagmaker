@@ -2,15 +2,22 @@ extends layout
 
 block content
     script(type='text/javascript', src='/javascripts/create.js')
-    nav
-        .logo
-        .right-actions
-            .save Save Design
+    button.close
+    button.save
     .content.create-page
         .bag-wrap
         .bottom-bar
-            .color-control-wrap
-            .addTextfield
-            .bag-size-wrap
-                .small-bag.icon.sel(data-size='small')
+            button.addTextfield
+            .bag-size-wrap.small
+                .selector
                 .big-bag.icon(data-size='big')
+                .small-bag.icon(data-size='small')
+            .color-control-wrap
+                button.color-control
+                .colors
+                    .color(rel='red')
+                        .color-wrap
+                    .color(rel='black')
+                        .color-wrap
+                    .color(rel='white')
+                        .color-wrap

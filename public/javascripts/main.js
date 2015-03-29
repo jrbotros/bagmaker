@@ -11,7 +11,7 @@ ga('create', 'UA-58975311-1', 'auto');
 
 // Likes API
 var likes = {
-    userLikes : null,
+    userLikes : [],
     saveUserLikes : function(){
 
     },
@@ -63,7 +63,7 @@ function hasLike(toteId){
 
 
 var site = {
-    colors : ["black", "white", "orange", "yellow", "cyan", "red", "green"],
+    colors : ["black", "white", "red"],
     chars : "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz".split(''),
     randomString : function(length){
         var string = '';
@@ -95,6 +95,7 @@ var site = {
             var width = $(tote).find(".bag-body").width();
             var fontSize = width / 2;
             $(tote).find(".bag-body").css("font-size", (fontSize + "px"));
+            $(tote).find(".bag-bottom").css("font-size", (fontSize + "px"));
 
             if ( $(tote).find(".editable-field").length > 0 ){
                 var fields = $(tote).find(".textfields-wrap .editable-field");
@@ -142,6 +143,23 @@ var site = {
                 onComplete();
             }
         });
+    },
+    breakpts : {
+        sml : 640,
+        med : 940,
+        lrg : 1280
+    },
+    breakpt : function() {
+        var ww = window.innerWidth;
+        var breakptval = 'lrg';
+
+        for( var key in site.breakpts){
+            if( site.breakpts[key] >= ww ){
+                breakptval = key;
+                break;
+            }
+        }
+        return breakptval;
     }
 };
 
@@ -163,6 +181,11 @@ var bagObject = {
         var width = $theTote.find(".bag-body").width();
         var fontSize = width / 2;
         $theTote.find(".bag-body").css("font-size", (fontSize + "px"));
+        $theTote.find(".bag-bottom").css("font-size", (fontSize + "px"));
+
+        setTimeout(function(){
+            site.refreshTypeOnTotes();
+        }, 100);
     },
 
     //big to small, refresh type afterwards.
@@ -326,18 +349,43 @@ var bagObject = {
     }
 };
 
+function resizeHelper(){
+    site.refreshTypeOnTotes();
+
+    if (site.breakpt() !== "sml")
+        TweenLite.to("nav", 0, { y : 0 });
+    else
+        scrollHelper();
+}
+
+function scrollHelper(){
+    var scroll = $("body").scrollTop();
+
+    if ($("nav").length > 0 && site.breakpt() === "sml"){
+        var navIndent = 80
+        if (scroll < $("nav .logo").height()){
+            navIndent = scroll;
+        }
+        TweenLite.to("nav", 0, { y : -navIndent });
+    }
+}
+
 $(document).ready(function(){
     if ($.cookie("likes") === undefined){
         $.cookie("likes", "");
     }
 
-    $(document).hammer().on("tap", ".logo", function(){
+    $(document).hammer().on("tap", ".logo, button.close", function(){
         window.location.href = "/";
     });
 
     site.refreshTypeOnTotes();
     $(window).resize(function(){
-        site.refreshTypeOnTotes();
+        resizeHelper();
+    });
+
+    $(window).scroll(function(){
+        scrollHelper();
     });
 
     ga('send', 'pageview');

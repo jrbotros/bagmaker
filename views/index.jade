@@ -15,14 +15,15 @@ block content
         .logo
         .right-actions
             .sort
-                .selected-sort Sort By:
+                .selected-sort
+                    span.sortTitle Sort:
                     span.name Newest
                 ul
                     li.item(data-attr='timestamp', data-dir='desc') Newest
                     li.item(data-attr='timestamp', data-dir='asc') Oldest
-                    li.item(data-attr='likes', data-dir='desc') Most Popular
+                    li.item(data-attr='likes', data-dir='desc') Popular
             .create
-                a(href='/totes/newtote') Create New Design
+                a(href='/totes/newtote') Make
     .content.browse-page
         .browse-tote-wrap
         .featured-carousel.tote

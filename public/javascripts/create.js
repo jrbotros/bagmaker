@@ -17,21 +17,42 @@ $(document).ready(function(){
     });
 
     // bag size toggling
-    $(document).hammer().on("tap", ".bag-size-wrap .icon", function(e){
+    $(document).hammer().on("tap", ".bag-size-wrap .selector", function(e){
         e.preventDefault();
         e.stopPropagation();
 
-        if ($(this).hasClass("small-bag")){
-            newBag.toggleSize("small");
-        }
-        else {
+        var $par = $(this).parents(".bag-size-wrap");
+        if ($par.hasClass("small")){
+            $par.removeClass("small");
+            $par.addClass("big");
             newBag.toggleSize("big");
         }
-     
-        $(this).siblings(".sel").removeClass("sel");
-        $(this).addClass("sel");
+        else if ($par.hasClass("big")){
+            $par.removeClass("big");
+            $par.addClass("small");
+            newBag.toggleSize("small");
+        }
     });
 
+    // expand and collapse color drawer
+    $(document).hammer().on("tap", ".color-control-wrap .color-control", function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        $(this).parents(".color-control-wrap").toggleClass("expand");
+    });
+
+    // selecting a color
+    $(document).hammer().on("tap", ".color-control-wrap .colors .color-wrap", function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        var color = $(this).parents(".color").attr("rel");
+        newBag.changeColor(color);
+        $(this).parents(".color-control-wrap").removeClass("expand");
+    });
+
+    //add a text field button
     $(document).hammer().on("tap", ".addTextfield:not(.disabled)", function(e){
         e.preventDefault();
         e.stopPropagation();
@@ -48,6 +69,7 @@ $(document).ready(function(){
         }
     });
 
+    // delete a text field
     $(document).hammer().on("tap", ".editable-field .corner.tr", function(e){
         e.preventDefault();
         e.stopPropagation();
@@ -82,6 +104,7 @@ $(document).ready(function(){
     $(document).hammer().on("tap", ".text-controls .justification > *", function(e){
         e.preventDefault();
         e.stopPropagation();
+        
         var $field = $(this).parents(".editable-field");
         var tfData = _.findWhere(newBag.data.textfields, { "_id" : $field.attr("data-id") });
         
@@ -133,15 +156,19 @@ $(document).ready(function(){
     }
 
     // //manages dragging only the text-wrap tool, for Y axis only.
-    $(document).hammer().on("drag", ".editable-field", function(e){
+    $(document).hammer().on("drag", ".editable-field, editable-field .corner", function(e){
         if ( $(e.target).parents(".text-controls").length === 1) {
             return;
         }
+
+        var $field = $(this);
+        if ($(this).parents(".editable-field").length !== 0)
+            $field = $(this).parents(".editable-field");
         
         if (e.gesture.direction === "up" || e.gesture.direction === "down"){
             var dragDist = e.gesture.deltaY;
-            var index = $(this).attr("data-id");
-            var parentFontSize = parseInt($(this).parents(".bag-body").css("font-size"));
+            var index = $field.attr("data-id");
+            var parentFontSize = parseInt($field.parents(".bag-body").css("font-size"));
 
             var tf = _.findWhere(newBag.data.textfields, { "_id" : index });
             
@@ -153,22 +180,26 @@ $(document).ready(function(){
             if (dragAmt < 0){
                 dragAmt = 0;
             }
-            else if ((dragAmt + $(this).height() > $(this).parents(".textfields-wrap").height()) ){
-                dragAmt = $(this).parents(".textfields-wrap").height() - $(this).height();
+            else if ((dragAmt + $field.height() > $field.parents(".textfields-wrap").height()) ){
+                dragAmt = $field.parents(".textfields-wrap").height() - $field.height();
             }
-            TweenLite.to($(this), 0, { y : dragAmt + "px" });
+            TweenLite.to($field, 0, { y : dragAmt + "px" });
         }
         
     });
-    $(document).hammer().on("dragend", ".editable-field", function(e){
+    $(document).hammer().on("dragend", ".editable-field, editable-field .corner", function(e){
         if ( $(e.target).parents(".text-controls").length === 1) {
             return;
         }
 
+        var $field = $(this);
+        if ($(this).parents(".editable-field").length !== 0)
+            $field = $(this).parents(".editable-field");
+
         if (e.gesture.direction === "up" || e.gesture.direction === "down"){
             var dragDist = e.gesture.deltaY;
-            var index = $(this).attr("data-id");
-            var parentFontSize = parseInt($(this).parents(".bag-body").css("font-size"));
+            var index = $field.attr("data-id");
+            var parentFontSize = parseInt($field.parents(".bag-body").css("font-size"));
 
             var tf = _.findWhere(newBag.data.textfields, { "_id" : index });
             
@@ -179,8 +210,8 @@ $(document).ready(function(){
             if (dragAmt < 0) {
                 dragAmt = 0;
             }
-            else if ((dragAmt + $(this).height() > $(this).parents(".textfields-wrap").height()) ){
-                dragAmt = $(this).parents(".textfields-wrap").height() - $(this).height();
+            else if ((dragAmt + $field.height() > $field.parents(".textfields-wrap").height()) ){
+                dragAmt = $field.parents(".textfields-wrap").height() - $field.height();
             }
 
             // save it in ems
@@ -188,7 +219,7 @@ $(document).ready(function(){
         }
     });
 
-    $(document).hammer().on("tap", "nav .right-actions .save", function(){
+    $(document).hammer().on("tap", "button.save", function(){
         newBag.saveAs();
     });
 });

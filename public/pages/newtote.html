@@ -19,20 +19,30 @@
   </head>
   <body>
     <script type="text/javascript" src="/javascripts/create.js"></script>
-    <nav>
-      <div class="logo"></div>
-      <div class="right-actions">
-        <div class="save">Save Design</div>
-      </div>
-    </nav>
+    <button class="close"></button>
+    <button class="save"></button>
     <div class="content create-page">
       <div class="bag-wrap"></div>
       <div class="bottom-bar">
-        <div class="color-control-wrap"></div>
-        <div class="addTextfield"></div>
-        <div class="bag-size-wrap">
-          <div data-size="small" class="small-bag icon sel"></div>
+        <button class="addTextfield"></button>
+        <div class="bag-size-wrap small">
+          <div class="selector"></div>
           <div data-size="big" class="big-bag icon"></div>
+          <div data-size="small" class="small-bag icon"></div>
+        </div>
+        <div class="color-control-wrap">
+          <button class="color-control"></button>
+          <div class="colors">
+            <div rel="red" class="color">
+              <div class="color-wrap"></div>
+            </div>
+            <div rel="black" class="color">
+              <div class="color-wrap"></div>
+            </div>
+            <div rel="white" class="color">
+              <div class="color-wrap"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
