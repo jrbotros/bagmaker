@@ -12,55 +12,125 @@ ga('create', 'UA-58975311-1', 'auto');
 // Likes API
 var likes = {
     userLikes : [],
-    saveUserLikes : function(){
-
+    fetchUserLikes : function(){
+        var userLikes = $.cookie("likes");
+        likes.userLikes = userLikes.split(",");
     },
     likeBag : function(toteID){
+        if (likes.indexOf(toteID) > -1){
+            return false;
+        }
+        else{
+            likes.userLikes.push(toteID);
+            $.cookie("likes", likes.userLikes);
 
+            browse.loadBags(function(){
+                var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
+                tote.likes = parseInt(tote.likes) + 1;
+
+                // sort of hacky, the only way i know how to update a tote. you aren't allowed
+                // to update it with the sacred _id variable already assigned.
+                var clone = _.extend({}, tote);
+                // JSON STRING ISSUE
+                clone.textfields = JSON.stringify(clone.textfields);
+                delete clone._id;
+                
+                $.ajax({
+                    type: 'PUT',
+                    data: clone,
+                    url: '/totes/updatetote/' + toteID
+                }).done(function( response ) {
+                    
+                });
+
+            });
+        }
     },
     unlikeBag : function(toteID){
+        var toteIndex = likes.indexOf(toteID);
 
+        if (toteIndex > -1){
+            likes.userLikes.splice(toteIndex, 1);
+            $.cookie("likes", likes.userLikes);
+        }
+        else{
+            return false;
+        }
     },
-    hasLike : function(toteID){
+    indexOf : function(toteID){
+        return likes.userLikes.indexOf(toteID);
+    },
+    toggleLike : function(toteID){
+        if (likes.indexOf(toteID) > -1){
+            likes.unlikeBag(toteID);
+        }
+        else{
+            likes.likeBag(toteID);
+        }
+    },
+    favorite : function($heartWrap){
+        //make circle immediately magenta and heart white.
+        $heartWrap.css("background-color", "#D93182");
+        $heartWrap.find(".heart .inner-heart").css("opacity", "0");
+        $heartWrap.find(".heart .white").css("opacity", "1");
+        $heartWrap.find(".heart").css("opacity", "1");
 
+        // animate magenta circle/white heart to white circle / pink heart
+        TweenLite.to($heartWrap, 0.3, {
+            "backgroundColor" : "#fff",
+            ease : cssBezier,
+            delay : 0.1
+        });
+        TweenLite.to($heartWrap.find(".heart"), 0.15, {
+            alpha : 0,
+            scale : 1.1,
+            ease : cssBezier,
+            delay : 0.1,
+            onComplete : function(){
+                $heartWrap.find(".heart .inner-heart").css("opacity", "0");
+                $heartWrap.find(".heart .magenta").css("opacity", "1");
+                TweenLite.to($heartWrap.find(".heart"), 0.15, {
+                    alpha : 1,
+                    ease : cssBezier,
+                    onComplete : function(){
+                        $heartWrap.parents(".heart-outer-wrap").addClass("favorited");
+                    }
+                });
+            }
+        });
+    },
+    unfavorite : function($heartWrap){
+        //make circle immediately magenta and heart white.
+        $heartWrap.css("background-color", "#D93182");
+        $heartWrap.find(".heart .inner-heart").css("opacity", "0");
+        $heartWrap.find(".heart .white").css("opacity", "1");
+        $heartWrap.find(".heart").css("opacity", "1");
+
+        // animate magenta circle/white heart to white circle / grey heart
+        TweenLite.to($heartWrap, 0.3, {
+            "backgroundColor" : "#fff",
+            ease : cssBezier,
+            delay : 0.1
+        });
+        TweenLite.to($heartWrap.find(".heart"), 0.15, {
+            alpha : 0,
+            scale : 1.1,
+            ease : cssBezier,
+            delay : 0.1,
+            onComplete : function(){
+                $heartWrap.find(".heart .inner-heart").css("opacity", "0");
+                $heartWrap.find(".heart .grey").css("opacity", "1");
+                TweenLite.to($heartWrap.find(".heart"), 0.15, {
+                    alpha : 1,
+                    ease : cssBezier,
+                    onComplete : function(){
+                        $heartWrap.parents(".heart-outer-wrap").removeClass("favorited");
+                    }
+                });
+            }
+        });
     }
 };
-
-function userLikesToArray(){
-    var userLikes = $.cookie("likes");
-    return userLikes.split(',');
-}
-
-function addLike(toteId){
-    var userLikes = userLikesToArray();
-
-    if (hasLike(toteId)){
-        return false;
-    }
-    else{
-        userLikes.push(toteId);
-        $.cookie("likes", userLikes);
-    }
-}
-
-function removeLike(toteId){
-    var userLikes = userLikesToArray();
-    var toteIndex = userLikes.indexOf(toteId);
-
-    if (hasLike(toteId)){
-        userLikes.splice(toteIndex, 1);
-        $.cookie("likes", userLikes);
-    }
-    else{
-        return false;
-    }
-}
-function hasLike(toteId){
-    var userLikes = userLikesToArray();
-    var toteIndex = userLikes.indexOf(toteId);
-    return (toteIndex !== -1);
-}
-
 
 var site = {
     colors : ["black", "white", "red"],
@@ -227,8 +297,9 @@ var bagObject = {
         if (content === ""){
             content = "Type Something.";
         }
-
-        $clone.html(content.replace(/\n/g, '<br />'));
+        //.replace(/\s{2}/g, ' &nbsp;')
+        contentFormatted = content.replace(/\n/g, '<br/>');
+        $clone.html(contentFormatted);
 
         if (bag.data && bag.data.textfields){
             var theTextField = _.findWhere(bag.data.textfields, { "_id" : textFieldID });

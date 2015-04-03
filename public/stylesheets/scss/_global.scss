@@ -84,8 +84,14 @@ nav{
         }
 
         .create{
-            background-color: $red;
+            background-color: $fadedRed;
             color: #fff;
+
+            a{
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
         }
 
         .sort {
@@ -154,6 +160,7 @@ nav{
                 //width: 250px;
                 text-align: left;
                 font-size: 16px;
+                overflow: hidden;
                 
                 @include prefix (transition, 0.5s $easing-curve);
                 @include prefix (transform, translateY(-10px));
@@ -224,13 +231,13 @@ nav{
                 .sortTitle{
                     display: none;
                 }
-                ul{
-                    width: 200%;
+                // ul{
+                //     width: 200%;
 
-                    &:before{
-                        @include calc (right, calc(50% + #{$body-padding} - 5px));
-                    }
-                }
+                //     &:before{
+                //         @include calc (right, calc(50% + #{$body-padding} - 5px));
+                //     }
+                // }
             }
         }
     }
@@ -249,10 +256,6 @@ nav{
             .sort{
                 .sortTitle{
                     display: none;
-                }
-                ul{
-                    width: 100%;
-
                 }
             }
         }

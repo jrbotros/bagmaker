@@ -5,8 +5,8 @@ button{
     &.close{
         top: $body-padding;
         left: $body-padding;
-        @include prefix (box-shadow, none);
-        background-color: transparent;
+        // @include prefix (box-shadow, none);
+        // background-color: transparent;
 
         &:after{
             width: 50%;

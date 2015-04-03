@@ -1,11 +1,20 @@
 var browse = {
-    toteBags : [], // array of tote objects
+    toteBags : null, // array of tote objects
 
     sort : function($li){
-        var attr = $(this).attr("data-attr");
-        var dir = $(this).attr("data-dir");
+        var attr = $li.attr("data-attr");
+        var dir = $li.attr("data-dir");
 
-        browse.toteBags = _.sortBy(browse.toteBags, attr);
+
+        // delete if statement after we figure out how to scope variables in mongodb 
+        if (attr === "likes"){
+            browse.toteBags = _.sortBy(browse.toteBags, function(bag){
+                return parseInt(bag.likes);
+            });
+        }
+        else{
+            browse.toteBags = _.sortBy(browse.toteBags, attr);
+        }
         if (dir === "desc")
             browse.toteBags = browse.toteBags.reverse();
         browse.animateOut(function(){
@@ -83,18 +92,28 @@ var browse = {
         }
     },
     // grab tote data
-    loadBags : function(){
-        $.getJSON('/totes', function( data ){
-            // sort it by time - newest
-            browse.toteBags = _.sortBy(data, function(tote){
-                return tote.timestamp;
-            });
-            browse.toteBags = browse.toteBags.reverse();
+    loadBags : function(callback){
+        if (browse.toteBags === null){
+            $.getJSON('/totes', function( data ){
+                // sort it by time - newest
+                browse.toteBags = _.sortBy(data, function(tote){
+                    return tote.timestamp;
+                });
+                browse.toteBags = browse.toteBags.reverse();
 
-            // build grid.
-            //totalPages = Math.ceil(toteBags.length / loadChunk);
-            browse.buildBagGrid();
-        });
+                // build grid.
+                //totalPages = Math.ceil(toteBags.length / loadChunk);
+                if (typeof callback !== "undefined"){
+                    callback();
+                }
+            });
+        }
+        else{
+            if (typeof callback !== "undefined"){
+                callback();
+            }
+        }
+
     },
     buildBagGrid : function(){
         _.each(browse.toteBags, function(tote){
@@ -109,16 +128,26 @@ var browse = {
             $.get("/templates/_bag.html", function(html) {
                 var template = Handlebars.compile(html);
                 var rendered = template(toteObj);
-                var $tote = $("<div />", {
-                    //id : "tote-" + tote._id,
-                    class : "tote-grid-element start " + toteObj.bags[0].color,
-                    html :  "<div class='heart-wrap'>" +
-                                "<div class='heart-circle'></div>" +
+
+                // marking which ones are favorited.
+                var heartWrap = "<div class='heart-outer-wrap'><div class='heart-wrap'>";
+                var toteID = toteObj.bags[0]._id;
+                if (likes.indexOf(toteID) > -1){
+                    heartWrap = "<div class='heart-outer-wrap favorited'><div class='heart-wrap'>";
+                }
+
+                heartWrap += "<div class='heart-circle'></div>" +
                                 "<div class='heart'>" + 
                                     "<div class='inner-heart grey'></div>" +
                                     "<div class='inner-heart magenta'></div>" +
+                                    "<div class='inner-heart white'></div>" +
                                 "</div>" +
-                            "</div>" + rendered
+                            "</div></div>";
+
+                var $tote = $("<div />", {
+                    //id : "tote-" + tote._id,
+                    class : "tote-grid-element start " + toteObj.bags[0].color,
+                    html :  heartWrap + rendered
                 }).appendTo(".browse-page.content .browse-tote-wrap");
 
                 // on the last one, update the type sizing and animate it in.
@@ -195,23 +224,37 @@ var gridElement = {
 }
 
 $(document).ready(function(){
-    browse.loadBags();
+    likes.fetchUserLikes();
+    browse.loadBags(browse.buildBagGrid);
 
     $(".sort ul li").hammer().on("tap", function(){
         browse.sort($(this));
     });
 
-    $(document).hammer().on("tap", ".heart-wrap", function(e){
+    $(document).hammer().on("tap", ".heart-outer-wrap", function(e){
         e.preventDefault();
         e.stopPropagation();
 
-        $(this).toggleClass("favorited");
+        var $gridEle = $(this).parents(".tote-grid-element");
+        var toteBag = browse.toteBags[$gridEle.index()];
+        var toteID = toteBag._id;
+
+        //likes.toggleLike(toteID);
+        if ($(this).hasClass("favorited")){
+            likes.unfavorite($(this).find(".heart-wrap"));
+            likes.unlikeBag(toteID);
+        }
+        else{
+            likes.favorite($(this).find(".heart-wrap"));
+            likes.likeBag(toteID);
+        }
     });
 
     $(document).on("mouseenter", ".tote-grid-element", function(){
         var index = $(this).index();
         browse.swing(index);
     });
+
     $(document).on("mouseleave", ".tote-grid-element", function(){
         var index = $(this).index();
         browse.stopSwing(index);

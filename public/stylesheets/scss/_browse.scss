@@ -97,18 +97,14 @@
                     opacity: 1;
                 }
             }
-            .heart-wrap{
+            .heart-outer-wrap{
                 opacity: 0.8;
             }
         }
-
-        .heart-wrap{
+        .heart-outer-wrap{
             position: absolute;
             top: 20px;
             right: 20px;
-            @include prefix (border-radius, 50%);
-            @include prefix (box-shadow, 0 2px 4px 2px rgba(0,0,0,0.2));
-            background-color: #fff;
             width: 40px;
             height: 40px;
             z-index: $z-first-level;
@@ -124,13 +120,79 @@
                 }
             }
 
+            &:active{
+                .heart-wrap{
+                    background-color: $magenta;
+
+                    .heart-circle{
+                        width: 100%;
+                        height: 100%;
+                        @include prefix (box-shadow, 0 3px 5px rgba(0,0,0,0.2));
+                    }
+                    
+                    .heart{
+                        opacity: 0.95;
+                        @include prefix (transform, translateY(-49%));
+
+                        .inner-heart{
+                            opacity: 0;
+
+                            &.white{
+                                opacity: 1;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.favorited{
+                @include prefix (transform, scale(1.1));
+                opacity: 0.9;
+
+                &:hover{
+                    opacity: 1;
+                }
+
+                .heart-wrap{
+                    background-color: #fff;
+
+                    .heart-circle{
+                        width: 100%;
+                        height: 100%;
+                        @include prefix (box-shadow, 0 3px 5px rgba(0,0,0,0.2));
+                    }
+                    
+                    .heart{
+                        opacity: 0.95;
+                        @include prefix (transform, translateY(-49%));
+
+                        .inner-heart{
+                            opacity: 0;
+
+                            &.magenta{
+                                opacity: 1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .heart-wrap{
+            position: relative;
+            width: 100%;
+            height: 100%;
+            @include prefix (border-radius, 50%);
+            @include prefix (box-shadow, 0 2px 4px 2px rgba(0,0,0,0.2));
+            background-color: #fff;
+            // @include prefix (transition, 0.3s $easing-curve);
+
             .heart{
                 width: 50%;
                 height: 50%;
                 @include centerAbsV;
                 @include centerAbsH;
                 opacity: 0.5;
-                @include prefix (transition, 0.3s $easing-curve);
+                // @include prefix (transition, 0.3s $easing-curve);
                 
                 .inner-heart{
                     position: absolute;
@@ -138,19 +200,20 @@
                     left: 0;
                     width: 100%;
                     height: 100%;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                    // @include prefix (transition, 0.3s $easing-curve);
+                    background-size: contain;
                     
                     &.grey{
-                        background: url("/images/heart-grey.svg") center center no-repeat;
-                        background-size: contain;
-                        @include prefix (transition, 0.3s $easing-curve);
+                        background-image: url("/images/heart-grey.svg");
                     }
                     &.white{
-                        background: url("/images/heart-white.svg") center center no-repeat;
-                        background-size: contain;
+                        background-image: url("/images/heart-white.svg");
+                        opacity: 0;
                     }
                     &.magenta{
-                        background: url("/images/heart-magenta.svg") center center no-repeat;
-                        background-size: contain;
+                        background-image: url("/images/heart-magenta.svg");
                         opacity: 0;
                     }
                 }
@@ -163,37 +226,10 @@
                 left: 0;
                 right: 0;
                 margin: 0 auto;
-                background-color: #fe3232;
                 opacity: 0;
                 @include prefix (transform, translateY(-50%));
-                @include prefix (transition, 0.3s $easing-curve);
+                // @include prefix (transition, 0.3s $easing-curve);
                 @include prefix (border-radius, 50%);
-            }
-
-            &.favorited{
-                opacity: 0.85;
-                border: 2px solid rgba(0,0,0,0);
-                @include prefix (transform, scale(1.1)); 
-                
-                &:hover{
-                    opacity: 1;
-                }
-
-                .heart-circle{
-                    width: 100%;
-                    height: 100%;
-                    opacity: 0.95;
-                    @include prefix (box-shadow, 0 3px 5px rgba(0,0,0,0.2));
-                }
-                
-                .heart{
-                    opacity: 0.95;
-                    @include prefix (transform, translateY(-49%) scale(1.1));
-
-                    .grey{
-                        opacity: 0;
-                    }
-                }
             }
         }
         
