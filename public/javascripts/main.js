@@ -52,6 +52,27 @@ var likes = {
         if (toteIndex > -1){
             likes.userLikes.splice(toteIndex, 1);
             $.cookie("likes", likes.userLikes);
+
+            browse.loadBags(function(){
+                var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
+                tote.likes = parseInt(tote.likes) - 1;
+
+                // sort of hacky, the only way i know how to update a tote. you aren't allowed
+                // to update it with the sacred _id variable already assigned.
+                var clone = _.extend({}, tote);
+                // JSON STRING ISSUE
+                clone.textfields = JSON.stringify(clone.textfields);
+                delete clone._id;
+                
+                $.ajax({
+                    type: 'PUT',
+                    data: clone,
+                    url: '/totes/updatetote/' + toteID
+                }).done(function( response ) {
+                    
+                });
+
+            });
         }
         else{
             return false;

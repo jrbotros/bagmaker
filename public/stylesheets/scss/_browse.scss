@@ -1,254 +1,260 @@
-.content.browse-page{
-    .tote-grid-element{
-        display: inline-block;
-        float: left;
-        width: 25%;
-        height: 0;
-        padding-bottom: 25%;
-        position: relative;
+.heart-outer-wrap{
+    @include prefix (transition, 0.3s $easing-curve);
+    cursor: pointer;
 
-        cursor: pointer;
-        overflow: hidden;
-        background-color: #ececec;
-        @include linear-gradient ( -45deg, #fff, $lightGrey );
-        @include prefix (transition, 0.4s $easing-curve);
-
-        &.black{
-            background: #fff;
+    &:hover{
+        @include prefix (transform, scale(1.1)); 
+        opacity: 1;
+        
+        .heart{
+            opacity: 0.75;
         }
-        &.red{
-            background: $darkGrey;
+    }
 
-            .tote-wrap .actual-tote {
-                .handle:before{
-                    background: $darkGrey;
-                }
+    &:active{
+        .heart-wrap{
+            background-color: $magenta !important;
 
-                .bag-bottom .bl-corner, .br-corner{
-                    border-left-color: $darkGrey;
-                    border-bottom-color: $darkGrey;
-                }
+            .heart-circle{
+                width: 100%;
+                height: 100%;
+                @include prefix (box-shadow, 0 3px 5px rgba(0,0,0,0.2));
             }
-        }
-        &.white{
-            background: $fadedRed;
+            
+            .heart{
+                opacity: 0.95;
+                @include prefix (transform, translateY(-49%));
 
-            .tote-wrap .actual-tote{
-                .handle{
-                    border: 0;
+                .inner-heart{
+                    opacity: 0;
 
-                    &:before{
-                        background: $fadedRed;
-                        border: 0;
-                    }
-                }
-                .bag-body{
-                    border: 0;
-                }
-                .bag-bottom {
-                    .bottom{
-                        border: 0;
-                    }
-
-                    .bl-corner, .br-corner{
-                        border-left-color: $fadedRed;
-                        border-bottom-color: $fadedRed;
-
-                        &:after{
-                            background-color: transparent;
-                        }
+                    &.white{
+                        opacity: 1;
                     }
                 }
             }
         }
+    }
 
-        &.start{
-            @include prefix (transform, translateY(100%));
-            opacity:0;
-        }
-        &.no-transition{
-            @include prefix (transition, none);
-        }
-        // &:after{
-        //     content: "";
-        //     position: absolute;
-        //     top: 0;
-        //     left: 0;
-        //     width: 100%;
-        //     height: 100%;
-        //     background-color: #fff;
-        //     opacity: 0;
-        //     @include prefix (transition, 0.3s $easing-curve);
-        //     pointer-events: none;
-        // }
+    &.favorited{
+        @include prefix (transform, scale(1.1));
+        opacity: 0.9;
+
         &:hover{
-            // &:after{
-            //     opacity: 1;
-            // }
+            opacity: 1;
+        }
 
-            // .tote-wrap .actual-tote .handle:before{
-            //     background: #fff;
-            // }
+        .heart-wrap{
+            background-color: #fff;
 
-            .tote-wrap{
-                @include prefix (transform, scale(1.1) translateY(-45%));
+            .heart-circle{
+                width: 100%;
+                height: 100%;
+                @include prefix (box-shadow, 0 3px 5px rgba(0,0,0,0.2));
+            }
+            
+            .heart{
+                opacity: 0.95;
+                @include prefix (transform, translateY(-49%));
 
-                .actual-tote .shadow-blur{
-                    opacity: 1;
+                .inner-heart{
+                    opacity: 0;
+
+                    &.magenta{
+                        opacity: 1;
+                    }
                 }
             }
-            .heart-outer-wrap{
-                opacity: 0.8;
+        }
+    }
+}
+.heart-wrap{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    @include prefix (border-radius, 50%);
+    @include prefix (box-shadow, 0 2px 4px 2px rgba(0,0,0,0.2));
+    background-color: #fff;
+    // @include prefix (transition, 0.3s $easing-curve);
+
+    .heart{
+        width: 50%;
+        height: 50%;
+        @include centerAbsV;
+        @include centerAbsH;
+        opacity: 0.5;
+        // @include prefix (transition, 0.3s $easing-curve);
+        
+        .inner-heart{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-position: center center;
+            // @include prefix (transition, 0.3s $easing-curve);
+            background-size: contain;
+            
+            &.grey{
+                background-image: url("/images/heart-grey.svg");
+            }
+            &.white{
+                background-image: url("/images/heart-white.svg");
+                opacity: 0;
+            }
+            &.magenta{
+                background-image: url("/images/heart-magenta.svg");
+                opacity: 0;
+            }
+        }
+    }
+    .heart-circle{
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        top: 50%;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        opacity: 0;
+        @include prefix (transform, translateY(-50%));
+        // @include prefix (transition, 0.3s $easing-curve);
+        @include prefix (border-radius, 50%);
+    }
+}
+
+.tote-grid-element{
+    display: inline-block;
+    float: left;
+    width: 25%;
+    height: 0;
+    padding-bottom: 25%;
+    position: relative;
+
+    cursor: pointer;
+    overflow: hidden;
+    background-color: #ececec;
+    @include linear-gradient ( -45deg, #fff, $lightGrey );
+    @include prefix (transition, 0.4s $easing-curve);
+
+    &.black{
+        background: #fff;
+    }
+    &.red{
+        background: $darkGrey;
+
+        .tote-wrap .actual-tote {
+            .handle:before{
+                background: $darkGrey;
+            }
+
+            .bag-bottom .bl-corner, .br-corner{
+                border-left-color: $darkGrey;
+                border-bottom-color: $darkGrey;
+            }
+        }
+    }
+    &.white{
+        background: $fadedRed;
+
+        .tote-wrap .actual-tote{
+            .handle{
+                border: 0;
+
+                &:before{
+                    background: $fadedRed;
+                    border: 0;
+                }
+            }
+            .bag-body{
+                border: 0;
+            }
+            .bag-bottom {
+                .bottom{
+                    border: 0;
+                }
+
+                .bl-corner, .br-corner{
+                    border-left-color: $fadedRed;
+                    border-bottom-color: $fadedRed;
+
+                    &:after{
+                        background-color: transparent;
+                    }
+                }
+            }
+        }
+    }
+    &.start{
+        @include prefix (transform, translateY(100%));
+        opacity:0;
+    }
+    &.no-transition{
+        @include prefix (transition, none);
+    }
+    &.dupe{
+        display: block;
+        float: none;
+        position: absolute;
+    }
+    // &:after{
+    //     content: "";
+    //     position: absolute;
+    //     top: 0;
+    //     left: 0;
+    //     width: 100%;
+    //     height: 100%;
+    //     background-color: #fff;
+    //     opacity: 0;
+    //     @include prefix (transition, 0.3s $easing-curve);
+    //     pointer-events: none;
+    // }
+    &:hover{
+        // &:after{
+        //     opacity: 1;
+        // }
+
+        // .tote-wrap .actual-tote .handle:before{
+        //     background: #fff;
+        // }
+
+        .tote-wrap{
+            @include prefix (transform, scale(1.1) translateY(-45%));
+
+            .actual-tote .shadow-blur{
+                opacity: 1;
             }
         }
         .heart-outer-wrap{
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            z-index: $z-first-level;
-            @include prefix (transition, 0.3s $easing-curve);
-            opacity: 0;
-
-            &:hover{
-                @include prefix (transform, scale(1.1)); 
-                opacity: 1;
-                
-                .heart{
-                    opacity: 0.75;
-                }
-            }
-
-            &:active{
-                .heart-wrap{
-                    background-color: $magenta;
-
-                    .heart-circle{
-                        width: 100%;
-                        height: 100%;
-                        @include prefix (box-shadow, 0 3px 5px rgba(0,0,0,0.2));
-                    }
-                    
-                    .heart{
-                        opacity: 0.95;
-                        @include prefix (transform, translateY(-49%));
-
-                        .inner-heart{
-                            opacity: 0;
-
-                            &.white{
-                                opacity: 1;
-                            }
-                        }
-                    }
-                }
-            }
-
-            &.favorited{
-                @include prefix (transform, scale(1.1));
-                opacity: 0.9;
-
-                &:hover{
-                    opacity: 1;
-                }
-
-                .heart-wrap{
-                    background-color: #fff;
-
-                    .heart-circle{
-                        width: 100%;
-                        height: 100%;
-                        @include prefix (box-shadow, 0 3px 5px rgba(0,0,0,0.2));
-                    }
-                    
-                    .heart{
-                        opacity: 0.95;
-                        @include prefix (transform, translateY(-49%));
-
-                        .inner-heart{
-                            opacity: 0;
-
-                            &.magenta{
-                                opacity: 1;
-                            }
-                        }
-                    }
-                }
-            }
+            opacity: 0.8;
         }
-        .heart-wrap{
-            position: relative;
-            width: 100%;
-            height: 100%;
-            @include prefix (border-radius, 50%);
-            @include prefix (box-shadow, 0 2px 4px 2px rgba(0,0,0,0.2));
-            background-color: #fff;
-            // @include prefix (transition, 0.3s $easing-curve);
+    }
+    .heart-outer-wrap{
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: $z-first-level;
+        opacity: 0;
 
-            .heart{
-                width: 50%;
-                height: 50%;
-                @include centerAbsV;
-                @include centerAbsH;
-                opacity: 0.5;
-                // @include prefix (transition, 0.3s $easing-curve);
-                
-                .inner-heart{
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-repeat: no-repeat;
-                    background-position: center center;
-                    // @include prefix (transition, 0.3s $easing-curve);
-                    background-size: contain;
-                    
-                    &.grey{
-                        background-image: url("/images/heart-grey.svg");
-                    }
-                    &.white{
-                        background-image: url("/images/heart-white.svg");
-                        opacity: 0;
-                    }
-                    &.magenta{
-                        background-image: url("/images/heart-magenta.svg");
-                        opacity: 0;
-                    }
-                }
-            }
-            .heart-circle{
-                position: absolute;
-                width: 2px;
-                height: 2px;
-                top: 50%;
-                left: 0;
-                right: 0;
-                margin: 0 auto;
+        width: 40px;
+        height: 40px;
+    }
+    .tote-wrap{
+        max-width: 60%;
+        @include centerAbsH;
+        @include centerAbsV;
+        z-index: $z-first-level;
+
+        .actual-tote{
+            @include prefix (transition, 0s $easing-curve);
+            @include prefix (transform-origin, top center);
+            
+            .shadow-blur{
                 opacity: 0;
-                @include prefix (transform, translateY(-50%));
-                // @include prefix (transition, 0.3s $easing-curve);
-                @include prefix (border-radius, 50%);
+                @include prefix (transition, 0.3s $easing-curve);
             }
-        }
-        
-        .tote-wrap{
-            max-width: 60%;
-            @include centerAbsH;
-            @include centerAbsV;
-            z-index: $z-first-level;
 
-            .actual-tote{
-                @include prefix (transition, 0s $easing-curve);
-                @include prefix (transform-origin, top center);
-                
-                .shadow-blur{
-                    opacity: 0;
-                    @include prefix (transition, 0.3s $easing-curve);
-                }
-
-            }
         }
     }
 }

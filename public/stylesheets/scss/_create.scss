@@ -29,7 +29,7 @@ button{
         right: $body-padding;
         background-color: $fadedRed;
 
-        &:after, &:before{
+        &:after{
             content: "";
             position: absolute;
             @include centerAbsV;

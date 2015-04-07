@@ -160,10 +160,49 @@ var browse = {
             });
         });        
     },
-    swingOnce : function(index){
-        var $bag = $(".tote-grid-element").eq(index);
+    // positions the view carousel with the $tote centered.
+    view : function($tote){
+        var toteIndex = $tote.index();
+        
+        var beforeIndex = toteIndex - 1;
+        if (beforeIndex < 0){
+            beforeIndex = $tote.siblings().length - 1;
+        }
+        var $beforeTote = $(".browse-tote-wrap .tote-grid-element").eq(beforeIndex);
+
+        var afterIndex = toteIndex + 1;
+        if (afterIndex > $tote.siblings().length - 1){
+            afterIndex = 0;
+        }
+        var $afterTote = $(".browse-tote-wrap .tote-grid-element").eq(afterIndex);
+
+        var $dupeBefore = $("<div />", {
+            "class" : $beforeTote.attr("class") + "",
+            "data-id" : beforeIndex,
+            "html" : $beforeTote.html()
+        });
+        var $dupe = $("<div />", {
+            "class" : $tote.attr("class") + "",
+            "data-id" : toteIndex,
+            "html" : $tote.html()
+        });
+        var $dupeAfter = $("<div />", {
+            "class" : $afterTote.attr("class") + "",
+            "data-id" : afterIndex,
+            "html" : $afterTote.html()
+        });
+
+        $(".view-carousel").addClass("on");
+        $(".view-carousel-wrap").append($dupeBefore).append($dupe).append($dupeAfter);
+        site.refreshTypeOnTotes();
+        $("body").addClass("lock-scroll");
+    },
+    swingOnce : function($bag){
+        // var $bag = $(".tote-grid-element").eq(index);
         var $tote = $bag.find(".actual-tote");
         var $shadow = $bag.find(".tote-shadow");
+
+        // $shadow.parents(".shadow-blur").css("opacity", "1");
 
         //start at 0
         // swing to the left
@@ -190,7 +229,14 @@ var browse = {
                     ease : gridBagBezier,
                     onComplete : function(){
                         // swing back to 0
-                        TweenLite.to($shadow, 0.5, { rotation : "0deg", scaleX : 1, ease : gridBagBezier });
+                        TweenLite.to($shadow, 0.5, {
+                            rotation : "0deg",
+                            scaleX : 1,
+                            ease : gridBagBezier,
+                            onComplete : function(){
+                                // $shadow.parents(".shadow-blur").css("opacity", "0");
+                            }
+                        });
                         TweenLite.to($tote, 0.5, {
                             rotation : "0deg",
                             ease : gridBagBezier
@@ -200,20 +246,28 @@ var browse = {
             }
         });
     },
-    swing : function(index){
-        if ( !$(".tote-grid-element").eq(index).hasClass("swinging") ){
-            browse.swingOnce(index);
-            $(".tote-grid-element").eq(index).addClass("swinging");
-            browse.toteBags[index].swingTimer = setInterval(function(){browse.swingOnce(index)}, 1900);    
+    swing : function($tote){
+        var index;
+        if (typeof $tote.attr("data-id") === "undefined") index = $tote.index();
+        else index = parseInt($tote.attr("data-id"));
+
+        if ( !$tote.hasClass("swinging") ){
+            browse.swingOnce($tote);
+            $tote.addClass("swinging");
+            browse.toteBags[index].swingTimer = setInterval(function(){browse.swingOnce($tote)}, 1900);
         }
         // rolling over something thats already swinging
         else{
             clearTimeout(browse.toteBags[index].stopTimer);
         }
     },
-    stopSwing : function(index){
+    stopSwing : function($tote){
+        var index;
+        if (typeof $tote.attr("data-id") === "undefined") index = $tote.index();
+        else index = parseInt($tote.attr("data-id"));
+
         browse.toteBags[index].stopTimer = setTimeout(function(){
-            $(".tote-grid-element").eq(index).removeClass("swinging");
+            $tote.removeClass("swinging");
             clearInterval(browse.toteBags[index].swingTimer);
         }, 500);
     }
@@ -251,20 +305,16 @@ $(document).ready(function(){
     });
 
     $(document).on("mouseenter", ".tote-grid-element", function(){
-        var index = $(this).index();
-        browse.swing(index);
+        browse.swing($(this));
     });
 
     $(document).on("mouseleave", ".tote-grid-element", function(){
-        var index = $(this).index();
-        browse.stopSwing(index);
+        browse.stopSwing($(this));
     });
 
     $(".tote-grid-element").hover(function(){
-        var index = $(this).index();
-        browse.swing(index);
+        browse.swing($(this));
     }, function(){
-        var index = $(this).index();
-        browse.stopSwing(index);
+        browse.stopSwing($(this));
     });
 });

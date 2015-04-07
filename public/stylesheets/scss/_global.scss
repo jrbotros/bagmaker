@@ -31,7 +31,7 @@ button{
     outline: 0;
 
     &:hover{
-        @include prefix (transform, scale(1.2));
+        @include prefix (transform, scale(1.1));
     }
 }
 
