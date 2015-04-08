@@ -6,7 +6,8 @@
                 <div class="textfields-wrap">
                     {{#if editMode}}
                         {{#each textfields}}
-                            <div data-id="{{_id}}" class="editable-field" style="text-align: {{justify}}; font-size: {{fontSize}}em; letter-spacing: {{kerning}}em; line-height: {{leading}}em; width: {{width}}">
+                            <div id="{{domid}}" class="editable-field" style="text-align: {{justify}}; font-size: {{fontSize}}em; letter-spacing: {{kerning}}em; line-height: {{leading}}em; width: {{width}}">
+                                <div class="border"></div>
                                 <div class="corner tl"></div>
                                 <div class="corner tr"></div>
                                 <div class="corner bl"></div>

@@ -5,14 +5,30 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// mongodb
-// var mongoose = require('mongoose');
-// mongoose.connect('mongodb://localhost:27017/totebags');
-// var db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'connection error:'));
-// db.once('open', function (callback) { });
-var mongo = require('mongoskin');
-var db = mongo.db('mongodb://localhost:27017/totebags', {native_parser:true});
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/bagmaker');
+
+var Totebag = mongoose.model('Totebag', {
+    color: String,
+    likes: Number,
+    size: String,
+    timestamp: Date,
+    textfields: [{
+        text: String,
+        x: Number,
+        y: Number,
+        domid: String,
+        leading: Number,
+        kerning: Number,
+        fontSize: Number,
+        justify: String,
+        width: String
+    }]
+});
+
+Totebag.schema.path('color').validate(function(value) {
+    return /red|black|white/i.test(value);
+}, 'Invalid color');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -33,10 +49,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Make our db accessible to our router
-app.use(function(req, res, next){
-    req.db = db;
-    next();
-});
+
+// app.use(function(req, res, next){
+    // req.db = db;
+    // next();
+// });
 
 app.use('/', routes);
 app.use('/users', users);
@@ -53,25 +70,25 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
+// if (app.get('env') === 'development') {
+    // app.use(function(err, req, res, next) {
+        // res.status(err.status || 500);
+        // res.render('error', {
+            // message: err.message,
+            // error: err
+        // });
+    // });
+// }
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
-});
+// app.use(function(err, req, res, next) {
+    // res.status(err.status || 500);
+    // res.render('error', {
+        // message: err.message,
+        // error: {}
+    // });
+// });
 
 
 module.exports = app;

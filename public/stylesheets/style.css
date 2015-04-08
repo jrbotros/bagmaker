@@ -603,40 +603,81 @@ button.save:after {
 .content.create-page .tote-wrap .actual-tote .bag-body .editable-field {
   position: absolute;
   max-height: 100%;
+  cursor: move;
+  cursor: -webkit-grab;
+  top: 0;
+  left: 0;
+  z-index: 101;
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected {
-  border: 1px dashed #ccc;
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected, .content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected:hover {
   z-index: 300;
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected .corner {
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected .border, .content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected:hover .border {
+  border: 1px dashed #c8c8c8;
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected .corner, .content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected:hover .corner {
   width: 20px;
   height: 20px;
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected .corner.tr {
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected .corner.tr, .content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected:hover .corner.tr {
   width: 30px;
   height: 30px;
   top: -15px;
   right: -15px;
+  background: linear-gradient(to bottom, #dc143a, #cd173a);
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected .corner.tl {
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected .corner.tl, .content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected:hover .corner.tl {
   top: -10px;
   left: -10px;
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected .corner.bl {
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected .corner.bl, .content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected:hover .corner.bl {
   bottom: -10px;
   left: -10px;
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected .corner.br {
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected .corner.br, .content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected:hover .corner.br {
   bottom: -10px;
   right: -10px;
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected .text-controls {
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected .text-controls, .content.create-page .tote-wrap .actual-tote .bag-body .editable-field.selected:hover .text-controls {
   opacity: 1;
   pointer-events: auto;
   -webkit-transform: translate3d(-50%, 0, 0);
   -ms-transform: translate3d(-50%, 0, 0);
   transform: translate3d(-50%, 0, 0);
   margin-bottom: 100px;
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field:hover .border {
+  border: 1px dashed rgba(200, 200, 200, 0.3);
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field:hover .corner {
+  width: 5px;
+  height: 5px;
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field:hover .corner.tr {
+  top: -2.5px;
+  right: -2.5px;
+  background: linear-gradient(to bottom, #fafafa, #efefef);
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field:hover .corner.tl {
+  top: -2.5px;
+  left: -2.5px;
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field:hover .corner.bl {
+  bottom: -2.5px;
+  left: -2.5px;
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field:hover .corner.br {
+  bottom: -2.5px;
+  right: -2.5px;
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field .border {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px dashed transparent;
+  transition: 0.3s cubic-bezier(0.7, 0, 0.3, 1);
 }
 .content.create-page .tote-wrap .actual-tote .bag-body .editable-field .corner {
   width: 0;
@@ -810,6 +851,8 @@ button.save:after {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  cursor: move;
+  cursor: -webkit-grab;
 }
 .content.create-page .tote-wrap .actual-tote .bag-body textarea::-webkit-input-placeholder {
   font-family: HugeAvantGarde;
@@ -1056,27 +1099,17 @@ button.save:after {
   -ms-box-shadow: 0 3px 6px 2px rgba(0, 0, 0, 0.15);
   -o-box-shadow: 0 3px 6px 2px rgba(0, 0, 0, 0.15);
   box-shadow: 0 3px 6px 2px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
+  cursor: move;
+  cursor: -webkit-grab;
   z-index: 200;
-  transition: 0.3s cubic-bezier(0.7, 0, 0.3, 1);
 }
 .content.create-page .bag-size-wrap .selector:hover {
   -ms-box-shadow: 0 4px 6px 3px rgba(0, 0, 0, 0.2);
   -o-box-shadow: 0 4px 6px 3px rgba(0, 0, 0, 0.2);
   box-shadow: 0 4px 6px 3px rgba(0, 0, 0, 0.2);
 }
-.content.create-page .bag-size-wrap.small .selector {
-  -webkit-transform: translateX(0);
-  -ms-transform: translateX(0);
-  transform: translateX(0);
-}
 .content.create-page .bag-size-wrap.small .icon.small-bag {
   opacity: 0.5;
-}
-.content.create-page .bag-size-wrap.big .selector {
-  -webkit-transform: translateX(50px);
-  -ms-transform: translateX(50px);
-  transform: translateX(50px);
 }
 .content.create-page .bag-size-wrap.big .icon.big-bag {
   opacity: 0.5;
@@ -1093,6 +1126,7 @@ button.save:after {
   background-size: 35px 17.5px;
   opacity: 0.3;
   position: relative;
+  cursor: pointer;
   transition: 0s 0.4s cubic-bezier(0.7, 0, 0.3, 1);
 }
 .content.create-page .bag-size-wrap .icon:before, .content.create-page .bag-size-wrap .icon:after {
@@ -1336,6 +1370,9 @@ button.save:after {
   opacity: 0;
   width: 40px;
   height: 40px;
+}
+.tote-grid-element .heart-outer-wrap.favorited {
+  opacity: 0.8;
 }
 .tote-grid-element .tote-wrap {
   max-width: 60%;

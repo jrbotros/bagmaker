@@ -117,10 +117,6 @@ var browse = {
     },
     buildBagGrid : function(){
         _.each(browse.toteBags, function(tote){
-
-            // temporary hack for not being able to save json properly
-            if (typeof tote.textfields === "string")
-                tote.textfields = JSON.parse(tote.textfields);
             tote.swingTimer = null;
             var toteObj = {bags : [tote]};
 

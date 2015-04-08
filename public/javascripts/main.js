@@ -31,18 +31,22 @@ var likes = {
                 // sort of hacky, the only way i know how to update a tote. you aren't allowed
                 // to update it with the sacred _id variable already assigned.
                 var clone = _.extend({}, tote);
-                // JSON STRING ISSUE
-                clone.textfields = JSON.stringify(clone.textfields);
                 delete clone._id;
-                
+                delete clone.swingTimer;
+                delete clone.stopTimer;
+
+                // use ajax to post tote to db
                 $.ajax({
                     type: 'PUT',
-                    data: clone,
-                    url: '/totes/updatetote/' + toteID
-                }).done(function( response ) {
-                    
-                });
+                    data: JSON.stringify(clone),
+                    url: '/totes/updatetote/' + toteID,
+                    contentType:"application/json; charset=utf-8",
+                    dataType: 'json'
+                }).done(function( response, status ){
 
+                }).fail(function( response, status ){
+
+                });
             });
         }
     },
@@ -60,16 +64,21 @@ var likes = {
                 // sort of hacky, the only way i know how to update a tote. you aren't allowed
                 // to update it with the sacred _id variable already assigned.
                 var clone = _.extend({}, tote);
-                // JSON STRING ISSUE
-                clone.textfields = JSON.stringify(clone.textfields);
                 delete clone._id;
-                
+                delete clone.swingTimer;
+                delete clone.stopTimer;
+
+                // use ajax to post tote to db
                 $.ajax({
                     type: 'PUT',
-                    data: clone,
-                    url: '/totes/updatetote/' + toteID
-                }).done(function( response ) {
-                    
+                    data: JSON.stringify(clone),
+                    url: '/totes/updatetote/' + toteID,
+                    contentType:"application/json; charset=utf-8",
+                    dataType: 'json'
+                }).done(function( response, status ){
+
+                }).fail(function( response, status ){
+
                 });
 
             });
@@ -311,7 +320,7 @@ var bagObject = {
         var bag = this;
 
         var $field = $textarea.parents(".editable-field");
-        var textFieldID = $field.attr("data-id");
+        var textFieldID = $field.attr("id");
         var $clone = $textarea.siblings(".clone-text");
         var content = $textarea.val();
     
@@ -323,7 +332,7 @@ var bagObject = {
         $clone.html(contentFormatted);
 
         if (bag.data && bag.data.textfields){
-            var theTextField = _.findWhere(bag.data.textfields, { "_id" : textFieldID });
+            var theTextField = _.findWhere(bag.data.textfields, { "domid" : textFieldID });
             theTextField.text = content;
 
             if ($textarea.val() === ""){
@@ -381,12 +390,12 @@ var bagObject = {
             kerning : -0.03,
             leading : 1
         };
-        var id = site.randomString(16);
+        var domid = site.randomString(16);
         // if it finds something (not undefined), choose another id.
-        while ( typeof _.findWhere(this.data.textfields, {"_id" : id }) !== "undefined" ){
+        while ( typeof _.findWhere(this.data.textfields, {"domid" : domid }) !== "undefined" ){
             id = site.randomString(16);
         }
-        emptyTextObj._id = id;
+        emptyTextObj.domid = domid;
 
         this.data.textfields.push(emptyTextObj);
 
@@ -394,16 +403,16 @@ var bagObject = {
             $(".addTextfield").addClass("disabled");
         }
     },
-    deleteTextField : function(id, callback){
+    deleteTextField : function(domid, callback){
         var bag = this;
-        var $field = $(this.htmlElement).find(".editable-field[data-id=" + id + "]");
+        var $field = $(this.htmlElement).find(".editable-field#" + domid);
         TweenLite.to($field, 0.3, {
             scale : 1.15,
             alpha : 0,
             onComplete : function(){
                 $field.remove();
                 bag.data.textfields = _.reject(bag.data.textfields, function(tf){
-                    return tf._id === id;
+                    return tf.domid === domid;
                 });
                 if (bag.data.textfields.length < 4){
                     $(".addTextfield").removeClass("disabled");
@@ -417,26 +426,21 @@ var bagObject = {
     },
     saveAs : function(){
         var bagData = _.extend({}, this.data);
-        bagData.textfields = JSON.stringify(bagData.textfields);
-        bagData.editMode = null;
+        delete bagData.editMode;
         bagData.timestamp = Math.round(new Date().getTime() / 1000);
-        
+
         // use ajax to post tote to db
         $.ajax({
             type: 'POST',
-            data: bagData,
+            data: JSON.stringify(bagData),
             url: '/totes/createtote',
-            dataType: 'JSON' 
-        }).done(function( response ){
+            contentType:"application/json; charset=utf-8",
+            dataType: 'json'
+        }).done(function( response, status ){
             // Check for successful (blank) response
-            if (response.msg === '') {
-                // what to do if we did it successfully
-                window.location.href = "/";
-            }
-            else {
-                // If something goes wrong, alert the error message that our service returned
-                alert('Error: ' + response.msg);
-            }
+            window.location.href = "/";
+        }).fail(function( response, status ){
+            alert('Error: ' + response.msg);
         });
     }
 };

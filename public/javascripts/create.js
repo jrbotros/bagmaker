@@ -1,5 +1,28 @@
 var newBag;
 
+// currently, this function assumes that there is only one bag size toggle tool.
+// This seems like a pretty fair assumption to make...
+function toggleBagSizeUI( direction ){
+    // size of the wrap - size of selector = moveable space.
+    var threshold = $(".bag-size-wrap").outerWidth() - $(".bag-size-wrap .selector").outerWidth();
+
+    var $par = $(".bag-size-wrap");
+    if ( (typeof direction === "undefined" && $par.hasClass("small")) || direction === "big" ){
+        $par.removeClass("small");
+        $par.addClass("big");
+
+        TweenLite.to(".bag-size-wrap .selector", 0.3, { x : threshold, ease : cssBezier });
+        newBag.toggleSize("big");
+    }
+    else if ( (typeof direction === "undefined" && $par.hasClass("big")) || direction === "small" ){
+        $par.removeClass("big");
+        $par.addClass("small");
+
+        TweenLite.to(".bag-size-wrap .selector", 0.3, { x : 0, ease : cssBezier });
+        newBag.toggleSize("small");
+    }
+}
+
 $(document).ready(function(){
     newBag = _.extend({}, bagObject);
     newBag.data.editMode = true;
@@ -17,20 +40,60 @@ $(document).ready(function(){
     });
 
     // bag size toggling
-    $(document).hammer().on("tap", ".bag-size-wrap .selector", function(e){
+    $(document).hammer().on("tap", ".bag-size-wrap > *", function(e){
         e.preventDefault();
         e.stopPropagation();
 
-        var $par = $(this).parents(".bag-size-wrap");
-        if ($par.hasClass("small")){
-            $par.removeClass("small");
-            $par.addClass("big");
-            newBag.toggleSize("big");
+        toggleBagSizeUI();
+    });
+    // drag controls for the slider
+    $(document).hammer().on("drag", ".bag-size-wrap .selector", function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        // big can only move left. small can only move right
+        var isBig = $(this).parents(".bag-size-wrap").hasClass("big");
+
+        if (e.gesture.direction === "left" && isBig){
+            // x would default be at all the way to the right... for now, its 50px supposedly at start of every drag
+            var dragDist = e.gesture.deltaX;
+
+            // size of the wrap - size of selector = moveable space.
+            var threshold = $(".bag-size-wrap").outerWidth() - $(".bag-size-wrap .selector").outerWidth();
+            var dragAmt = threshold + dragDist;
+
+            // lowest limit
+            if (dragAmt < 0){
+                dragAmt = 0;
+            }
+
+            TweenLite.to($(this), 0, { x : dragAmt + "px" });
         }
-        else if ($par.hasClass("big")){
-            $par.removeClass("big");
-            $par.addClass("small");
-            newBag.toggleSize("small");
+        else if (e.gesture.direction === "right" && !isBig){
+            // x would default be at 0 supposedly at start of every drag
+            var dragDist = e.gesture.deltaX;
+
+            // highest limit
+            var threshold = $(this).parents(".bag-size-wrap").outerWidth() - $(this).outerWidth();
+            if (dragDist > threshold){
+                dragDist = threshold;
+            }
+
+            TweenLite.to($(this), 0, { x : dragDist + "px" });
+        }
+    });
+    // dragend - snapping to one side - controls for the slider
+    $(document).hammer().on("dragend", ".bag-size-wrap .selector", function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        var isBig = $(this).parents(".bag-size-wrap").hasClass("big");
+
+        if (e.gesture.direction === "left" && isBig){
+            toggleBagSizeUI("small");
+        }
+        else if (e.gesture.direction === "right" && !isBig){
+            toggleBagSizeUI("big");
         }
     });
 
@@ -74,7 +137,7 @@ $(document).ready(function(){
         e.preventDefault();
         e.stopPropagation();
 
-        var id = $(this).parents(".editable-field").attr("data-id");
+        var id = $(this).parents(".editable-field").attr("id");
         newBag.deleteTextField(id);
     });
 
@@ -106,7 +169,7 @@ $(document).ready(function(){
         e.stopPropagation();
         
         var $field = $(this).parents(".editable-field");
-        var tfData = _.findWhere(newBag.data.textfields, { "_id" : $field.attr("data-id") });
+        var tfData = _.findWhere(newBag.data.textfields, { "domid" : $field.attr("id") });
         
         $(this).siblings(".sel").removeClass("sel");
 
@@ -120,16 +183,16 @@ $(document).ready(function(){
     });
 
     // manages type control sliders
-    $(document).on("input", ".type-control input", function(){
-        typeSliderHandler($(this));
-    });
-    $(document).on("change", ".type-control input", function(){
+    $(document).on("input", ".type-control input", function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
         typeSliderHandler($(this));
     });
 
     function typeSliderHandler($input){
         var $field = $input.parents(".editable-field");
-        var tfData = _.findWhere(newBag.data.textfields, { "_id" : $field.attr("data-id") });
+        var tfData = _.findWhere(newBag.data.textfields, { "domid" : $field.attr("id") });
         
         if ($input.parent().hasClass("size")){
             var newSize = $input.val();
@@ -162,15 +225,15 @@ $(document).ready(function(){
         }
 
         var $field = $(this);
-        if ($(this).parents(".editable-field").length !== 0)
+        if ($(this).hasClass("corner"))
             $field = $(this).parents(".editable-field");
         
         if (e.gesture.direction === "up" || e.gesture.direction === "down"){
             var dragDist = e.gesture.deltaY;
-            var index = $field.attr("data-id");
+            var index = $field.attr("id");
             var parentFontSize = parseInt($field.parents(".bag-body").css("font-size"));
 
-            var tf = _.findWhere(newBag.data.textfields, { "_id" : index });
+            var tf = _.findWhere(newBag.data.textfields, { "domid" : index });
             
             // read it in pixels
             var amountMoved = tf.y * parentFontSize;
@@ -198,10 +261,10 @@ $(document).ready(function(){
 
         if (e.gesture.direction === "up" || e.gesture.direction === "down"){
             var dragDist = e.gesture.deltaY;
-            var index = $field.attr("data-id");
+            var index = $field.attr("id");
             var parentFontSize = parseInt($field.parents(".bag-body").css("font-size"));
 
-            var tf = _.findWhere(newBag.data.textfields, { "_id" : index });
+            var tf = _.findWhere(newBag.data.textfields, { "domid" : index });
             
             // read it in pixels
             var amountMoved = tf.y * parentFontSize;
