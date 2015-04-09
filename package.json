@@ -13,9 +13,7 @@
     "serve-favicon": "~2.1.3",
     "debug": "~2.0.0",
     "jade": "~1.6.0",
-    "mongodb": "*",
-    "mongoskin": "*",
-    "grabzit" : "*"
+    "mongoose": "4.0.1"
   },
   "devDependencies": {
     "del": "^0.1.3",

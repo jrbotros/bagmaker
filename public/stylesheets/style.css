@@ -462,6 +462,17 @@ nav .right-actions .sort ul li:hover {
   left: 0;
   right: 0;
 }
+.tote-wrap .actual-tote .bag-body .text.strikethrough .strike {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #d93182;
+  text-decoration: line-through;
+  pointer-event: none;
+}
+.tote-wrap .actual-tote .bag-body .text.strikethrough .strike .inner-strike {
+  color: transparent;
+}
 .tote-wrap .actual-tote .bag-bottom {
   width: 100%;
   padding-bottom: 10%;
@@ -670,6 +681,11 @@ button.save:after {
   bottom: -2.5px;
   right: -2.5px;
 }
+.content.create-page .tote-wrap .actual-tote .bag-body .editable-field.strikethrough .clone-text-wrap {
+  z-index: 101;
+  text-decoration: line-through;
+  color: #d93182;
+}
 .content.create-page .tote-wrap .actual-tote .bag-body .editable-field .border {
   width: 100%;
   height: 100%;
@@ -760,36 +776,62 @@ button.save:after {
   margin: 0 auto;
   bottom: 100%;
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .justification {
+.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls {
   width: 100%;
   height: 40px;
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .justification * {
+.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .justification *:not(.sel), .content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .strikethrough:not(.sel) {
+  opacity: 0.7;
+  transition: 0.3s cubic-bezier(0.7, 0, 0.3, 1);
+  transition-property: opacity;
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .justification *:not(.sel):hover, .content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .strikethrough:not(.sel):hover {
+  opacity: 1;
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .justification {
+  width: 75%;
+  height: 100%;
+  float: left;
+  display: inline-block;
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .justification *:not(.clearfix) {
   width: 33.33%;
+  height: 100%;
   float: left;
   display: inline-block;
   height: 100%;
   cursor: pointer;
-  position: relative;
-  z-index: 101;
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .justification .justify-left {
+.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .justification .justify-left {
   background: url("/images/aligned-left-white.svg") no-repeat left center;
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .justification .justify-left.sel {
+.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .justification .justify-left.sel {
   background-image: url("/images/aligned-left-blue.svg");
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .justification .justify-center {
-  background: url("/images/aligned-center-white.svg") no-repeat center center;
+.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .justification .justify-center {
+  background: url("/images/aligned-center-white.svg") no-repeat left center;
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .justification .justify-center.sel {
+.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .justification .justify-center.sel {
   background-image: url("/images/aligned-center-blue.svg");
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .justification .justify-right {
-  background: url("/images/aligned-right-white.svg") no-repeat right center;
+.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .justification .justify-right {
+  background: url("/images/aligned-right-white.svg") no-repeat left center;
+  border-right: 1px dotted rgba(255, 255, 255, 0.2);
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .justification .justify-right.sel {
+.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .justification .justify-right.sel {
   background-image: url("/images/aligned-right-blue.svg");
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .strikethrough {
+  width: 25%;
+  height: 100%;
+  display: inline-block;
+  float: left;
+  background: url("/images/strikethrough-white.svg") no-repeat center right;
+  background-size: 22px 22px;
+  cursor: pointer;
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .text-controls .top-controls .strikethrough.sel {
+  background-image: url("/images/strikethrough-blue.svg");
 }
 .content.create-page .tote-wrap .actual-tote .bag-body .text-controls .type-control-wrap .type-control {
   width: 100%;
@@ -870,9 +912,12 @@ button.save:after {
   font-family: HugeAvantGarde;
   color: rgba(205, 205, 205, 0.5);
 }
-.content.create-page .tote-wrap .actual-tote .bag-body .clone-text {
+.content.create-page .tote-wrap .actual-tote .bag-body .clone-text-wrap {
   pointer-events: none;
-  opacity: 0;
+  position: relative;
+}
+.content.create-page .tote-wrap .actual-tote .bag-body .clone-text-wrap .clone-text {
+  color: transparent;
 }
 .content.create-page .tote-wrap .actual-tote .bag-bottom .bl-corner, .content.create-page .tote-wrap .actual-tote .bag-bottom .br-corner {
   border-left-color: #f8f8f8;

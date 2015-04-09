@@ -182,6 +182,28 @@ $(document).ready(function(){
         $(this).addClass("sel");
     });
 
+    // Strikethroughs.
+    $(document).hammer().on("tap", ".text-controls .strikethrough", function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var $field = $(this).parents(".editable-field");
+        var tfData = _.findWhere(newBag.data.textfields, { "domid" : $field.attr("id") });
+        
+        // make it strikethrough
+        if (!$(this).hasClass("sel")){
+            $(this).addClass("sel");
+            $field.addClass("strikethrough");
+            tfData.strikethrough = "strikethrough";
+        }
+        // make it normal
+        else{
+            $(this).removeClass("sel");
+            $field.removeClass("strikethrough");
+            delete tfData.strikethrough;
+        }
+    });
+
     // manages type control sliders
     $(document).on("input", ".type-control input", function(e){
         e.preventDefault();

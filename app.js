@@ -22,6 +22,7 @@ var Totebag = mongoose.model('Totebag', {
         kerning: Number,
         fontSize: Number,
         justify: String,
+        strikethrough: String,
         width: String
     }]
 });

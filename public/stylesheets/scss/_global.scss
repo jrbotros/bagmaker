@@ -530,6 +530,21 @@ nav{
                 top: 0;
                 left: 0;
                 right: 0;
+
+                &.strikethrough{
+                    .strike{
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        color: $magenta;
+                        text-decoration: line-through;
+                        pointer-event: none;
+                        
+                        .inner-strike{
+                            color: transparent;
+                        }
+                    }
+                }
             }
         }
 

@@ -321,7 +321,7 @@ var bagObject = {
 
         var $field = $textarea.parents(".editable-field");
         var textFieldID = $field.attr("id");
-        var $clone = $textarea.siblings(".clone-text");
+        var $clone = $textarea.siblings(".clone-text-wrap").find(".clone-text");
         var content = $textarea.val();
     
         if (content === ""){
@@ -350,7 +350,6 @@ var bagObject = {
         }
         TweenLite.to($field, 0.1, { height : $clone.height() } );
     },
-
     draw : function($parent, onComplete){
         var bag = this;
 

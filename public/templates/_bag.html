@@ -6,21 +6,27 @@
                 <div class="textfields-wrap">
                     {{#if editMode}}
                         {{#each textfields}}
-                            <div id="{{domid}}" class="editable-field" style="text-align: {{justify}}; font-size: {{fontSize}}em; letter-spacing: {{kerning}}em; line-height: {{leading}}em; width: {{width}}">
+                            <div id="{{domid}}" class="editable-field {{#if strikethrough}}{{strikethrough}}{{/if}}" style="text-align: {{justify}}; font-size: {{fontSize}}em; letter-spacing: {{kerning}}em; line-height: {{leading}}em; width: {{width}}">
                                 <div class="border"></div>
                                 <div class="corner tl"></div>
                                 <div class="corner tr"></div>
                                 <div class="corner bl"></div>
                                 <div class="corner br"></div>
                                 <textarea spellcheck="false" placeholder="Type something.">{{text}}</textarea>
-                                <div class="clone-text">{{^text}}Type something.{{/text}}{{text}}</div>
-                                
+                                <div class='clone-text-wrap'>
+                                    <div class="clone-text">{{^text}}Type something.{{/text}}{{text}}</div>
+                                </div>
                                 
                                 <div class="text-controls">
-                                    <div class="justification">
-                                        <div class="justify-left sel"></div>
-                                        <div class="justify-center"></div>
-                                        <div class="justify-right"></div>
+                                    <div class="top-controls">
+                                        <div class="justification">
+                                            <div class="justify-left sel"></div>
+                                            <div class="justify-center"></div>
+                                            <div class="justify-right"></div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="strikethrough {{#if strikethrough}}sel{{/if}}"></div>
+                                        <div class="clearfix"></div>
                                     </div>
                                     <div class="type-control-wrap">
                                         <div class="type-control size">
@@ -41,7 +47,7 @@
                         {{/each}}
                     {{else}}
                         {{#each textfields}}
-                            <div data-id="{{_id}}" data-x="{{x}}" data-y="{{y}}" class="text" style="text-align: {{justify}}; font-size: {{fontSize}}em; letter-spacing: {{kerning}}em; line-height: {{leading}}em; width: {{width}}">{{text}}</div>
+                            <div data-id="{{_id}}" data-x="{{x}}" data-y="{{y}}" class="text {{#if strikethrough}}{{strikethrough}}{{/if}}" style="text-align: {{justify}}; font-size: {{fontSize}}em; letter-spacing: {{kerning}}em; line-height: {{leading}}em; width: {{width}}">{{text}}{{#if strikethrough}}<div class="strike"><div class="inner-strike">{{text}}</div></div>{{/if}}</div>
                         {{/each}}
                     {{/if}}                    
                 </div>
