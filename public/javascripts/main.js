@@ -439,7 +439,7 @@ var bagObject = {
             // Check for successful (blank) response
             window.location.href = "/";
         }).fail(function( response, status ){
-            alert('Error: ' + response.msg);
+            alert('Something went wrong :(. Error: ' + response.msg);
         });
     }
 };

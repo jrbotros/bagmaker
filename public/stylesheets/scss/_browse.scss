@@ -138,6 +138,10 @@
     @include linear-gradient ( -45deg, #fff, $lightGrey );
     @include prefix (transition, 0.4s $easing-curve);
 
+    &#zoomAnimation{
+        @include prefix (transition, 0);
+    }
+
     &.black{
         background: #fff;
     }
@@ -211,6 +215,7 @@
     //     pointer-events: none;
     // }
     &:hover{
+
         // &:after{
         //     opacity: 1;
         // }
@@ -228,6 +233,15 @@
         }
         .heart-outer-wrap{
             opacity: 0.8;
+        }
+
+        &#zoomAnimation, &.view{
+            .tote-wrap{
+                @include prefix (transform, scale(1.0), translateY(-45%));
+            }
+            .heart-outer-wrap{
+                opacity: 0;
+            }
         }
     }
     .heart-outer-wrap{

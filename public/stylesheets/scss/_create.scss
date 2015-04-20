@@ -483,6 +483,7 @@ button{
 
         &:before{
             background: url("/images/color-wheel.svg") center center no-repeat;
+            background-size: 25px 25px;
         }
         &:after{
             background: url("/images/x-close-white.svg") center center no-repeat;

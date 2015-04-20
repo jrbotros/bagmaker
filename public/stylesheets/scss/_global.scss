@@ -265,7 +265,7 @@ nav{
     }
 }
 
-.tote-wrap{
+body .tote-wrap{
     position: relative;
     @include prefix (user-select, none);
     @include prefix (transition, 0.5s $easing-curve);
@@ -281,6 +281,10 @@ nav{
         }
         .actual-tote .bag-body{
             background-color: $red;
+
+            .textfields-wrap .strikethrough .strike, .editable-field.strikethrough .clone-text-wrap{
+                color: #000 !important;
+            }
 
             &:after{
                 background-image: url("/images/huge-logo-white.svg");
@@ -492,7 +496,7 @@ nav{
                 width: 3.5%;
                 height: 7%;
 
-                background: $magenta url("/images/h.svg") center 5px no-repeat;
+                background: $magenta url("/images/h.svg") center center no-repeat;
                 background-size: 60%;
             }
 

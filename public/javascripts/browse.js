@@ -160,38 +160,104 @@ var browse = {
     view : function($tote){
         var toteIndex = $tote.index();
         
+        // loops to the end of the list
         var beforeIndex = toteIndex - 1;
         if (beforeIndex < 0){
             beforeIndex = $tote.siblings().length - 1;
         }
         var $beforeTote = $(".browse-tote-wrap .tote-grid-element").eq(beforeIndex);
 
+        // loops to the first element on the list
         var afterIndex = toteIndex + 1;
         if (afterIndex > $tote.siblings().length - 1){
             afterIndex = 0;
         }
         var $afterTote = $(".browse-tote-wrap .tote-grid-element").eq(afterIndex);
 
+        // create each of the 3 bags.
         var $dupeBefore = $("<div />", {
-            "class" : $beforeTote.attr("class") + "",
+            "class" : $beforeTote.attr("class") + " view",
             "data-id" : beforeIndex,
             "html" : $beforeTote.html()
         });
         var $dupe = $("<div />", {
-            "class" : $tote.attr("class") + "",
+            "class" : $tote.attr("class") + " view",
             "data-id" : toteIndex,
             "html" : $tote.html()
         });
         var $dupeAfter = $("<div />", {
-            "class" : $afterTote.attr("class") + "",
+            "class" : $afterTote.attr("class") + " view",
             "data-id" : afterIndex,
             "html" : $afterTote.html()
         });
 
+        // add all the shit.
         $(".view-carousel").addClass("on");
         $(".view-carousel-wrap").append($dupeBefore).append($dupe).append($dupeAfter);
+        
+        // stop it from swinging.
+        TweenLite.to(".view-carousel-wrap .tote-grid-element .actual-tote, .view-carousel-wrap .tote-grid-element .tote-shadow", 0, { rotation : "0deg" })
+        $(".view-carousel-wrap .tote-grid-element.swinging").removeClass("swinging");
+
+        //update bag size / favorites
+        site.refreshTypeOnTotes();
+        if ($dupe.find(".heart-outer-wrap").hasClass("favorited")){
+            $dupe.parents(".view-carousel").find(".view-controls .heart-outer-wrap").addClass("favorited");
+        }
+        window.history.pushState("html", "Title", "/totes/" + browse.toteBags[toteIndex]._id);
+        $("body").addClass("lock-scroll");
+
+        // scroll user to the bottom of the bag.
+        var viewToteHeight = $dupe.height();
+        var viewportHeight = $(window).height();
+        $(".view-carousel-wrap").scrollTop(viewToteHeight - viewportHeight);
+        $(".view-carousel").attr("data-display", toteIndex);
+    },
+    viewZoomIn : function($tote){
+        var x = $tote.offset().left;
+        var y = $tote.offset().top - $(window).scrollTop();
+        var $dupe = $("<div />", {
+            "id" : "zoomAnimation",
+            "class" : $tote.attr("class") + "",
+            "html" : $tote.html()
+        });
+
+        // add all the shit.
+        $(".content.browse-page .zoomTransition .zoomAnimationWrapper").append($dupe);
+        TweenLite.to($dupe, 0, { x : x, y : y});
+        $dupe.removeClass("swinging");
+        TweenLite.to($dupe.find(".actual-tote"), 0.3, { rotation: "0deg" });
+        TweenLite.to($dupe.find(".tote-shadow"), 0.3, { rotation: "0deg" });
+
         site.refreshTypeOnTotes();
         $("body").addClass("lock-scroll");
+        
+        // animating to full screen
+        var currWidth = $dupe.outerWidth();
+        var currHeight = $dupe.outerHeight();
+        var windowWidth = $(window).width();
+        var ratio = Math.round(windowWidth / currWidth);
+        var toBeWidth = currWidth * ratio;
+        var toBeHeight = currHeight * ratio;
+        $(".zoomTransition").scrollTop(toBeHeight - $(window).height());
+
+        TweenLite.to($dupe, 0.5, {
+            x : (ratio - 1) * 1/2 * currWidth,
+            y : 0,
+            scale : ratio,
+            ease : cssBezier,
+            onComplete : function(){
+                site.refreshTypeOnTotes();
+                browse.view($tote);
+                
+                setTimeout(function(){
+                    $("#zoomAnimation").remove();
+                }, 1000);
+            }
+        });
+    },
+    viewZoomOut : function($tote){
+
     },
     swingOnce : function($bag){
         // var $bag = $(".tote-grid-element").eq(index);
@@ -269,10 +335,6 @@ var browse = {
     }
 };
 
-var gridElement = {
-    data : null
-}
-
 $(document).ready(function(){
     likes.fetchUserLikes();
     browse.loadBags(browse.buildBagGrid);
@@ -285,8 +347,19 @@ $(document).ready(function(){
         e.preventDefault();
         e.stopPropagation();
 
-        var $gridEle = $(this).parents(".tote-grid-element");
-        var toteBag = browse.toteBags[$gridEle.index()];
+        var toteIndex;
+
+        // its in the view mode
+        if ($(this).parents(".view-controls").length > 0){
+            var index = $(this).parents(".view-carousel").attr("data-display");
+            toteIndex = parseInt(index);
+        }
+        else{
+            var $gridEle = $(this).parents(".tote-grid-element");
+            toteIndex = $gridEle.index();
+        }
+       
+        var toteBag = browse.toteBags[toteIndex];
         var toteID = toteBag._id;
 
         //likes.toggleLike(toteID);
@@ -300,11 +373,11 @@ $(document).ready(function(){
         }
     });
 
-    $(document).on("mouseenter", ".tote-grid-element", function(){
+    $(document).on("mouseenter", ".browse-tote-wrap .tote-grid-element", function(){
         browse.swing($(this));
     });
 
-    $(document).on("mouseleave", ".tote-grid-element", function(){
+    $(document).on("mouseleave", ".browse-tote-wrap .tote-grid-element", function(){
         browse.stopSwing($(this));
     });
 
@@ -312,5 +385,12 @@ $(document).ready(function(){
         browse.swing($(this));
     }, function(){
         browse.stopSwing($(this));
+    });
+
+    $(document).hammer().on("tap", ".browse-tote-wrap .tote-grid-element", function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        browse.viewZoomIn($(this));
     });
 });
