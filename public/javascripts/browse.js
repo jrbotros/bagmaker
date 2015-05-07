@@ -216,15 +216,21 @@ var browse = {
     viewZoomIn : function($tote){
         var x = $tote.offset().left;
         var y = $tote.offset().top - $(window).scrollTop();
+        var h = $tote.outerHeight();
+        var w = $tote.outerWidth();
         var $dupe = $("<div />", {
             "id" : "zoomAnimation",
             "class" : $tote.attr("class") + "",
             "html" : $tote.html()
         });
+        $dupe.height(h);
+        $dupe.width(w);
 
         // add all the shit.
         $(".content.browse-page .zoomTransition .zoomAnimationWrapper").append($dupe);
-        TweenLite.to($dupe, 0, { x : x, y : y});
+        $(".zoomTransition").addClass("debug");
+        TweenLite.to($dupe, 0, { x : x, y : y });
+
         $dupe.removeClass("swinging");
         TweenLite.to($dupe.find(".actual-tote"), 0.3, { rotation: "0deg" });
         TweenLite.to($dupe.find(".tote-shadow"), 0.3, { rotation: "0deg" });
@@ -239,15 +245,24 @@ var browse = {
         var ratio = Math.round(windowWidth / currWidth);
         var toBeWidth = currWidth * ratio;
         var toBeHeight = currHeight * ratio;
-        $(".zoomTransition").scrollTop(toBeHeight - $(window).height());
 
-        TweenLite.to($dupe, 0.5, {
+        TweenLite.fromTo($dupe, 0.5, {
+            x : x,
+            y : y,
+            height: h,
+            scale: 1,
+            ease : cssBezier
+        }, {
             x : (ratio - 1) * 1/2 * currWidth,
             y : 0,
+            height: (150 / ratio) + "vh",
             scale : ratio,
             ease : cssBezier,
             onComplete : function(){
                 site.refreshTypeOnTotes();
+                $(".zoomTransition").animate({ scrollTop : 1000 }, 500);
+                $(".zoomTransition").addClass("debug");
+                // $("#zoomAnimation").addClass("scrollToView");
                 browse.view($tote);
                 
                 setTimeout(function(){

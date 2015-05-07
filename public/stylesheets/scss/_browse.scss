@@ -139,7 +139,13 @@
     @include prefix (transition, 0.4s $easing-curve);
 
     &#zoomAnimation{
-        @include prefix (transition, 0);
+        position: absolute;
+        display: block;
+        float: none;
+        top: 0;
+        left: 0;
+        padding-bottom: 0;
+        @include prefix (transition, 0s);
     }
 
     &.black{
@@ -214,33 +220,17 @@
     //     @include prefix (transition, 0.3s $easing-curve);
     //     pointer-events: none;
     // }
-    &:hover{
-
-        // &:after{
-        //     opacity: 1;
-        // }
-
-        // .tote-wrap .actual-tote .handle:before{
-        //     background: #fff;
-        // }
-
-        .tote-wrap{
-            @include prefix (transform, scale(1.1) translateY(-45%));
-
-            .actual-tote .shadow-blur{
-                opacity: 1;
-            }
-        }
-        .heart-outer-wrap{
-            opacity: 0.8;
-        }
-
-        &#zoomAnimation, &.view{
+    &:not(.view, #zoomAnimation){
+        &:hover{
             .tote-wrap{
-                @include prefix (transform, scale(1.0), translateY(-45%));
+                @include prefix (transform, scale(1.1) translateY(-45%));
+                
+                .actual-tote .shadow-blur{
+                    opacity: 1;
+                }
             }
             .heart-outer-wrap{
-                opacity: 0;
+                opacity: 0.8;
             }
         }
     }
