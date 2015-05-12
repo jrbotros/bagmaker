@@ -207,10 +207,17 @@ var browse = {
         window.history.pushState("html", "Title", "/totes/" + browse.toteBags[toteIndex]._id);
         $("body").addClass("lock-scroll");
 
-        // scroll user to the bottom of the bag.
-        var viewToteHeight = $dupe.height();
-        var viewportHeight = $(window).height();
-        $(".view-carousel-wrap").scrollTop(viewToteHeight - viewportHeight);
+        // scroll user to center the bag.
+        var viewToteHeight = $dupe.find(".tote-wrap").height();
+        var viewGridHeight = $dupe.height();
+
+        // scroll to the center if the bag height is smaller than the window height
+        var scrollAmount = ( ( $(window).height() - viewToteHeight)/2);
+        // if the bag height is larger than the window height, scroll to the bottom.
+        if (viewToteHeight > $(window).height())
+            scrollAmount = viewGridHeight;
+
+        $(".view-carousel-wrap").scrollTop( scrollAmount );
         $(".view-carousel").attr("data-display", toteIndex);
     },
     viewZoomIn : function($tote){
@@ -239,35 +246,45 @@ var browse = {
         $("body").addClass("lock-scroll");
         
         // animating to full screen
-        var currWidth = $dupe.outerWidth();
-        var currHeight = $dupe.outerHeight();
         var windowWidth = $(window).width();
-        var ratio = Math.round(windowWidth / currWidth);
-        var toBeWidth = currWidth * ratio;
-        var toBeHeight = currHeight * ratio;
+        var windowHeight = $(window).height();
+        var ratio = Math.round(windowWidth / w);
 
-        TweenLite.fromTo($dupe, 0.5, {
-            x : x,
-            y : y,
-            height: h,
-            scale: 1,
-            ease : cssBezier
-        }, {
-            x : (ratio - 1) * 1/2 * currWidth,
+        TweenLite.to($dupe, 0.5, {
+            x : (ratio - 1)/2 * w,
             y : 0,
-            height: (150 / ratio) + "vh",
+            height: (1.5 * windowHeight / ratio),
             scale : ratio,
             ease : cssBezier,
             onComplete : function(){
+                // redraw the same bag instantly so that we aren't dealing with scale anymore
+                TweenLite.to($dupe, 0, {
+                    x : 0,
+                    y : 0,
+                    width : "100%",
+                    height : (1.5 * windowHeight),
+                    scale : 1
+                });
                 site.refreshTypeOnTotes();
-                $(".zoomTransition").animate({ scrollTop : 1000 }, 500);
-                $(".zoomTransition").addClass("debug");
-                // $("#zoomAnimation").addClass("scrollToView");
-                browse.view($tote);
-                
-                setTimeout(function(){
-                    $("#zoomAnimation").remove();
-                }, 1000);
+                var animationToteHeight = $dupe.find(".tote-wrap").height();
+                var animationGridHeight = $dupe.height();
+
+                // scroll to the center if the bag height is smaller than the window height
+                var scrollAmount = ( ( $(window).height() - animationToteHeight)/2);
+
+                // if the bag height is larger than the window height, scroll to the bottom.
+                if (animationToteHeight > $(window).height())
+                    scrollAmount = animationGridHeight;
+
+                $(".zoomAnimationWrapper").animate({
+                    scrollTop : scrollAmount
+                }, (scrollAmount/2), function(){
+                    browse.view($tote);
+
+                    setTimeout(function(){
+                        $("#zoomAnimation").remove();
+                    }, 1000);
+                });
             }
         });
     },

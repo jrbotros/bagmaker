@@ -146,6 +146,7 @@
         left: 0;
         padding-bottom: 0;
         @include prefix (transition, 0s);
+        @include prefix (transform-origin, center top);
     }
 
     &.black{
@@ -220,20 +221,31 @@
     //     @include prefix (transition, 0.3s $easing-curve);
     //     pointer-events: none;
     // }
-    &:not(.view, #zoomAnimation){
+    
+    &:hover{
+        .tote-wrap{
+            @include prefix (transform, scale(1.1) translateY(-45%));
+            
+            .actual-tote .shadow-blur{
+                opacity: 1;
+            }
+        }
+        .heart-outer-wrap{
+            opacity: 0.8;
+        }
+    }
+
+    &.view, &#zoomAnimation{
         &:hover{
             .tote-wrap{
-                @include prefix (transform, scale(1.1) translateY(-45%));
-                
-                .actual-tote .shadow-blur{
-                    opacity: 1;
-                }
+                @include prefix (transform, scale(1) translateY(-50%));
             }
             .heart-outer-wrap{
-                opacity: 0.8;
+                opacity: 0;
             }
         }
     }
+    
     .heart-outer-wrap{
         position: absolute;
         top: 20px;

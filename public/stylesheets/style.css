@@ -1360,6 +1360,9 @@ button.save:after {
   left: 0;
   padding-bottom: 0;
   transition: 0s;
+  -webkit-transform-origin: center top;
+  -ms-transform-origin: center top;
+  transform-origin: center top;
 }
 .tote-grid-element.black {
   background: #fff;
@@ -1411,16 +1414,24 @@ button.save:after {
   float: none;
   position: absolute;
 }
-.tote-grid-element:not(.view, #zoomAnimation):hover .tote-wrap {
+.tote-grid-element:hover .tote-wrap {
   -webkit-transform: scale(1.1) translateY(-45%);
   -ms-transform: scale(1.1) translateY(-45%);
   transform: scale(1.1) translateY(-45%);
 }
-.tote-grid-element:not(.view, #zoomAnimation):hover .tote-wrap .actual-tote .shadow-blur {
+.tote-grid-element:hover .tote-wrap .actual-tote .shadow-blur {
   opacity: 1;
 }
-.tote-grid-element:not(.view, #zoomAnimation):hover .heart-outer-wrap {
+.tote-grid-element:hover .heart-outer-wrap {
   opacity: 0.8;
+}
+.tote-grid-element.view:hover .tote-wrap, .tote-grid-element#zoomAnimation:hover .tote-wrap {
+  -webkit-transform: scale(1) translateY(-50%);
+  -ms-transform: scale(1) translateY(-50%);
+  transform: scale(1) translateY(-50%);
+}
+.tote-grid-element.view:hover .heart-outer-wrap, .tote-grid-element#zoomAnimation:hover .heart-outer-wrap {
+  opacity: 0;
 }
 .tote-grid-element .heart-outer-wrap {
   position: absolute;
@@ -1482,7 +1493,7 @@ button.save:after {
   height: 100vh;
   top: 0;
   left: 0;
-  overflow: auto;
+  overflow: hidden;
   pointer-events: none;
   z-index: 290;
 }
@@ -1492,7 +1503,10 @@ button.save:after {
 .content.browse-page .zoomTransition .zoomAnimationWrapper {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 .content.browse-page .zoomTransition .tote-grid-element .tote-wrap .actual-tote .bag-bottom .br-corner {
   right: -2px;
@@ -1508,7 +1522,6 @@ body .view-carousel {
   z-index: 300;
   opacity: 0;
   pointer-events: none;
-  transition: 0.5s cubic-bezier(0.7, 0, 0.3, 1);
   overflow: hidden;
 }
 body .view-carousel.on {

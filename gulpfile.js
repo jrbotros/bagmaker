@@ -31,9 +31,9 @@ gulp.task('scripts', function() {
   return gulp.src('public/javascripts/*.js')
     .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('default'))
-    .pipe(rename({suffix: '.min'}))
+    // .pipe(rename({suffix: '.min'}))
     .pipe(uglify()).on('error', errorHandler)
-    .pipe(gulp.dest('public/javascripts/min'))
+    // .pipe(gulp.dest('public/javascripts/min'))
     .pipe(notify({ message: 'Scripts task complete' }));
 });
 
