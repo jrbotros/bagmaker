@@ -483,5 +483,9 @@ $(document).ready(function(){
         scrollHelper();
     });
 
+    $(document).hammer().on("tap", ".create", function(){
+        window.location.href = "/totes/newtote";
+    });
+
     ga('send', 'pageview');
 });

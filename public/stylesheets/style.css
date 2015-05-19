@@ -25,8 +25,8 @@ body.lock-scroll {
 button {
   width: 40px;
   height: 40px;
-  -o-border-radius: 50%;
-  border-radius: 50%;
+  -o-border-radius: 20px;
+  border-radius: 20px;
   border: 0;
   background-color: #fff;
   -ms-box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.2);
@@ -51,76 +51,51 @@ nav {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #fff;
+  background-color: rgba(0, 0, 0, 0.9);
   z-index: 200;
 }
-nav .logo {
-  background: rgba(0, 0, 0, 0.9) url("/images/h.svg") no-repeat center center;
-  background-size: contain;
-  background-size: 50% 50%;
-  width: 50%;
-  height: 80px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  cursor: pointer;
-}
-nav .right-actions {
-  height: 80px;
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 50%;
+nav > * {
   font-size: 21px;
-}
-nav .right-actions > div {
-  display: inline-block;
-  width: 50%;
-  text-align: center;
   line-height: 80px;
   transition: 0.3s cubic-bezier(0.7, 0, 0.3, 1);
   cursor: pointer;
 }
-nav .right-actions > div:hover {
-  background-color: #d93182;
-  color: #fff;
-}
-nav .right-actions > div a {
-  color: inherit;
-  text-decoration: none;
-}
-nav .right-actions .create {
-  background-color: #fa4248;
-  color: #fff;
-}
-nav .right-actions .create a {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-nav .right-actions .sort {
+nav .sort {
   position: relative;
   padding: 0;
+  float: left;
 }
-nav .right-actions .sort:hover {
+nav .sort:hover {
   background-color: inherit;
   color: inherit;
 }
-nav .right-actions .sort .selected-sort {
+nav .sort:hover .selected-sort {
+  background-color: #d93182;
+}
+nav .sort:hover ul {
+  height: 240px;
+  pointer-events: auto;
+  opacity: 1;
+  -webkit-transform: translateY(0);
+  -ms-transform: translateY(0);
+  transform: translateY(0);
+}
+nav .sort .selected-sort {
   width: 100%;
   transition: 0.3s cubic-bezier(0.7, 0, 0.3, 1);
   position: relative;
   text-align: left;
-  padding-left: 25px;
+  padding: 0 40px 0 25px;
+  color: #fff;
 }
-nav .right-actions .sort .selected-sort:hover {
+nav .sort .selected-sort:hover {
   background-color: #d93182;
   color: #fff;
 }
-nav .right-actions .sort .selected-sort:hover:after {
+nav .sort .selected-sort:hover:after {
   border-top: 7px solid rgba(255, 255, 255, 0.95);
 }
-nav .right-actions .sort .selected-sort:hover + ul {
+nav .sort .selected-sort:hover + ul {
   height: 240px;
   opacity: 1;
   pointer-events: auto;
@@ -128,23 +103,23 @@ nav .right-actions .sort .selected-sort:hover + ul {
   -ms-transform: translateY(0);
   transform: translateY(0);
 }
-nav .right-actions .sort .selected-sort .name {
-  padding: 0 10px;
+nav .sort .selected-sort .name {
+  padding-right: 10px;
 }
-nav .right-actions .sort .selected-sort:after {
+nav .sort .selected-sort:after {
   content: "";
   width: 0;
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 5px solid rgba(0, 0, 0, 0.95);
+  border-top: 5px solid #fff;
   position: absolute;
   top: 50%;
   margin-top: -3px;
   right: 25px;
   margin-left: -5px;
 }
-nav .right-actions .sort ul {
+nav .sort ul {
   display: block;
   position: absolute;
   background-color: rgba(0, 0, 0, 0.95);
@@ -154,7 +129,7 @@ nav .right-actions .sort ul {
   padding: 0;
   height: 0;
   opacity: 0;
-  width: 100%;
+  width: 25vw;
   pointer-events: none;
   text-align: left;
   font-size: 16px;
@@ -164,7 +139,7 @@ nav .right-actions .sort ul {
   -ms-transform: translateY(-10px);
   transform: translateY(-10px);
 }
-nav .right-actions .sort ul:hover {
+nav .sort ul:hover {
   height: 240px;
   pointer-events: auto;
   opacity: 1;
@@ -172,7 +147,7 @@ nav .right-actions .sort ul:hover {
   -ms-transform: translateY(0);
   transform: translateY(0);
 }
-nav .right-actions .sort ul:before {
+nav .sort ul:before {
   content: "";
   width: 0;
   height: 0;
@@ -183,24 +158,41 @@ nav .right-actions .sort ul:before {
   top: -10px;
   right: 20px;
 }
-nav .right-actions .sort ul.open {
-  height: 240px;
-  opacity: 1;
-  -webkit-transform: translateY(0);
-  -ms-transform: translateY(0);
-  transform: translateY(0);
-}
-nav .right-actions .sort ul li {
+nav .sort ul li {
   color: #fff;
   display: block;
   margin: 0;
   box-sizing: border-box;
   padding: 0 30px;
+  font-size: 18px;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   transition: 0.3s cubic-bezier(0.7, 0, 0.3, 1);
 }
-nav .right-actions .sort ul li:hover {
+nav .sort ul li:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+nav .create {
+  color: #000;
+  float: right;
+  height: 100%;
+}
+nav .create button {
+  position: absolute;
+  right: 25px;
+  top: 20px;
+  width: auto;
+  padding-left: 25px;
+  padding-right: 25px;
+  font-family: HugeAvantGarde;
+  font-size: 16px;
+  transition: 0.3s cubic-bezier(0.7, 0, 0.3, 1);
+}
+nav .create button:hover {
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
   background-color: #d93182;
+  color: #fff;
 }
 
 @media screen and (max-width: 1280px) {

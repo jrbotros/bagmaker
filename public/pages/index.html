@@ -22,25 +22,22 @@
     <script type="text/javascript" src="/javascripts/view.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
-          theTote = 
-          var bagNum = theTote.bagNum;
-          if (bagNum != -1){
-              showTote(bagNum, theTote);
-          }
+          var theTote = 
+          console.log(theTote);
       });
     </script>
     <nav>
-      <div class="logo"></div>
-      <div class="right-actions">
-        <div class="sort">
-          <div class="selected-sort"><span class="sortTitle">Sort:</span><span class="name">Newest</span></div>
-          <ul>
-            <li data-attr="timestamp" data-dir="desc" class="item">Newest</li>
-            <li data-attr="timestamp" data-dir="asc" class="item">Oldest</li>
-            <li data-attr="likes" data-dir="desc" class="item">Popular</li>
-          </ul>
+      <div class="sort">
+        <div class="selected-sort"><span class="name">Newest</span>
         </div>
-        <div class="create"><a href="/totes/newtote">Make</a></div>
+        <ul>
+          <li data-attr="timestamp" data-dir="desc" class="item">Newest</li>
+          <li data-attr="timestamp" data-dir="asc" class="item">Oldest</li>
+          <li data-attr="likes" data-dir="desc" class="item">Popular    </li>
+        </ul>
+      </div>
+      <div class="create">
+        <button>Create</button>
       </div>
     </nav>
     <div class="content browse-page">

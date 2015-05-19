@@ -5,16 +5,8 @@ var browse = {
         var attr = $li.attr("data-attr");
         var dir = $li.attr("data-dir");
 
-
-        // delete if statement after we figure out how to scope variables in mongodb 
-        if (attr === "likes"){
-            browse.toteBags = _.sortBy(browse.toteBags, function(bag){
-                return parseInt(bag.likes);
-            });
-        }
-        else{
-            browse.toteBags = _.sortBy(browse.toteBags, attr);
-        }
+        browse.toteBags = _.sortBy(browse.toteBags, attr);
+        
         if (dir === "desc")
             browse.toteBags = browse.toteBags.reverse();
         browse.animateOut(function(){
@@ -202,7 +194,7 @@ var browse = {
         //update bag size / favorites
         site.refreshTypeOnTotes();
         if ($dupe.find(".heart-outer-wrap").hasClass("favorited")){
-            $dupe.parents(".view-carousel").find(".view-controls .heart-outer-wrap").addClass("favorited");
+            $(".view-controls .heart-outer-wrap").addClass("favorited");
         }
         window.history.pushState("html", "Title", "/totes/" + browse.toteBags[toteIndex]._id);
         $("body").addClass("lock-scroll");
@@ -398,10 +390,20 @@ $(document).ready(function(){
         if ($(this).hasClass("favorited")){
             likes.unfavorite($(this).find(".heart-wrap"));
             likes.unlikeBag(toteID);
+
+            // its in the view mode
+            if ($(this).parents(".view-controls").length > 0){
+                likes.unfavorite($(".browse-tote-wrap .tote-grid-element").eq(toteIndex).find(".heart-wrap"));
+            }
         }
         else{
             likes.favorite($(this).find(".heart-wrap"));
             likes.likeBag(toteID);
+
+            // its in the view mode
+            if ($(this).parents(".view-controls").length > 0){
+                likes.favorite($(".browse-tote-wrap .tote-grid-element").eq(toteIndex).find(".heart-wrap"));
+            }
         }
     });
 

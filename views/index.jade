@@ -5,25 +5,20 @@ block content
     script(type='text/javascript', src='/javascripts/view.js')
     script(type='text/javascript').
         $(document).ready(function(){
-            theTote = !{tote}
-            var bagNum = theTote.bagNum;
-            if (bagNum != -1){
-                showTote(bagNum, theTote);
-            }
+            var theTote = !{tote}
+            console.log(theTote);
         });
     nav
-        .logo
-        .right-actions
-            .sort
-                .selected-sort
-                    span.sortTitle Sort:
-                    span.name Newest
-                ul
-                    li.item(data-attr='timestamp', data-dir='desc') Newest
-                    li.item(data-attr='timestamp', data-dir='asc') Oldest
-                    li.item(data-attr='likes', data-dir='desc') Popular
-            .create
-                a(href='/totes/newtote') Make
+        .sort
+            .selected-sort
+                //- span.sortTitle Sort:
+                span.name Newest
+            ul
+                li.item(data-attr='timestamp', data-dir='desc') Newest
+                li.item(data-attr='timestamp', data-dir='asc') Oldest
+                li.item(data-attr='likes', data-dir='desc') Popular    
+        .create
+            button Create
     .content.browse-page
         .browse-tote-wrap
         .zoomTransition

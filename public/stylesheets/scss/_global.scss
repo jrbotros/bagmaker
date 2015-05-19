@@ -19,7 +19,7 @@ body.lock-scroll{
 button{
     width: $button-size;
     height: $button-size;
-    @include prefix (border-radius, 50%);
+    @include prefix (border-radius, #{$button-size/2} );
     border: 0;
     background-color: #fff;
     @include prefix (box-shadow, 0 2px 4px 2px rgba(0,0,0,0.2));
@@ -41,169 +41,169 @@ nav{
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #fff;
+    background-color: rgba(0,0,0,0.9);
     z-index: $z-second-level;
 
-    .logo{
-        background: rgba(0,0,0,0.9) url("/images/h.svg") no-repeat center center;
-        background-size: contain;
-        background-size: 50% 50%;
-        width: 50%;
-        height: $navHeight;
-        position: absolute;
-        top: 0;
-        left: 0;
+    // .logo{
+    //     background: rgba(0,0,0,0.9) url("/images/h.svg") no-repeat center center;
+    //     background-size: contain;
+    //     background-size: 50% 50%;
+    //     width: 50%;
+    //     height: $navHeight;
+    //     position: absolute;
+    //     top: 0;
+    //     left: 0;
+    //     cursor: pointer;
+    // }
+
+    & > *{
+        font-size: 21px;
+        line-height: $navHeight;
+        @include prefix (transition, 0.3s $easing-curve);
         cursor: pointer;
     }
 
-    .right-actions{
-        height: $navHeight;
-        position: absolute;
-        right: 0;
-        top: 0;
-        width: 50%;
-        font-size: 21px;
+    .sort {
+        position: relative;
+        padding: 0;
+        float: left;
 
-        & > div{
-            display: inline-block;
-            width: 50%;
-            text-align: center;
-            line-height: $navHeight;
+        &:hover{
+            background-color: inherit;
+            color: inherit;
+
+            .selected-sort{
+                background-color: $magenta
+            }
+
+            ul{
+                height: $navHeight * 3;
+                pointer-events: auto;
+                opacity: 1;
+                @include prefix (transform, translateY(0));
+            }
+        }
+        
+        .selected-sort{
+            width: 100%;
             @include prefix (transition, 0.3s $easing-curve);
-            cursor: pointer;
+            position: relative;
+            text-align: left;
+            padding: 0 ($body-padding + 15) 0 $body-padding;
+            color: #fff;
 
             &:hover{
                 background-color: $magenta;
                 color: #fff;
-            }
-
-            a{
-                color: inherit;
-                text-decoration: none;
-            }
-        }
-
-        .create{
-            background-color: $fadedRed;
-            color: #fff;
-
-            a{
-                width: 100%;
-                height: 100%;
-                display: block;
-            }
-        }
-
-        .sort {
-            position: relative;
-            padding: 0;
-
-            &:hover{
-                background-color: inherit;
-                color: inherit;
-            }
-            
-            .selected-sort{
-                width: 100%;
-                @include prefix (transition, 0.3s $easing-curve);
-                position: relative;
-                text-align: left;
-                padding-left: $body-padding;
-
-                &:hover{
-                    background-color: $magenta;
-                    color: #fff;
-
-                    &:after{
-                        border-top: 7px solid rgba(255,255,255,0.95);
-                    }
-
-                    & + ul{
-                        height: $navHeight * 3;
-                        opacity: 1;
-                        pointer-events: auto;
-                        @include prefix (transform, translateY(0));
-                    }
-                }
-
-                .name{
-                    padding: 0 10px;
-                }
 
                 &:after{
-                    content: "";
-                    width: 0;
-                    height: 0;
-                    border-left: 5px solid transparent;
-                    border-right: 5px solid transparent;
-                    border-top: 5px solid rgba(0,0,0,0.95);
-                    position: absolute;
-                    top: 50%;
-                    margin-top: -3px;
-                    right: $body-padding;
-                    margin-left: -5px;
+                    border-top: 7px solid rgba(255,255,255,0.95);
+                }
+
+                & + ul{
+                    height: $navHeight * 3;
+                    opacity: 1;
+                    pointer-events: auto;
+                    @include prefix (transform, translateY(0));
                 }
             }
-            
-            ul {
-                display: block;
-                position: absolute;
-                background-color: rgba(0, 0, 0, 0.95);
-                top: 100%;
-                left: 0;
-                margin: 0;
-                padding: 0;
+
+            .name{
+                padding-right: 10px;
+            }
+
+            &:after{
+                content: "";
+                width: 0;
                 height: 0;
-                opacity: 0;
-                width: 100%;
-                pointer-events: none;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-top: 5px solid #fff;
+                position: absolute;
+                top: 50%;
+                margin-top: -3px;
+                right: $body-padding;
+                margin-left: -5px;
+            }
+        }
+        
+        ul {
+            display: block;
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.95);
+            top: 100%;
+            left: 0;
+            margin: 0;
+            padding: 0;
+            height: 0;
+            opacity: 0;
+            width: 25vw;
+            pointer-events: none;
+            //width: 250px;
+            text-align: left;
+            font-size: 16px;
+            overflow: hidden;
+            
+            @include prefix (transition, 0.5s $easing-curve);
+            @include prefix (transform, translateY(-10px));
+
+            &:hover {
+                height: $navHeight * 3;
+                pointer-events: auto;
+                opacity: 1;
+                @include prefix (transform, translateY(0));
+            }
+
+            &:before{
+                content: "";
+                width: 0;
+                height: 0;
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-bottom: 10px solid rgba(0,0,0,0.95);
+                position: absolute;
+                top: -10px;
+                right: $body-padding - 5px;
+            }
+
+            li{
+                color: #fff;
+                display: block;
+                margin: 0;
+                box-sizing: border-box;
+                padding: 0 30px;
+                font-size: 18px;
                 //width: 250px;
-                text-align: left;
-                font-size: 16px;
-                overflow: hidden;
-                
-                @include prefix (transition, 0.5s $easing-curve);
-                @include prefix (transform, translateY(-10px));
+                border-top: 1px solid rgba(255,255,255,0.2);
+                @include prefix (transition, 0.3s $easing-curve);
 
-                &:hover {
-                    height: $navHeight * 3;
-                    pointer-events: auto;
-                    opacity: 1;
-                    @include prefix (transform, translateY(0));
+                &:hover{
+                    background-color: rgba(255, 255, 255, 0.2);
                 }
+            }
+        }
+    }
 
-                &:before{
-                    content: "";
-                    width: 0;
-                    height: 0;
-                    border-left: 10px solid transparent;
-                    border-right: 10px solid transparent;
-                    border-bottom: 10px solid rgba(0,0,0,0.95);
-                    position: absolute;
-                    top: -10px;
-                    right: $body-padding - 5px;
-                }
+    .create{
+        color: #000;
+        float: right;
+        height: 100%;
 
-                &.open{
-                    height: $navHeight * 3;
-                    opacity: 1;
-                    @include prefix (transform, translateY(0));
-                }
-                
-                li{
-                    color: #fff;
-                    display: block;
-                    margin: 0;
-                    box-sizing: border-box;
-                    padding: 0 30px;
-                    //width: 250px;
-                    border-top: 1px solid rgba(255,255,255,0.2);
-                    @include prefix (transition, 0.3s $easing-curve);
+        button{
+            position: absolute;
+            right: $body-padding;
+            top: ($navHeight - $button-size)/2;
+            width: auto;
+            padding-left: $body-padding;
+            padding-right: $body-padding;
+            font-family: HugeAvantGarde;
+            font-size: 16px;
+            @include prefix (transition, 0.3s $easing-curve);
 
-                    &:hover{
-                        background-color: $magenta;
-                    }
-                }
+            &:hover{
+                @include prefix (transform, scale(1));
+                background-color: $magenta;
+                color: #fff;
             }
         }
     }
