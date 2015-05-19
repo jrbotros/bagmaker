@@ -66,12 +66,13 @@ var viewPage = {
         var toteIndex = parseInt($(".view-carousel").attr("data-display"));
         var toteID = browse.toteBags[toteIndex]._id;
 
-        // user likes it
-        if (likes.indexOf(toteID) > -1){
-            $(".view-controls .heart-outer-wrap").addClass("favorited");
+        // user likes it and the button isn't already liked
+        if (likes.indexOf(toteID) > -1 && !$(".view-controls .heart-outer-wrap").hasClass("favorited") ){
+            likes.favorite($(".view-controls .heart-outer-wrap .heart-wrap"));
         }
-        else{
-            $(".view-controls .heart-outer-wrap").removeClass("favorited");
+        // user doesnt like it and the button is liked.
+        else if (likes.indexOf(toteID) === -1 && $(".view-controls .heart-outer-wrap").hasClass("favorited")) {
+            likes.unfavorite($(".view-controls .heart-outer-wrap .heart-wrap"));
         }
     }
 };

@@ -1,3 +1,9 @@
+// TO DO:
+// - Routing for views
+// - Close view animation
+// - Redo heart animation?
+// - Admin view.
+
 var cssBezier = new Ease(BezierEasing(.7,0,.3,1));
 var gridBagBezier = new Ease(BezierEasing(.42,0,.58,1));
 
