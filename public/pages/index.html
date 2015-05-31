@@ -20,13 +20,7 @@
   <body>
     <script type="text/javascript" src="/javascripts/browse.js"></script>
     <script type="text/javascript" src="/javascripts/view.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function(){
-          var theTote = 
-          console.log(theTote);
-      });
-    </script>
-    <nav>
+    <nav class="hidden">
       <div class="sort">
         <div class="selected-sort"><span class="name">Newest</span>
         </div>
@@ -41,6 +35,7 @@
       </div>
     </nav>
     <div class="content browse-page">
+      <div id="viewId"></div>
       <div class="browse-tote-wrap"></div>
       <div class="zoomTransition">
         <div class="zoomAnimationWrapper"></div>

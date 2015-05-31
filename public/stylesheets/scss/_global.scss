@@ -16,6 +16,10 @@ body.lock-scroll{
     overflow: hidden;
 }
 
+.hidden{
+    display: none;
+}
+
 button{
     width: $button-size;
     height: $button-size;
@@ -137,7 +141,7 @@ nav{
             padding: 0;
             height: 0;
             opacity: 0;
-            width: 25vw;
+            width: 33.33vw;
             pointer-events: none;
             //width: 250px;
             text-align: left;
@@ -208,60 +212,19 @@ nav{
         }
     }
 }
-
-@media screen and (max-width: $lrgBP) {
-    nav{
-        .logo{
-            width: 33.33%;
-        }
-        .right-actions{
-            width: 66.66%;
-        }
+@media screen and (min-width: $lrgBP) {
+    nav .sort ul{
+        width: 25vw;
     }
 }
 @media screen and (max-width: $medBP) {
-    nav{
-        .logo{
-            width: 50%;
-        }
-        .right-actions{
-            width: 50%;
-
-            .sort{
-                .sortTitle{
-                    display: none;
-                }
-                // ul{
-                //     width: 200%;
-
-                //     &:before{
-                //         @include calc (right, calc(50% + #{$body-padding} - 5px));
-                //     }
-                // }
-            }
-        }
+    nav .sort ul{
+        width: 50vw;
     }
 }
 @media screen and (max-width: $smlBP) {
-    nav{
-        height: 2 * $navHeight;
-
-        .logo{
-            width: 100%;
-        }
-        .right-actions{
-            width: 100%;
-            top: $navHeight;
-
-            .sort{
-                .sortTitle{
-                    display: none;
-                }
-            }
-        }
-    }
-    .content{
-        margin-top: $navHeight;
+    nav .sort ul{
+        width: 100vw;
     }
 }
 

@@ -149,6 +149,10 @@
         @include prefix (transform-origin, center top);
     }
 
+    &.noAnimate{
+        @include prefix (transition, 0s);
+    }
+
     &.black{
         background: #fff;
     }

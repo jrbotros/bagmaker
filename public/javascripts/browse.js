@@ -107,7 +107,9 @@ var browse = {
         }
 
     },
-    buildBagGrid : function(){
+    buildBagGrid : function(animate, callback){
+        if (typeof animate === "undefined") animate = true;
+
         _.each(browse.toteBags, function(tote){
             tote.swingTimer = null;
             var toteObj = {bags : [tote]};
@@ -136,14 +138,25 @@ var browse = {
                     //id : "tote-" + tote._id,
                     class : "tote-grid-element start " + toteObj.bags[0].color,
                     html :  heartWrap + rendered
-                }).appendTo(".browse-page.content .browse-tote-wrap");
+                });
+                $tote.appendTo(".browse-page.content .browse-tote-wrap");
 
                 // on the last one, update the type sizing and animate it in.
                 if (tote == browse.toteBags[browse.toteBags.length-1]){
                     $('.browse-page.content .browse-tote-wrap .clearfix').remove();
                     $('.browse-page.content .browse-tote-wrap').append("<div class='clearfix'></div>");
                     site.refreshTypeOnTotes();
-                    browse.animateIn();
+
+                    if (animate){
+                        browse.animateIn();
+                        $("nav.hidden").removeClass("hidden");
+                    }
+                    else{
+                        $(".tote-grid-element.start").addClass("noAnimate").removeClass("start").removeClass("noAnimate");
+                        $("nav.hidden").removeClass("hidden");
+                    }
+
+                    if (typeof callback !== "undefined") callback();
                 }
             });
         });        
@@ -361,7 +374,23 @@ var browse = {
 
 $(document).ready(function(){
     likes.fetchUserLikes();
-    browse.loadBags(browse.buildBagGrid);
+    browse.loadBags(function(){
+
+        // check to see if its a view page actually.
+        var viewId = $("#viewId").html();
+        $("#viewId").remove();
+
+        if (viewId === ""){
+            browse.buildBagGrid();
+        }
+        else{
+            browse.buildBagGrid(false, function(){
+                var toteBag = _.findWhere(browse.toteBags, {"_id" : viewId});
+                var toteIndex = _.indexOf(browse.toteBags, toteBag);
+                browse.view($(".tote-grid-element").eq(toteIndex));
+            });  
+        }
+    });
 
     $(".sort ul li").hammer().on("tap", function(){
         browse.sort($(this));

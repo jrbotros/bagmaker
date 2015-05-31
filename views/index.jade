@@ -3,12 +3,8 @@ extends layout
 block content
     script(type='text/javascript', src='/javascripts/browse.js')
     script(type='text/javascript', src='/javascripts/view.js')
-    script(type='text/javascript').
-        $(document).ready(function(){
-            var theTote = !{tote}
-            console.log(theTote);
-        });
-    nav
+    
+    nav.hidden
         .sort
             .selected-sort
                 //- span.sortTitle Sort:
@@ -20,6 +16,7 @@ block content
         .create
             button Create
     .content.browse-page
+        #viewId= toteID
         .browse-tote-wrap
         .zoomTransition
             .zoomAnimationWrapper

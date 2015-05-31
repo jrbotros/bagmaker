@@ -21,6 +21,9 @@ var likes = {
     fetchUserLikes : function(){
         var userLikes = $.cookie("likes");
         likes.userLikes = userLikes.split(",");
+
+        // refresh their likes every time they come to the site, causing infinitely long saved cookies
+        $.cookie("likes", likes.userLikes, { expires : 30 });
     },
     likeBag : function(toteID){
         if (likes.indexOf(toteID) > -1){
@@ -28,7 +31,8 @@ var likes = {
         }
         else{
             likes.userLikes.push(toteID);
-            $.cookie("likes", likes.userLikes);
+            // sets the cookie to not expire for 30 days.
+            $.cookie("likes", likes.userLikes, { expires : 30 });
 
             browse.loadBags(function(){
                 var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
@@ -61,7 +65,7 @@ var likes = {
 
         if (toteIndex > -1){
             likes.userLikes.splice(toteIndex, 1);
-            $.cookie("likes", likes.userLikes);
+            $.cookie("likes", likes.userLikes, { expires : 30 });
 
             browse.loadBags(function(){
                 var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
@@ -461,14 +465,6 @@ function resizeHelper(){
 
 function scrollHelper(){
     var scroll = $("body").scrollTop();
-
-    if ($("nav").length > 0 && site.breakpt() === "sml"){
-        var navIndent = 80
-        if (scroll < $("nav .logo").height()){
-            navIndent = scroll;
-        }
-        TweenLite.to("nav", 0, { y : -navIndent });
-    }
 }
 
 $(document).ready(function(){

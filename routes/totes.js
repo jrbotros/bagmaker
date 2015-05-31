@@ -50,14 +50,20 @@ router.put('/updatetote/:id', function(req, res) {
     });
 });
 
+router.param('id', function(req, res, next, id){
+    // validate the id.
+    console.log("its validatingggg");
+    next();
+})
+
 /* GET a single tote */
 router.get('/:id', function(req, res) {
-
     var toteToUpdate = req.params.id;
-
     Totebag.findOne({_id: toteToUpdate}, function(err, totebag) {
         if(err) return res.status(500).json("Internal Server Error");
-        return res.status(200).json(totebag);
+        res.render("index", {
+            toteID : toteToUpdate
+        });
     });
 });
 
