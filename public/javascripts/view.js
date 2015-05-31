@@ -24,6 +24,7 @@ var viewPage = {
 
                 $carousel.parents(".view-carousel").attr("data-display", nextIndex );
                 window.history.pushState("html", "Title", "/totes/" + browse.toteBags[nextIndex]._id);
+                // $("head title").html("View Tote | Maker | Huge inc.");
                 site.refreshTypeOnTotes();
                 viewPage.updateLikes();
             }
@@ -34,8 +35,6 @@ var viewPage = {
         var dist = $carousel.find(".tote-grid-element").outerWidth();
 
         var prevIndex = parseInt($carousel.find(".tote-grid-element:first-child").attr("data-id"));
-        
-        console.log(prevIndex);
 
         var newIndex = prevIndex - 1;
         if ( newIndex < 0 )
@@ -57,6 +56,7 @@ var viewPage = {
 
                 $carousel.parents(".view-carousel").attr("data-display", prevIndex );
                 window.history.pushState("html", "Title", "/totes/" + browse.toteBags[prevIndex]._id);
+                // $("head title").html("View Tote | Maker | Huge inc.");
                 site.refreshTypeOnTotes();
                 viewPage.updateLikes();
             }
@@ -84,6 +84,37 @@ $(document).ready(function(){
 
     $(document).hammer().on("tap", ".view-controls button.right", function(){
         viewPage.nextTote();
+    });
+
+    $(document).hammer().on("tap", ".view-carousel.on button.close", function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        
+        browse.viewZoomOut();
+    })
+
+    $(document).on("keyup", function(e){
+        if ($(".view-carousel").hasClass("on")){
+            // right
+            if (e.keyCode === 39)
+                viewPage.nextTote();
+
+            // left
+            else if (e.keyCode === 37)
+                viewPage.prevTote();
+
+            // up
+            else if (e.keyCode === 38){
+                currScroll = $(".view-carousel-wrap").scrollTop();
+                $(".view-carousel-wrap").scrollTop(currScroll - 10);
+            }
+
+            // down
+            else if (e.keyCode === 40){
+                currScroll = $(".view-carousel-wrap").scrollTop();
+                $(".view-carousel-wrap").scrollTop(currScroll + 10);
+            }
+        }
     });
 
     $(document).hammer().on("drag", ".view-carousel-wrap", function(e){

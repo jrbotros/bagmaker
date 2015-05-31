@@ -18,7 +18,7 @@ router.get('/', function(req, res) {
 
 /* GET New tote page. */
 router.get('/newtote', function(req, res) {
-    res.render('newtote', { title: 'Design a Tote Bag' });
+    res.render('newtote', { title: 'Create a Tote / Totebag Maker / Huge inc.' });
 });
 
 /* POST to createtote */
@@ -51,8 +51,8 @@ router.put('/updatetote/:id', function(req, res) {
 });
 
 router.param('id', function(req, res, next, id){
+    console.log(id);
     // validate the id.
-    console.log("its validatingggg");
     next();
 })
 
@@ -60,8 +60,11 @@ router.param('id', function(req, res, next, id){
 router.get('/:id', function(req, res) {
     var toteToUpdate = req.params.id;
     Totebag.findOne({_id: toteToUpdate}, function(err, totebag) {
-        if(err) return res.status(500).json("Internal Server Error");
+        if(err){
+            res.render("index", { title : "Totebag Maker / Huge inc."});
+        }
         res.render("index", {
+            title: 'View Tote / Totebag Maker / Huge inc.',
             toteID : toteToUpdate
         });
     });

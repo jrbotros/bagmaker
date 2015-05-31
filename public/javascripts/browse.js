@@ -210,6 +210,7 @@ var browse = {
             $(".view-controls .heart-outer-wrap").addClass("favorited");
         }
         window.history.pushState("html", "Title", "/totes/" + browse.toteBags[toteIndex]._id);
+        $("head title").html("View Tote / Totebag Maker / Huge inc.");
         $("body").addClass("lock-scroll");
 
         // scroll user to center the bag.
@@ -239,8 +240,7 @@ var browse = {
         $dupe.width(w);
 
         // add all the shit.
-        $(".content.browse-page .zoomTransition .zoomAnimationWrapper").append($dupe);
-        $(".zoomTransition").addClass("debug");
+        $(".zoomAnimationWrapper").append($dupe);
         TweenLite.to($dupe, 0, { x : x, y : y });
 
         $dupe.removeClass("swinging");
@@ -293,7 +293,59 @@ var browse = {
             }
         });
     },
-    viewZoomOut : function($tote){
+    viewZoomOut : function(){
+        // find which tote in the grid it is.
+        var toteIndex = parseInt($(".view-carousel").attr("data-display"));
+        var $tote = $(".browse-tote-wrap .tote-grid-element").eq(toteIndex);
+        
+        // dupe that for the animation.
+        var $dupe = $("<div />", {
+            "id" : "zoomAnimation",
+            "class" : $tote.attr("class") + "",
+            "html" : $tote.html()
+        });
+
+        // get all them measurements.
+        var w = $tote.outerWidth();
+        var windowWidth = $(window).width();
+        var windowHeight = $(window).height();
+        var ratio = w / windowWidth;
+        var inverseRatio = Math.round(1/ratio);
+        var x = $tote.offset().left;
+        var y = $tote.offset().top;
+
+        // morph the duplicate to be the right size.
+        TweenLite.to($dupe, 0, {
+            x : 0,
+            y : 0,
+            width: "100%",
+            scale : 1,
+            height : (1.5 * windowHeight)
+        });
+        $(".zoomAnimationWrapper").append($dupe);
+        site.refreshTypeOnTotes();
+
+        // Getting the right scroll spot.
+        scrollAmount = $(".view-carousel-wrap").scrollTop();;
+        $(".zoomAnimationWrapper").scrollTop(scrollAmount);
+        $(".view-carousel-wrap").empty();
+        $(".view-carousel").removeClass("on");
+
+        // Animation part of it.
+        console.log(y, $(window).scrollTop());
+        TweenLite.to($dupe, 0.5, {
+            x : (x - ((inverseRatio - 1) * 1/2 * w)),
+            y : y - $(window).scrollTop(),
+            scale : ratio,
+            ease : cssBezier,
+            height : (w / ratio),
+            onComplete : function(){
+                $dupe.remove();
+                $("body").removeClass("lock-scroll");
+                window.history.pushState("html", "Title", "/");
+                $("head title").html("Totebag Maker / Huge inc.");
+            }
+        });
 
     },
     swingOnce : function($bag){
@@ -382,12 +434,23 @@ $(document).ready(function(){
 
         if (viewId === ""){
             browse.buildBagGrid();
+            window.history.pushState("html", "Title", "/");
         }
         else{
             browse.buildBagGrid(false, function(){
                 var toteBag = _.findWhere(browse.toteBags, {"_id" : viewId});
                 var toteIndex = _.indexOf(browse.toteBags, toteBag);
-                browse.view($(".tote-grid-element").eq(toteIndex));
+                
+                // if this tote does exist
+                if (toteIndex !== -1)
+                    browse.view($(".tote-grid-element").eq(toteIndex));
+
+                // if it doesn't
+                else{
+                    browse.buildBagGrid();
+                    window.history.pushState("html", "Title", "/");
+                    $("head title").html("Totebag Maker / Huge inc.");
+                }
             });  
         }
     });

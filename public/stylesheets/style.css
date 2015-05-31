@@ -1477,9 +1477,6 @@ button.save:after {
   pointer-events: none;
   z-index: 290;
 }
-.content.browse-page .zoomTransition.debug {
-  pointer-events: auto;
-}
 .content.browse-page .zoomTransition .zoomAnimationWrapper {
   width: 100%;
   height: 100%;

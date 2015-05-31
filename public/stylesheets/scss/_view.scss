@@ -12,10 +12,6 @@
     pointer-events: none;
     z-index: $z-third-level - 10;
 
-    &.debug{
-        pointer-events: auto;
-    }
-
     .zoomAnimationWrapper{
         width: 100%;
         height: 100%;
