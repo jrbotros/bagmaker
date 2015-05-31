@@ -152,6 +152,7 @@ var browse = {
                         $("nav.hidden").removeClass("hidden");
                     }
                     else{
+                        console.log('yeah');
                         $(".tote-grid-element.start").addClass("noAnimate").removeClass("start").removeClass("noAnimate");
                         $("nav.hidden").removeClass("hidden");
                     }
@@ -378,7 +379,7 @@ $(document).ready(function(){
 
         // check to see if its a view page actually.
         var viewId = $("#viewId").html();
-        $("#viewId").remove();
+        // $("#viewId").remove();
 
         if (viewId === ""){
             browse.buildBagGrid();
