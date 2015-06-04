@@ -3,15 +3,15 @@ var router = express.Router();
 
 var mongoose = require('mongoose');
 var Totebag = mongoose.model('Totebag');
+var pageLimit = 10;
 
 /* GET totes listing. */
-router.get('/', function(req, res) {
+router.get('/tote-data', function(req, res) {
     Totebag.find(function(err, totebags) {
         if(err) {
-          console.log(err);  
+          console.log(err);
           return res.status(500).json("Internal Server Error");  
-        } 
-
+        }        
         return res.status(200).json(totebags);
     });
 });
@@ -51,10 +51,17 @@ router.put('/updatetote/:id', function(req, res) {
 });
 
 router.param('id', function(req, res, next, id){
-    console.log(id);
-    // validate the id.
-    next();
-})
+    Totebag.findById(id, function (err, found) {
+        // if you can't find this id, take them to the index page.
+        if (found === null || typeof found === "undefined")
+            res.render("index", { title : "Totebag Maker / Huge inc."});
+        
+        // valid id
+        else
+            next();
+
+    });    
+});
 
 /* GET a single tote */
 router.get('/:id', function(req, res) {
@@ -67,6 +74,7 @@ router.get('/:id', function(req, res) {
             title: 'View Tote / Totebag Maker / Huge inc.',
             toteID : toteToUpdate
         });
+        // res.send({testID : toteToUpdate});
     });
 });
 

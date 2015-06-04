@@ -280,6 +280,7 @@ var bagObject = {
                 size : "small",
                 color : "black",
                 likes : 0,
+                views : 0,
                 editMode : false
             },
     
@@ -297,6 +298,34 @@ var bagObject = {
         setTimeout(function(){
             site.refreshTypeOnTotes();
         }, 100);
+    },
+
+    upViewCount : function(toteID){
+        browse.loadBags(function(){
+            var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
+            if (typeof tote.views !== "number" || tote.views === null)
+                tote.views = 1;
+            else
+                tote.views = tote.views + 1;
+
+            // sort of hacky, the only way i know how to update a tote. you aren't allowed
+            // to update it with the sacred _id variable already assigned.
+            var clone = _.extend({}, tote);
+            delete clone._id;
+
+            // use ajax to post tote to db
+            $.ajax({
+                type: 'PUT',
+                data: JSON.stringify(clone),
+                url: '/totes/updatetote/' + toteID,
+                contentType:"application/json; charset=utf-8",
+                dataType: 'json'
+            }).done(function( response, status ){
+
+            }).fail(function( response, status ){
+
+            });
+        });
     },
 
     //big to small, refresh type afterwards.

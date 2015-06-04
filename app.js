@@ -11,6 +11,7 @@ mongoose.connect('mongodb://localhost:27017/bagmaker');
 var Totebag = mongoose.model('Totebag', {
     color: String,
     likes: Number,
+    views: Number,
     size: String,
     timestamp: Date,
     textfields: [{
