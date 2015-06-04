@@ -23,10 +23,13 @@ var viewPage = {
                 TweenLite.to($carousel, 0, { x : 0 });
 
                 $carousel.parents(".view-carousel").attr("data-display", nextIndex );
-                window.history.pushState("html", "Title", "/totes/" + browse.toteBags[nextIndex]._id);
+                var toteId = browse.toteBags[nextIndex]._id;
+                window.history.pushState("html", "Title", "/totes/" + toteId);
+
                 // $("head title").html("View Tote | Maker | Huge inc.");
                 site.refreshTypeOnTotes();
                 viewPage.updateLikes();
+                bagObject.upViewCount(toteId);
             }
         });
     },
@@ -55,10 +58,13 @@ var viewPage = {
                 TweenLite.to($carousel, 0, { x : 0 });
 
                 $carousel.parents(".view-carousel").attr("data-display", prevIndex );
-                window.history.pushState("html", "Title", "/totes/" + browse.toteBags[prevIndex]._id);
+                var toteId = browse.toteBags[prevIndex]._id;
+                window.history.pushState("html", "Title", "/totes/" + toteId);
+
                 // $("head title").html("View Tote | Maker | Huge inc.");
                 site.refreshTypeOnTotes();
                 viewPage.updateLikes();
+                bagObject.upViewCount(toteId);
             }
         });
     },

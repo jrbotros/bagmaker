@@ -3,7 +3,7 @@ extends layout
 block content
     script(type='text/javascript', src='/javascripts/browse.js')
     script(type='text/javascript', src='/javascripts/view.js')
-    
+
     nav.hidden
         .sort
             .selected-sort
@@ -16,7 +16,7 @@ block content
         .create
             button Create
     .content.browse-page
-        #viewId= toteID
+        #viewId #{toteID}
         .browse-tote-wrap
         .zoomTransition
             .zoomAnimationWrapper

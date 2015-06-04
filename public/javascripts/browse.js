@@ -86,7 +86,7 @@ var browse = {
     // grab tote data
     loadBags : function(callback){
         if (browse.toteBags === null){
-            $.getJSON('/totes', function( data ){
+            $.getJSON('/totes/tote-data', function( data ){
                 // sort it by time - newest
                 browse.toteBags = _.sortBy(data, function(tote){
                     return tote.timestamp;
@@ -209,7 +209,11 @@ var browse = {
         if ($dupe.find(".heart-outer-wrap").hasClass("favorited")){
             $(".view-controls .heart-outer-wrap").addClass("favorited");
         }
-        window.history.pushState("html", "Title", "/totes/" + browse.toteBags[toteIndex]._id);
+
+        var toteId = browse.toteBags[toteIndex]._id;
+        window.history.pushState("html", "Title", "/totes/" + toteId);
+        bagObject.upViewCount(toteId);
+        
         $("head title").html("View Tote / Totebag Maker / Huge inc.");
         $("body").addClass("lock-scroll");
 
