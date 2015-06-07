@@ -6,15 +6,15 @@ var Totebag = mongoose.model('Totebag');
 var pageLimit = 10;
 
 /* GET totes listing. */
-router.get('/tote-data', function(req, res) {
-    Totebag.find(function(err, totebags) {
-        if(err) {
-          console.log(err);
-          return res.status(500).json("Internal Server Error");  
-        }        
-        return res.status(200).json(totebags);
-    });
-});
+// router.get('/data', function(req, res) {
+//     Totebag.find(function(err, totebags) {
+//         if(err) {
+//           console.log(err);
+//           return res.status(500).json("Internal Server Error");  
+//         }        
+//         return res.status(200).json(totebags);
+//     });
+// });
 
 /* GET New tote page. */
 router.get('/newtote', function(req, res) {
@@ -50,16 +50,15 @@ router.put('/updatetote/:id', function(req, res) {
     });
 });
 
+// validates all uses of the "id" variable.
 router.param('id', function(req, res, next, id){
     Totebag.findById(id, function (err, found) {
         // if you can't find this id, take them to the index page.
         if (found === null || typeof found === "undefined")
-            res.render("index", { title : "Totebag Maker / Huge inc."});
-        
+            handle404(req, res);
         // valid id
         else
             next();
-
     });    
 });
 
@@ -68,13 +67,16 @@ router.get('/:id', function(req, res) {
     var toteToUpdate = req.params.id;
     Totebag.findOne({_id: toteToUpdate}, function(err, totebag) {
         if(err){
-            res.render("index", { title : "Totebag Maker / Huge inc."});
+            res.render('index', {
+                title : 'Newest | Totebag Maker | Huge inc.',
+                sort : "newest"
+            });
         }
         res.render("index", {
-            title: 'View Tote / Totebag Maker / Huge inc.',
-            toteID : toteToUpdate
+            title: 'View Tote | Totebag Maker | Huge inc.',
+            toteID : toteToUpdate,
+            sort : "newest"
         });
-        // res.send({testID : toteToUpdate});
     });
 });
 

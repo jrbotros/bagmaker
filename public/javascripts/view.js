@@ -1,72 +1,127 @@
 var viewPage = {
     nextTote : function(){
+        if ($(".view-controls button.right").hasClass("disabled")) return;
+
         var $carousel = $(".view-carousel-wrap");
         var dist = $carousel.find(".tote-grid-element").outerWidth();
-
         var nextIndex = parseInt($carousel.find(".tote-grid-element:last-child").attr("data-id"));
         var newIndex = nextIndex + 1;
-        if (newIndex >= $(".browse-tote-wrap .tote-grid-element").length )
-            newIndex = 0;
 
-        TweenLite.to($carousel, 0.5, {
-            x : -dist,
-            ease: cssBezier,
-            onComplete : function() {
-                var $nextTote = $(".browse-tote-wrap .tote-grid-element").eq(newIndex);
-                var $addNext = $("<div />", {
-                    "class" : $nextTote.attr("class") + " view",
-                    "data-id" : newIndex,
-                    "html" : $nextTote.html()
+        // catch for loading more.
+        if (newIndex >= $(".browse-tote-wrap .tote-grid-element").length ){
+            if (!browse.loadedAll){
+                browse.loadBags( function(){ 
+                    browse.buildBagGrid(false, function(){
+                        slideNextAnimation();
+                    });
                 });
-                $carousel.append( $addNext );
-                $carousel.find(".tote-grid-element:first-child").remove();
-                TweenLite.to($carousel, 0, { x : 0 });
-
-                $carousel.parents(".view-carousel").attr("data-display", nextIndex );
-                var toteId = browse.toteBags[nextIndex]._id;
-                window.history.pushState("html", "Title", "/totes/" + toteId);
-
-                // $("head title").html("View Tote | Maker | Huge inc.");
-                site.refreshTypeOnTotes();
-                viewPage.updateLikes();
-                bagObject.upViewCount(toteId);
             }
-        });
+            else{
+                newIndex = -1;
+                slideNextAnimation();
+                $(".view-controls button.right").addClass("disabled");
+            }
+        }
+        else{
+            slideNextAnimation();
+        }
+
+        function slideNextAnimation(){
+            TweenLite.to($carousel, 0.5, {
+                x : -dist,
+                ease: cssBezier,
+                onComplete : function() {
+                    var $addNext;
+                    if (newIndex !== -1){
+                        var $nextTote = $(".browse-tote-wrap .tote-grid-element").eq(newIndex);
+                        $addNext = $("<div />", {
+                            "class" : $nextTote.attr("class") + " view",
+                            "data-id" : newIndex,
+                            "html" : $nextTote.html()
+                        });
+                    }
+                    else{
+                        $addNext = $("<div />", {
+                            "class" : "empty tote-grid-element black",
+                            "data-id" : -1,
+                            "html" : ""
+                        });
+                    }
+                    $carousel.append( $addNext );
+
+                    $carousel.find(".tote-grid-element:first-child").remove();
+                    TweenLite.to($carousel, 0, { x : 0 });
+                    $(".view-controls button.left").removeClass("disabled");
+
+                    $carousel.parents(".view-carousel").attr("data-display", nextIndex );
+                    var toteId = browse.toteBags[nextIndex]._id;
+                    window.history.pushState("html", "Title", "/totes/" + toteId);
+
+                    // $("head title").html("View Tote | Maker | Huge inc.");
+                    site.refreshTypeOnTotes();
+                    viewPage.updateLikes();
+                    bagObject.upViewCount(toteId);
+                }
+            });
+        }
+        
     },
     prevTote : function(){
+        if ($(".view-controls button.left").hasClass("disabled")) return;
+
         var $carousel = $(".view-carousel-wrap");
         var dist = $carousel.find(".tote-grid-element").outerWidth();
-
         var prevIndex = parseInt($carousel.find(".tote-grid-element:first-child").attr("data-id"));
-
         var newIndex = prevIndex - 1;
-        if ( newIndex < 0 )
-            newIndex = $(".browse-tote-wrap .tote-grid-element").length - 1;
 
-        TweenLite.to($carousel, 0.5, {
-            x : dist,
-            ease: cssBezier,
-            onComplete : function() {
-                var $prevTote = $(".browse-tote-wrap .tote-grid-element").eq(newIndex);
-                var $addPrev = $("<div />", {
-                    "class" : $prevTote.attr("class") + " view",
-                    "data-id" : newIndex,
-                    "html" : $prevTote.html()
-                });
-                $carousel.prepend( $addPrev );
-                $carousel.find(".tote-grid-element:last-child").remove();
-                TweenLite.to($carousel, 0, { x : 0 });
+        // catch for loading more.
+        if (newIndex < 0 ){
+            newIndex = -1;
+            slidePrevAnimation();
+            $(".view-controls button.left").addClass("disabled");
+        }
+        else{
+            slidePrevAnimation();
+        }
 
-                $carousel.parents(".view-carousel").attr("data-display", prevIndex );
-                var toteId = browse.toteBags[prevIndex]._id;
-                window.history.pushState("html", "Title", "/totes/" + toteId);
+        function slidePrevAnimation(){
+            TweenLite.to($carousel, 0.5, {
+                x : dist,
+                ease: cssBezier,
+                onComplete : function() {
+                    var $addPrev;
+                    if (newIndex !== -1){
+                        var $prevTote = $(".browse-tote-wrap .tote-grid-element").eq(newIndex);
+                        $addPrev = $("<div />", {
+                            "class" : $prevTote.attr("class") + " view",
+                            "data-id" : newIndex,
+                            "html" : $prevTote.html()
+                        });
+                    }
+                    else {
+                        $addPrev = $("<div />", {
+                            "class" : "empty tote-grid-element black",
+                            "data-id" : -1,
+                            "html" : ""
+                        });
+                    }
+                    
+                    $carousel.prepend( $addPrev );
+                    $carousel.find(".tote-grid-element:last-child").remove();
+                    TweenLite.to($carousel, 0, { x : 0 });
+                    $(".view-controls button.right").removeClass("disabled");
 
-                // $("head title").html("View Tote | Maker | Huge inc.");
-                site.refreshTypeOnTotes();
-                viewPage.updateLikes();
-                bagObject.upViewCount(toteId);
-            }
-        });
+                    $carousel.parents(".view-carousel").attr("data-display", prevIndex );
+                    var toteId = browse.toteBags[prevIndex]._id;
+                    window.history.pushState("html", "Title", "/totes/" + toteId);
+
+                    // $("head title").html("View Tote | Maker | Huge inc.");
+                    site.refreshTypeOnTotes();
+                    viewPage.updateLikes();
+                    bagObject.upViewCount(toteId);
+                }
+            });
+        }
     },
     updateLikes : function(){
         var toteIndex = parseInt($(".view-carousel").attr("data-display"));

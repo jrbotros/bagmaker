@@ -9,15 +9,19 @@ html, body{
     *{
         @include borderBox;
     }
+
+    &.instant{
+        @include prefix (transition, 0s);
+    }
+
+    &.hidden{
+        display: none;
+    }
 }
 
 body.lock-scroll{
     height: 100%;
     overflow: hidden;
-}
-
-.hidden{
-    display: none;
 }
 
 button{

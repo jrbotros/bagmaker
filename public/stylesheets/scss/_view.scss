@@ -46,7 +46,6 @@ body .view-carousel{
         pointer-events: auto;
 
         .view-carousel-wrap .tote-grid-element .tote-wrap .actual-tote .shadow-blur .tote-shadow{
-            opacity: 1;
             @include prefix (transform, translateY(0));
         }
         .close{
@@ -91,7 +90,6 @@ body .view-carousel{
                         .tote-shadow{
                             opacity: 0;
                             @include prefix (transform, translateY(-100px));
-                            @include prefix (transition, 0.5s $easing-curve);
                         }
                     }
                 }

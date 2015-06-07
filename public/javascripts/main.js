@@ -1,8 +1,6 @@
 // TO DO:
 // -Redo heart animation.
 // -Admin view.
-// -Lazy Loading.
-// -add view count to bag data
 // -404 page.
 
 var cssBezier = new Ease(BezierEasing(.7,0,.3,1));
@@ -35,7 +33,7 @@ var likes = {
             // sets the cookie to not expire for 30 days.
             $.cookie("likes", likes.userLikes, { expires : 30 });
 
-            browse.loadBags(function(){
+            // browse.loadBags(function(){
                 var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
                 tote.likes = parseInt(tote.likes) + 1;
 
@@ -58,7 +56,7 @@ var likes = {
                 }).fail(function( response, status ){
 
                 });
-            });
+            // });
         }
     },
     unlikeBag : function(toteID){
@@ -68,7 +66,7 @@ var likes = {
             likes.userLikes.splice(toteIndex, 1);
             $.cookie("likes", likes.userLikes, { expires : 30 });
 
-            browse.loadBags(function(){
+            // browse.loadBags(function(){
                 var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
                 tote.likes = parseInt(tote.likes) - 1;
 
@@ -92,7 +90,7 @@ var likes = {
 
                 });
 
-            });
+            // });
         }
         else{
             return false;
@@ -301,7 +299,7 @@ var bagObject = {
     },
 
     upViewCount : function(toteID){
-        browse.loadBags(function(){
+        // browse.loadBags(function(){
             var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
             if (typeof tote.views !== "number" || tote.views === null)
                 tote.views = 1;
@@ -325,7 +323,7 @@ var bagObject = {
             }).fail(function( response, status ){
 
             });
-        });
+        // });
     },
 
     //big to small, refresh type afterwards.
@@ -493,8 +491,22 @@ function resizeHelper(){
         scrollHelper();
 }
 
+
 function scrollHelper(){
     var scroll = $("body").scrollTop();
+
+    // when it gets one tile away from the end, it will load more.
+    var distToEnd = $(document).height() - $(window).height() - scroll;
+    if (distToEnd < $(".browse-tote-wrap .tote-grid-element").outerHeight()) {
+        console.log("should be loading shit!");
+
+        if (browse.currentlyBuilding)
+            return;
+
+        browse.loadBags( function(){ 
+            browse.buildBagGrid();
+        });
+    }
 }
 
 $(document).ready(function(){
