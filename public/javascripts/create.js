@@ -247,8 +247,9 @@ $(document).ready(function(){
         }
 
         var $field = $(this);
-        if ($(this).hasClass("corner"))
+        if ($(this).hasClass("corner")){
             $field = $(this).parents(".editable-field");
+        }
         
         if (e.gesture.direction === "up" || e.gesture.direction === "down"){
             var dragDist = e.gesture.deltaY;
@@ -278,8 +279,9 @@ $(document).ready(function(){
         }
 
         var $field = $(this);
-        if ($(this).parents(".editable-field").length !== 0)
+        if ($(this).parents(".editable-field").length !== 0){
             $field = $(this).parents(".editable-field");
+        }
 
         if (e.gesture.direction === "up" || e.gesture.direction === "down"){
             var dragDist = e.gesture.deltaY;

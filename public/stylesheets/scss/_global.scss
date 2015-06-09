@@ -8,14 +8,14 @@ html, body{
 
     *{
         @include borderBox;
-    }
+        
+        &.instant{
+            @include prefix (transition, 0s);
+        }
 
-    &.instant{
-        @include prefix (transition, 0s);
-    }
-
-    &.hidden{
-        display: none;
+        &.hidden{
+            display: none;
+        }
     }
 }
 

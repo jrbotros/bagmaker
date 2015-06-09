@@ -16,10 +16,10 @@ html *, body * {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
 }
-html.instant, body.instant {
+html *.instant, body *.instant {
   transition: 0s;
 }
-html.hidden, body.hidden {
+html *.hidden, body *.hidden {
   display: none;
 }
 

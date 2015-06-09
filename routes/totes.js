@@ -23,20 +23,29 @@ router.get('/newtote', function(req, res) {
 
 /* POST to createtote */
 router.post('/createtote', function(req, res) {
-    var newtote = new Totebag(req.body);
-    newtote.save(function(err) {
-        if(err) return res.status(500).json(err);
+    // if it meets the admin requirements.
+    if (req.body.textfields.length === 1 && req.body.textfields[0].text === "Enter Sesame"){
         return res.send({ res: "Success"});
-    });
+    }
+    else{
+        var newtote = new Totebag(req.body);
+        newtote.save(function(err) {
+            if(err) return res.status(500).json(err);
+            return res.send({ res: "Success"});
+        });
+    }
 });
 
 /* DELETE to deletetote */
-router.delete('/deletetote/:id', function(req, res) {
+router.get('/deletetote/:id', function(req, res) {
     var toteToDelete = req.params.id;
-
-    Totebag.remove({'_id': toteToDelete}, function(err) {
+    Totebag.findByIdAndRemove(toteToDelete, null, function(err) {
         if(err) return res.status(500).json("Internal Server Error");
-        return res.status(200).end();
+        
+        res.render('index', {
+            title : 'Newest | Totebag Maker | Huge inc.',
+            sort : "newest"
+        });
     });
 });
 
