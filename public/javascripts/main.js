@@ -1,12 +1,10 @@
 // TO DO:
 // -Redo heart animation.
 // -Admin view.
-// -Lazy Loading.
-// -add view count to bag data
 // -404 page.
 
-var cssBezier = new Ease(BezierEasing(.7,0,.3,1));
-var gridBagBezier = new Ease(BezierEasing(.42,0,.58,1));
+var cssBezier = new Ease(BezierEasing(0.7, 0, 0.3, 1));
+var gridBagBezier = new Ease(BezierEasing(0.42, 0, 0.58, 1));
 
 //google analytics
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -35,8 +33,7 @@ var likes = {
             // sets the cookie to not expire for 30 days.
             $.cookie("likes", likes.userLikes, { expires : 30 });
 
-            browse.loadBags(function(){
-                var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
+            browse.getToteObj(toteID, function(tote, bagIndex){
                 tote.likes = parseInt(tote.likes) + 1;
 
                 // sort of hacky, the only way i know how to update a tote. you aren't allowed
@@ -68,8 +65,7 @@ var likes = {
             likes.userLikes.splice(toteIndex, 1);
             $.cookie("likes", likes.userLikes, { expires : 30 });
 
-            browse.loadBags(function(){
-                var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
+            browse.getToteObj(toteID, function(tote, bagIndex){
                 tote.likes = parseInt(tote.likes) - 1;
 
                 // sort of hacky, the only way i know how to update a tote. you aren't allowed
@@ -91,7 +87,6 @@ var likes = {
                 }).fail(function( response, status ){
 
                 });
-
             });
         }
         else{
@@ -301,12 +296,18 @@ var bagObject = {
     },
 
     upViewCount : function(toteID){
-        browse.loadBags(function(){
-            var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
-            if (typeof tote.views !== "number" || tote.views === null)
+        var toteJsonURL = "/data/tote/" + toteID;
+        var tote;
+
+        $.getJSON(toteJsonURL, function( data ){
+            tote = data;
+        
+            if (typeof tote.views !== "number" || tote.views === null){
                 tote.views = 1;
-            else
+            }
+            else{
                 tote.views = tote.views + 1;
+            }
 
             // sort of hacky, the only way i know how to update a tote. you aren't allowed
             // to update it with the sacred _id variable already assigned.
@@ -325,7 +326,7 @@ var bagObject = {
             }).fail(function( response, status ){
 
             });
-        });
+        }); 
     },
 
     //big to small, refresh type afterwards.
@@ -368,7 +369,7 @@ var bagObject = {
             content = "Type Something.";
         }
         //.replace(/\s{2}/g, ' &nbsp;')
-        contentFormatted = content.replace(/\n/g, '<br/>');
+        var contentFormatted = content.replace(/\n/g, '<br/>');
         $clone.html(contentFormatted);
 
         if (bag.data && bag.data.textfields){
@@ -383,7 +384,7 @@ var bagObject = {
             }
 
             // dealing with x and y
-            var parentFontSize = parseInt($field.parents(".bag-body").css("font-size"))
+            var parentFontSize = parseInt($field.parents(".bag-body").css("font-size"));
             var newX = theTextField.x * parentFontSize;
             var newY = theTextField.y * parentFontSize;
             TweenLite.to($field, 0, { x : newX, y : newY });
@@ -432,7 +433,7 @@ var bagObject = {
         var domid = site.randomString(16);
         // if it finds something (not undefined), choose another id.
         while ( typeof _.findWhere(this.data.textfields, {"domid" : domid }) !== "undefined" ){
-            id = site.randomString(16);
+            domid = site.randomString(16);
         }
         emptyTextObj.domid = domid;
 
@@ -487,14 +488,23 @@ var bagObject = {
 function resizeHelper(){
     site.refreshTypeOnTotes();
 
-    if (site.breakpt() !== "sml")
+    if (site.breakpt() !== "sml"){
         TweenLite.to("nav", 0, { y : 0 });
-    else
+    }
+    else{
         scrollHelper();
+    }
 }
+
 
 function scrollHelper(){
     var scroll = $("body").scrollTop();
+
+    // when it gets one tile away from the end, it will load more.
+    var distToEnd = $(document).height() - $(window).height() - scroll;
+    if (distToEnd < $(".browse-tote-wrap .tote-grid-element").outerHeight()) {
+        browse.loadMoreBags();
+    }
 }
 
 $(document).ready(function(){

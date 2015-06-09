@@ -10,10 +10,10 @@ mongoose.connect('mongodb://localhost:27017/bagmaker');
 
 var Totebag = mongoose.model('Totebag', {
     color: String,
-    likes: Number,
-    views: Number,
+    likes: { type : [Number], index : true },
+    views: Number, // { type : [Number], index : true }
     size: String,
-    timestamp: Date,
+    timestamp: { type : [Date], index : true },
     textfields: [{
         text: String,
         x: Number,

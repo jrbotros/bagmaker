@@ -1,77 +1,119 @@
 var viewPage = {
+    // return a $(".tote-grid-element") object most optimally from either
+    // a loaded element, or render one if it hasn't be rendered before.
+    getToteGridHTML : function(data, callback){
+        // if its an array, just take the [0] of it.
+        if ( typeof data[0] !== "undefined"){
+            data = data[0];
+        }
+
+        var toteId = data._id;
+        var alreadyLoaded = _.findWhere(browse.toteBags, { "_id" : toteId });
+        
+        // if it hasn't been loaded before, render it.
+        if (typeof alreadyLoaded === "undefined"){
+            var toteObj = { bags : [data] };
+
+            $.get("/templates/_bag.html", function(html) {
+                var template = Handlebars.compile(html);
+                var rendered = template(toteObj);
+
+                var $renderedTote = $("<div />", {
+                    "class" : "tote-grid-element view " + toteObj.bags[0].color,
+                    "data-id" : toteObj.bags[0]._id,
+                    "html" :  rendered
+                });
+
+                callback($renderedTote, -1);
+            });
+        }
+
+        // if we have already rendered it before, just grab the existing html.
+        else{
+            var toteIndex = _.indexOf(browse.toteBags, alreadyLoaded);
+            var $tote = $(".browse-tote-wrap .tote-grid-element").eq(toteIndex);
+
+            var $renderedTote = $("<div />", {
+                "class" : $tote.attr("class") + " view",
+                "data-id" : toteId,
+                "html" :  $tote.html()
+            });
+
+            callback($renderedTote, toteIndex);
+        }
+    },
     nextTote : function(){
         var $carousel = $(".view-carousel-wrap");
         var dist = $carousel.find(".tote-grid-element").outerWidth();
+        var toteId = $(".view-carousel .tote-grid-element:last-child").attr("data-id");
+        var nextJsonURL = "/data/" + browse.currSort + "/" + toteId + "/next";
 
-        var nextIndex = parseInt($carousel.find(".tote-grid-element:last-child").attr("data-id"));
-        var newIndex = nextIndex + 1;
-        if (newIndex >= $(".browse-tote-wrap .tote-grid-element").length )
-            newIndex = 0;
+        $.getJSON(nextJsonURL, function( data ){
+            viewPage.getToteGridHTML(data, function($nextTote, nextToteId){
+                
+                // if we know the one we're about to be on, but don't know the next loaded one,
+                // we then know we're in order and should load more.
+                var alreadyLoadedToteObj = _.findWhere(browse.toteBags, { "_id" : toteId });
+                if (nextToteId === -1 && typeof alreadyLoadedToteObj !== "undefined"){
+                    browse.loadMoreBags();
+                }
+            
+                TweenLite.to($carousel, 0.5, {
+                    x : -dist,
+                    ease: cssBezier,
+                    onComplete : function() {
+                        $carousel.append( $nextTote );
 
-        TweenLite.to($carousel, 0.5, {
-            x : -dist,
-            ease: cssBezier,
-            onComplete : function() {
-                var $nextTote = $(".browse-tote-wrap .tote-grid-element").eq(newIndex);
-                var $addNext = $("<div />", {
-                    "class" : $nextTote.attr("class") + " view",
-                    "data-id" : newIndex,
-                    "html" : $nextTote.html()
+                        $carousel.find(".tote-grid-element:first-child").remove();
+                        TweenLite.to($carousel, 0, { x : 0 });
+
+                        $carousel.parents(".view-carousel").attr("data-display", toteId );
+                        window.history.pushState("html", "Title", "/totes/" + toteId);
+
+                        // $("head title").html("View Tote | Maker | Huge inc.");
+                        site.refreshTypeOnTotes();
+                        $(".view-carousel-wrap .tote-grid-element .tote-shadow").css("opacity", "1");
+                        viewPage.updateLikes();
+                        bagObject.upViewCount(toteId);
+                    }
                 });
-                $carousel.append( $addNext );
-                $carousel.find(".tote-grid-element:first-child").remove();
-                TweenLite.to($carousel, 0, { x : 0 });
-
-                $carousel.parents(".view-carousel").attr("data-display", nextIndex );
-                var toteId = browse.toteBags[nextIndex]._id;
-                window.history.pushState("html", "Title", "/totes/" + toteId);
-
-                // $("head title").html("View Tote | Maker | Huge inc.");
-                site.refreshTypeOnTotes();
-                viewPage.updateLikes();
-                bagObject.upViewCount(toteId);
-            }
+            });
         });
     },
     prevTote : function(){
         var $carousel = $(".view-carousel-wrap");
         var dist = $carousel.find(".tote-grid-element").outerWidth();
+        var toteId = $(".view-carousel .tote-grid-element:first-child").attr("data-id");
+        var prevJsonURL = "/data/" + browse.currSort + "/" + toteId + "/prev";
 
-        var prevIndex = parseInt($carousel.find(".tote-grid-element:first-child").attr("data-id"));
+        $.getJSON(prevJsonURL, function( data ){
+           viewPage.getToteGridHTML(data, function($prevTote, prevToteId){
+                TweenLite.to($carousel, 0.5, {
+                    x : dist,
+                    ease: cssBezier,
+                    onComplete : function() {
+                        $carousel.prepend( $prevTote );
 
-        var newIndex = prevIndex - 1;
-        if ( newIndex < 0 )
-            newIndex = $(".browse-tote-wrap .tote-grid-element").length - 1;
+                        $carousel.find(".tote-grid-element:last-child").remove();
+                        TweenLite.to($carousel, 0, { x : 0 });
 
-        TweenLite.to($carousel, 0.5, {
-            x : dist,
-            ease: cssBezier,
-            onComplete : function() {
-                var $prevTote = $(".browse-tote-wrap .tote-grid-element").eq(newIndex);
-                var $addPrev = $("<div />", {
-                    "class" : $prevTote.attr("class") + " view",
-                    "data-id" : newIndex,
-                    "html" : $prevTote.html()
+                        $carousel.parents(".view-carousel").attr("data-display", toteId );
+                        window.history.pushState("html", "Title", "/totes/" + toteId);
+
+                        // $("head title").html("View Tote | Maker | Huge inc.");
+                        site.refreshTypeOnTotes();
+                        $(".view-carousel-wrap .tote-grid-element .tote-shadow").css("opacity", "1");
+                        viewPage.updateLikes();
+                        bagObject.upViewCount(toteId);
+                    }
                 });
-                $carousel.prepend( $addPrev );
-                $carousel.find(".tote-grid-element:last-child").remove();
-                TweenLite.to($carousel, 0, { x : 0 });
-
-                $carousel.parents(".view-carousel").attr("data-display", prevIndex );
-                var toteId = browse.toteBags[prevIndex]._id;
-                window.history.pushState("html", "Title", "/totes/" + toteId);
-
-                // $("head title").html("View Tote | Maker | Huge inc.");
-                site.refreshTypeOnTotes();
-                viewPage.updateLikes();
-                bagObject.upViewCount(toteId);
-            }
+            });
         });
+        
     },
     updateLikes : function(){
-        var toteIndex = parseInt($(".view-carousel").attr("data-display"));
-        var toteID = browse.toteBags[toteIndex]._id;
-
+        var toteID = $(".view-carousel").attr("data-display");
+        
         // user likes it and the button isn't already liked
         if (likes.indexOf(toteID) > -1 && !$(".view-controls .heart-outer-wrap").hasClass("favorited") ){
             likes.favorite($(".view-controls .heart-outer-wrap .heart-wrap"));
@@ -97,27 +139,29 @@ $(document).ready(function(){
         e.stopPropagation();
         
         browse.viewZoomOut();
-    })
+    });
 
     $(document).on("keyup", function(e){
         if ($(".view-carousel").hasClass("on")){
             // right
-            if (e.keyCode === 39)
+            if (e.keyCode === 39){
                 viewPage.nextTote();
+            }
 
             // left
-            else if (e.keyCode === 37)
+            else if (e.keyCode === 37){
                 viewPage.prevTote();
+            }
 
             // up
             else if (e.keyCode === 38){
-                currScroll = $(".view-carousel-wrap").scrollTop();
+                var currScroll = $(".view-carousel-wrap").scrollTop();
                 $(".view-carousel-wrap").scrollTop(currScroll - 10);
             }
 
             // down
             else if (e.keyCode === 40){
-                currScroll = $(".view-carousel-wrap").scrollTop();
+                var currScroll = $(".view-carousel-wrap").scrollTop();
                 $(".view-carousel-wrap").scrollTop(currScroll + 10);
             }
         }
@@ -128,7 +172,7 @@ $(document).ready(function(){
         e.stopPropagation();
 
         var dir = e.gesture.direction;
-        if (dir == "left" || dir == "right"){
+        if (dir === "left" || dir === "right"){
             TweenLite.to($(this), 0, { "x" : e.gesture.deltaX });
         }
     });
@@ -139,9 +183,11 @@ $(document).ready(function(){
 
         var dir = e.gesture.direction;
 
-        if (dir == "left")
+        if (dir === "left"){
             viewPage.nextTote();
-        else if (dir == "right")
+        }
+        else if (dir === "right"){
             viewPage.prevTote();
+        }
     });
 });

@@ -6,15 +6,15 @@ var Totebag = mongoose.model('Totebag');
 var pageLimit = 10;
 
 /* GET totes listing. */
-router.get('/tote-data', function(req, res) {
-    Totebag.find(function(err, totebags) {
-        if(err) {
-          console.log(err);
-          return res.status(500).json("Internal Server Error");  
-        }        
-        return res.status(200).json(totebags);
-    });
-});
+// router.get('/data', function(req, res) {
+//     Totebag.find(function(err, totebags) {
+//         if(err) {
+//           console.log(err);
+//           return res.status(500).json("Internal Server Error");  
+//         }        
+//         return res.status(200).json(totebags);
+//     });
+// });
 
 /* GET New tote page. */
 router.get('/newtote', function(req, res) {
@@ -23,20 +23,29 @@ router.get('/newtote', function(req, res) {
 
 /* POST to createtote */
 router.post('/createtote', function(req, res) {
-    var newtote = new Totebag(req.body);
-    newtote.save(function(err) {
-        if(err) return res.status(500).json(err);
+    // if it meets the admin requirements.
+    if (req.body.textfields.length === 1 && req.body.textfields[0].text === "Enter Sesame"){
         return res.send({ res: "Success"});
-    });
+    }
+    else{
+        var newtote = new Totebag(req.body);
+        newtote.save(function(err) {
+            if(err) return res.status(500).json(err);
+            return res.send({ res: "Success"});
+        });
+    }
 });
 
 /* DELETE to deletetote */
-router.delete('/deletetote/:id', function(req, res) {
+router.get('/deletetote/:id', function(req, res) {
     var toteToDelete = req.params.id;
-
-    Totebag.remove({'_id': toteToDelete}, function(err) {
+    Totebag.findByIdAndRemove(toteToDelete, null, function(err) {
         if(err) return res.status(500).json("Internal Server Error");
-        return res.status(200).end();
+        
+        res.render('index', {
+            title : 'Newest | Totebag Maker | Huge inc.',
+            sort : "newest"
+        });
     });
 });
 
@@ -50,16 +59,15 @@ router.put('/updatetote/:id', function(req, res) {
     });
 });
 
+// validates all uses of the "id" variable.
 router.param('id', function(req, res, next, id){
     Totebag.findById(id, function (err, found) {
         // if you can't find this id, take them to the index page.
         if (found === null || typeof found === "undefined")
-            res.render("index", { title : "Totebag Maker / Huge inc."});
-        
+            handle404(req, res);
         // valid id
         else
             next();
-
     });    
 });
 
@@ -68,13 +76,16 @@ router.get('/:id', function(req, res) {
     var toteToUpdate = req.params.id;
     Totebag.findOne({_id: toteToUpdate}, function(err, totebag) {
         if(err){
-            res.render("index", { title : "Totebag Maker / Huge inc."});
+            res.render('index', {
+                title : 'Newest | Totebag Maker | Huge inc.',
+                sort : "newest"
+            });
         }
         res.render("index", {
-            title: 'View Tote / Totebag Maker / Huge inc.',
-            toteID : toteToUpdate
+            title: 'View Tote | Totebag Maker | Huge inc.',
+            toteID : toteToUpdate,
+            sort : "newest"
         });
-        // res.send({testID : toteToUpdate});
     });
 });
 

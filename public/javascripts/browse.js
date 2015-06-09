@@ -1,20 +1,54 @@
 var browse = {
     toteBags : null, // array of tote objects
+    currPage : 1,
+    numPerPage : 24,
+    currSort : "newest",
+    loadedAll : false,
+    currentlyBuilding : false,
+
+    getToteObj : function(toteID, callback){
+        var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
+
+        if (typeof tote === "undefined"){    
+            $.getJSON('/data/tote/' + toteID, function( data ){
+                callback(data, -1);
+            });
+        }
+        else{
+            var index = _.indexOf(browse.toteBags, tote);
+            callback(tote, index);
+        }
+    },
 
     sort : function($li){
         var attr = $li.attr("data-attr");
         var dir = $li.attr("data-dir");
+        var sortName = $li.html();
+        var newSort;
 
-        browse.toteBags = _.sortBy(browse.toteBags, attr);
+        $("nav .sort .name").html( sortName );
+        if (sortName === "Newest") { newSort = "newest"; }
+        else if (sortName === "Oldest") { newSort = "oldest"; }
+        else if (sortName === "Popular") { newSort = "popular"; }
+        else if (sortName === "Most Views") { newSort = "views"; }
+
+        // it changed.
+        if (newSort !== browse.currSort){
+            browse.currSort = newSort;
+            browse.currPage = 1;
+            window.history.pushState("html", "Title", "/" + newSort);
+            $("head title").html(sortName + " | Totebag Maker | Huge inc.");
+
+            browse.animateOut(function(){
+                $(".browse-tote-wrap").empty();
+                browse.toteBags = null;
+                browse.loadedAll = false;
+                browse.loadBags( function(){
+                    browse.buildBagGrid();
+                });
+            });
+        }
         
-        if (dir === "desc")
-            browse.toteBags = browse.toteBags.reverse();
-        browse.animateOut(function(){
-            $(".browse-tote-wrap").empty();
-            browse.buildBagGrid();
-        });
-
-        $("nav .sort .name").html($li.html());
     },
     gridOrderHelper : function(input){
         var gridWidth = $(".tote-grid-element").width();
@@ -36,6 +70,9 @@ var browse = {
         var totalGridElements = $(".tote-grid-element").length;
         if (ind >= totalGridElements) {
             setTimeout(function(){
+                // catch all.
+                $(".tote-grid-element.start").removeClass('start');
+                
                 if (callback && callback !== undefined){
                     callback();
                 }
@@ -83,34 +120,59 @@ var browse = {
             }, (elementNum - ind) * 10);
         }
     },
+    loadMoreBags : function(){
+        if (browse.currentlyBuilding){
+            return;
+        }
+
+        browse.loadBags( function(){ 
+            browse.buildBagGrid();
+        });
+    },
     // grab tote data
     loadBags : function(callback){
+        browse.currentlyBuilding = true;
+
         if (browse.toteBags === null){
-            $.getJSON('/totes/tote-data', function( data ){
+            $.getJSON('/data/' + browse.currSort + '/' + browse.currPage, function( data ){
                 // sort it by time - newest
-                browse.toteBags = _.sortBy(data, function(tote){
-                    return tote.timestamp;
-                });
-                browse.toteBags = browse.toteBags.reverse();
+                browse.toteBags = data;
 
                 // build grid.
-                //totalPages = Math.ceil(toteBags.length / loadChunk);
                 if (typeof callback !== "undefined"){
                     callback();
                 }
             });
         }
         else{
-            if (typeof callback !== "undefined"){
-                callback();
+            if (browse.loadedAll){
+                return;
             }
+
+            browse.currPage = browse.currPage + 1;
+            $.getJSON('/data/' + browse.currSort + '/' + browse.currPage, function( data ){
+                // we need to check data to see if its [] and then flag it as the end.
+                if (data.length < browse.numPerPage){
+                    browse.loadedAll = true;
+                }
+
+                browse.toteBags = browse.toteBags.concat(data);
+                if (typeof callback !== "undefined"){
+                    callback();
+                }
+            });
         }
 
     },
     buildBagGrid : function(animate, callback){
-        if (typeof animate === "undefined") animate = true;
+        if (typeof animate === "undefined"){
+            animate = true;
+        }
+        var startIndex = ((browse.currPage - 1) * browse.numPerPage);
+        var endIndex = startIndex + browse.numPerPage;
+        var subsetTotes = browse.toteBags.slice(startIndex, endIndex);
 
-        _.each(browse.toteBags, function(tote){
+        _.each(subsetTotes, function(tote){
             tote.swingTimer = null;
             var toteObj = {bags : [tote]};
 
@@ -142,93 +204,112 @@ var browse = {
                 $tote.appendTo(".browse-page.content .browse-tote-wrap");
 
                 // on the last one, update the type sizing and animate it in.
-                if (tote == browse.toteBags[browse.toteBags.length-1]){
+                if ( tote === browse.toteBags[browse.toteBags.length-1] ){
                     $('.browse-page.content .browse-tote-wrap .clearfix').remove();
                     $('.browse-page.content .browse-tote-wrap').append("<div class='clearfix'></div>");
                     site.refreshTypeOnTotes();
 
                     if (animate){
-                        browse.animateIn();
-                        $("nav.hidden").removeClass("hidden");
+                        browse.animateIn(startIndex, function(){
+                            browse.currentlyBuilding = false;
+                        });
                     }
                     else{
                         $(".tote-grid-element.start").addClass("noAnimate").removeClass("start").removeClass("noAnimate");
-                        $("nav.hidden").removeClass("hidden");
+                        browse.currentlyBuilding = false;
                     }
 
-                    if (typeof callback !== "undefined") callback();
+                    $("nav.hidden").removeClass("hidden");
+
+                    if (typeof callback !== "undefined"){
+                        callback();
+                    }
                 }
             });
         });        
     },
     // positions the view carousel with the $tote centered.
-    view : function($tote){
-        var toteIndex = $tote.index();
-        
-        // loops to the end of the list
-        var beforeIndex = toteIndex - 1;
-        if (beforeIndex < 0){
-            beforeIndex = $tote.siblings().length - 1;
-        }
-        var $beforeTote = $(".browse-tote-wrap .tote-grid-element").eq(beforeIndex);
+    view : function(toteId){
+        // grab all the data.
+        var prevJsonURL = "/data/" + browse.currSort + "/" + toteId + "/prev";
+        var nextJsonURL = "/data/" + browse.currSort + "/" + toteId + "/next";
+        var currJsonURL = "/data/tote/" + toteId;
+        var toteObjArray = [];
+        var toteIdArray = [];
 
-        // loops to the first element on the list
-        var afterIndex = toteIndex + 1;
-        if (afterIndex > $tote.siblings().length - 1){
-            afterIndex = 0;
-        }
-        var $afterTote = $(".browse-tote-wrap .tote-grid-element").eq(afterIndex);
+        $.getJSON(prevJsonURL, function( data ){
+            toteIdArray.push(data[0]._id);
+            toteObjArray.push({bags : data});
 
-        // create each of the 3 bags.
-        var $dupeBefore = $("<div />", {
-            "class" : $beforeTote.attr("class") + " view",
-            "data-id" : beforeIndex,
-            "html" : $beforeTote.html()
-        });
-        var $dupe = $("<div />", {
-            "class" : $tote.attr("class") + " view",
-            "data-id" : toteIndex,
-            "html" : $tote.html()
-        });
-        var $dupeAfter = $("<div />", {
-            "class" : $afterTote.attr("class") + " view",
-            "data-id" : afterIndex,
-            "html" : $afterTote.html()
+            $.getJSON(currJsonURL, function( data ){
+                toteIdArray.push(toteId);
+                toteObjArray.push({bags : [data]});
+            
+                $.getJSON(nextJsonURL, function( data ){
+                    toteIdArray.push(data[0]._id);
+                    toteObjArray.push({bags : data});
+
+                    loadToteViews();
+                });
+            });
+            
         });
 
-        // add all the shit.
-        $(".view-carousel").addClass("on");
-        $(".view-carousel-wrap").append($dupeBefore).append($dupe).append($dupeAfter);
-        
-        // stop it from swinging.
-        TweenLite.to(".view-carousel-wrap .tote-grid-element .actual-tote, .view-carousel-wrap .tote-grid-element .tote-shadow", 0, { rotation : "0deg" })
-        $(".view-carousel-wrap .tote-grid-element.swinging").removeClass("swinging");
+        function loadToteViews(){
+            $.get("/templates/_bag.html", function(html) {
+                var template = Handlebars.compile(html);
+                
+                for (var i = 0; i < toteObjArray.length; i++){
+                    var rendered = template(toteObjArray[i]);
+                
+                    if (likes.indexOf(toteIdArray[i]) > -1){
+                        // if its liked and its the middle one (the centered one), mark it as favorited.
+                        if (i === 1){
+                            $(".view-controls .heart-outer-wrap").addClass("favorited");
+                        }
+                    }
 
-        //update bag size / favorites
-        site.refreshTypeOnTotes();
-        if ($dupe.find(".heart-outer-wrap").hasClass("favorited")){
-            $(".view-controls .heart-outer-wrap").addClass("favorited");
+                    var $tote = $("<div />", {
+                        "class" : "tote-grid-element view " + toteObjArray[i].bags[0].color,
+                        "data-id" : toteIdArray[i],
+                        "html" :  rendered
+                    }).appendTo(".view-carousel-wrap");
+                }
+
+                $(".view-carousel").addClass("on");
+
+                // stop it from swinging.
+                TweenLite.to(".view-carousel-wrap .tote-grid-element .actual-tote, .view-carousel-wrap .tote-grid-element .tote-shadow", 0, { rotation : "0deg" });
+                TweenLite.to(".view-carousel-wrap .tote-grid-element .tote-shadow", 0.5, {
+                    "alpha" : 1,
+                    "ease" : cssBezier
+                });
+                $(".view-carousel-wrap .tote-grid-element.swinging").removeClass("swinging");
+                
+                //update bag size / favorites
+                site.refreshTypeOnTotes();
+
+                // scroll user to center the bag.
+                var $tote = $(".view-carousel-wrap .tote-grid-element").eq(1);
+                var viewToteHeight = $tote.find(".tote-wrap").height();
+                var viewGridHeight = $tote.height();
+
+                // scroll to the center if the bag height is smaller than the window height
+                var scrollAmount = ((viewGridHeight - $(window).height()) / 2);
+                // if the bag height is larger than the window height, scroll to the bottom.
+                if (viewToteHeight > $(window).height()){
+                    scrollAmount = viewToteHeight;
+                }
+                $(".view-carousel-wrap").scrollTop( scrollAmount );
+
+                window.history.pushState("html", "Title", "/totes/" + toteId);
+                bagObject.upViewCount(toteId);
+
+                $("head title").html("View Tote | Totebag Maker | Huge inc.");
+                $("body").addClass("lock-scroll");
+                $(".view-carousel").attr("data-display", toteId);
+            });
         }
-
-        var toteId = browse.toteBags[toteIndex]._id;
-        window.history.pushState("html", "Title", "/totes/" + toteId);
-        bagObject.upViewCount(toteId);
-        
-        $("head title").html("View Tote / Totebag Maker / Huge inc.");
-        $("body").addClass("lock-scroll");
-
-        // scroll user to center the bag.
-        var viewToteHeight = $dupe.find(".tote-wrap").height();
-        var viewGridHeight = $dupe.height();
-
-        // scroll to the center if the bag height is smaller than the window height
-        var scrollAmount = ( ( $(window).height() - viewToteHeight)/2);
-        // if the bag height is larger than the window height, scroll to the bottom.
-        if (viewToteHeight > $(window).height())
-            scrollAmount = viewGridHeight;
-
-        $(".view-carousel-wrap").scrollTop( scrollAmount );
-        $(".view-carousel").attr("data-display", toteIndex);
     },
     viewZoomIn : function($tote){
         var x = $tote.offset().left;
@@ -282,13 +363,16 @@ var browse = {
                 var scrollAmount = ( ( $(window).height() - animationToteHeight)/2);
 
                 // if the bag height is larger than the window height, scroll to the bottom.
-                if (animationToteHeight > $(window).height())
+                if (animationToteHeight > $(window).height()){
                     scrollAmount = animationGridHeight;
+                }
 
                 $(".zoomAnimationWrapper").animate({
                     scrollTop : scrollAmount
                 }, (scrollAmount/2), function(){
-                    browse.view($tote);
+                    var toteIndex = $tote.index();
+                    var toteId = browse.toteBags[toteIndex]._id;
+                    browse.view(toteId);
 
                     setTimeout(function(){
                         $("#zoomAnimation").remove();
@@ -299,58 +383,83 @@ var browse = {
     },
     viewZoomOut : function(){
         // find which tote in the grid it is.
-        var toteIndex = parseInt($(".view-carousel").attr("data-display"));
-        var $tote = $(".browse-tote-wrap .tote-grid-element").eq(toteIndex);
-        
-        // dupe that for the animation.
-        var $dupe = $("<div />", {
-            "id" : "zoomAnimation",
-            "class" : $tote.attr("class") + "",
-            "html" : $tote.html()
-        });
+        var toteID = $(".view-carousel").attr("data-display");
+        var x,y,w,ratio,inverseRatio;
 
-        // get all them measurements.
-        var w = $tote.outerWidth();
-        var windowWidth = $(window).width();
-        var windowHeight = $(window).height();
-        var ratio = w / windowWidth;
-        var inverseRatio = Math.round(1/ratio);
-        var x = $tote.offset().left;
-        var y = $tote.offset().top;
+        // zooming out
+        function zoomOutAnimate($dupe){
+            TweenLite.to($dupe, 0.5, {
+                x : (x - ((inverseRatio - 1) * 1/2 * w)),
+                y : y - $(window).scrollTop(),
+                scale : ratio,
+                ease : cssBezier,
+                height : (w / ratio),
+                onComplete : function(){
+                    $dupe.remove();
+                    $(".view-controls button.disabled").removeClass("disabled");
+                    window.history.pushState("html", "Title", "/" + browse.currSort);
+                    $("head title").html("Totebag Maker | Huge inc.");
+                }
+            });
+        }
 
-        // morph the duplicate to be the right size.
-        TweenLite.to($dupe, 0, {
-            x : 0,
-            y : 0,
-            width: "100%",
-            scale : 1,
-            height : (1.5 * windowHeight)
-        });
-        $(".zoomAnimationWrapper").append($dupe);
-        site.refreshTypeOnTotes();
+        browse.getToteObj(toteID, function(tote, bagIndex){
+            // if its in the grid DOM.
+            if (bagIndex > -1){
+                var $tote = $(".browse-tote-wrap .tote-grid-element").eq(bagIndex);
 
-        // Getting the right scroll spot.
-        scrollAmount = $(".view-carousel-wrap").scrollTop();;
-        $(".zoomAnimationWrapper").scrollTop(scrollAmount);
-        $(".view-carousel-wrap").empty();
-        $(".view-carousel").removeClass("on");
+                // dupe that for the animation.
+                var $dupe = $("<div />", {
+                    "id" : "zoomAnimation",
+                    "class" : $tote.attr("class") + "",
+                    "html" : $tote.html()
+                });
 
-        // Animation part of it.
-        console.log(y, $(window).scrollTop());
-        TweenLite.to($dupe, 0.5, {
-            x : (x - ((inverseRatio - 1) * 1/2 * w)),
-            y : y - $(window).scrollTop(),
-            scale : ratio,
-            ease : cssBezier,
-            height : (w / ratio),
-            onComplete : function(){
-                $dupe.remove();
+                // get all them measurements.
+                w = $tote.outerWidth();
+                var windowWidth = $(window).width();
+                var windowHeight = $(window).height();
+                ratio = w / windowWidth;
+                inverseRatio = Math.round(1/ratio);
+                x = $tote.offset().left;
+                y = $tote.offset().top;
+
+                // morph the duplicate to be the right size.
+                TweenLite.to($dupe, 0, {
+                    x : 0,
+                    y : 0,
+                    width: "100%",
+                    scale : 1,
+                    height : (1.5 * windowHeight)
+                });
+                $(".zoomAnimationWrapper").append($dupe);
+                site.refreshTypeOnTotes();
+
+                // Getting the right scroll spot.
+                var scrollAmount = $(".view-carousel-wrap").scrollTop();
+                $(".zoomAnimationWrapper").scrollTop(scrollAmount);
+                $(".view-carousel-wrap").empty();
+                $(".view-carousel").removeClass("on");
+
+                // Animation part of it.
                 $("body").removeClass("lock-scroll");
-                window.history.pushState("html", "Title", "/");
-                $("head title").html("Totebag Maker / Huge inc.");
+                if ( (y > $(window).scrollTop() + $(window).outerHeight() - w) || (y < $(window).scrollTop() ) ){
+                    $("body", "html").animate({
+                        scrollTop : y - w,
+                    }, 0, function(){
+                        zoomOutAnimate($dupe);
+                    });
+                }
+                else{
+                    zoomOutAnimate($dupe);
+                }
+            }
+            // if it's not.
+            else{
+                window.location.href = "/";
             }
         });
-
+        
     },
     swingOnce : function($bag){
         // var $bag = $(".tote-grid-element").eq(index);
@@ -403,13 +512,17 @@ var browse = {
     },
     swing : function($tote){
         var index;
-        if (typeof $tote.attr("data-id") === "undefined") index = $tote.index();
-        else index = parseInt($tote.attr("data-id"));
+        if (typeof $tote.attr("data-id") === "undefined"){
+            index = $tote.index();
+        }
+        else{
+            index = parseInt($tote.attr("data-id"));
+        }
 
         if ( !$tote.hasClass("swinging") ){
             browse.swingOnce($tote);
             $tote.addClass("swinging");
-            browse.toteBags[index].swingTimer = setInterval(function(){browse.swingOnce($tote)}, 1900);
+            browse.toteBags[index].swingTimer = setInterval(function(){ browse.swingOnce($tote); }, 1900);
         }
         // rolling over something thats already swinging
         else{
@@ -418,18 +531,45 @@ var browse = {
     },
     stopSwing : function($tote){
         var index;
-        if (typeof $tote.attr("data-id") === "undefined") index = $tote.index();
-        else index = parseInt($tote.attr("data-id"));
+        if (typeof $tote.attr("data-id") === "undefined"){
+            index = $tote.index();
+        }
+        else{
+            index = parseInt($tote.attr("data-id"));
+        }
 
         browse.toteBags[index].stopTimer = setTimeout(function(){
             $tote.removeClass("swinging");
             clearInterval(browse.toteBags[index].swingTimer);
         }, 500);
+    },
+    syncSortView : function(){
+        // update sort from URL.
+        browse.currSort = $("#sort").html();
+        $("#sort").remove();
+
+        // if the url doesn't have that sort name in it, update the url.
+        // example: totes.hugeinc.com -> totes.hugeinc.com/new
+        if ($("#viewId").html() === "" && window.location.href.indexOf(browse.currSort) === -1){
+            window.history.pushState("html", "Title", "/" + browse.currSort);
+        }
+
+        // update the UI on the sort button.
+        var sortName;
+        if (browse.currSort === "newest") { sortName = "Newest"; }
+        else if (browse.currSort === "oldest") { sortName = "Oldest"; }
+        else if (browse.currSort === "popular") { sortName = "Popular"; }
+        else if (browse.currSort === "views") { sortName = "Most Views"; }
+        else { sortName = "Newest"; }
+        
+        $("nav .sort .selected-sort .name").html(sortName);
     }
 };
 
 $(document).ready(function(){
     likes.fetchUserLikes();
+    browse.syncSortView();
+
     browse.loadBags(function(){
 
         // check to see if its a view page actually.
@@ -438,24 +578,12 @@ $(document).ready(function(){
 
         if (viewId === ""){
             browse.buildBagGrid();
-            window.history.pushState("html", "Title", "/");
         }
         else{
-            browse.buildBagGrid(false, function(){
-                var toteBag = _.findWhere(browse.toteBags, {"_id" : viewId});
-                var toteIndex = _.indexOf(browse.toteBags, toteBag);
-                
-                // if this tote does exist
-                if (toteIndex !== -1)
-                    browse.view($(".tote-grid-element").eq(toteIndex));
-
-                // if it doesn't
-                else{
-                    browse.buildBagGrid();
-                    window.history.pushState("html", "Title", "/");
-                    $("head title").html("Totebag Maker / Huge inc.");
-                }
-            });  
+            browse.view(viewId);
+            setTimeout(function(){
+                browse.buildBagGrid(false);
+            }, 500);
         }
     });
 
@@ -468,19 +596,19 @@ $(document).ready(function(){
         e.stopPropagation();
 
         var toteIndex;
+        var toteID;
 
         // its in the view mode
         if ($(this).parents(".view-controls").length > 0){
-            var index = $(this).parents(".view-carousel").attr("data-display");
-            toteIndex = parseInt(index);
+            toteID = $(this).parents(".view-carousel").attr("data-display");
         }
         else{
             var $gridEle = $(this).parents(".tote-grid-element");
             toteIndex = $gridEle.index();
+            
+            var toteBag = browse.toteBags[toteIndex];
+            toteID = toteBag._id;
         }
-       
-        var toteBag = browse.toteBags[toteIndex];
-        var toteID = toteBag._id;
 
         //likes.toggleLike(toteID);
         if ($(this).hasClass("favorited")){

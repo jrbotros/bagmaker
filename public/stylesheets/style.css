@@ -16,14 +16,16 @@ html *, body * {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
 }
+html *.instant, body *.instant {
+  transition: 0s;
+}
+html *.hidden, body *.hidden {
+  display: none;
+}
 
 body.lock-scroll {
   height: 100%;
   overflow: hidden;
-}
-
-.hidden {
-  display: none;
 }
 
 button {
@@ -1507,7 +1509,6 @@ body .view-carousel.on {
   pointer-events: auto;
 }
 body .view-carousel.on .view-carousel-wrap .tote-grid-element .tote-wrap .actual-tote .shadow-blur .tote-shadow {
-  opacity: 1;
   -webkit-transform: translateY(0);
   -ms-transform: translateY(0);
   transform: translateY(0);
@@ -1556,7 +1557,6 @@ body .view-carousel .view-carousel-wrap .tote-grid-element .tote-wrap .actual-to
   -webkit-transform: translateY(-100px);
   -ms-transform: translateY(-100px);
   transform: translateY(-100px);
-  transition: 0.5s cubic-bezier(0.7, 0, 0.3, 1);
 }
 body .view-carousel .view-carousel-wrap .tote-grid-element .heart-outer-wrap {
   display: none;
