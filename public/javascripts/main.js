@@ -1,11 +1,10 @@
 // TO DO:
-// -Redo heart animation.
 // -Admin view.
 // -404 page.
 
 var cssBezier = new Ease(BezierEasing(0.7, 0, 0.3, 1));
 var gridBagBezier = new Ease(BezierEasing(0.42, 0, 0.58, 1));
-
+ 
 //google analytics
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 (i[r].q=i[r].q||[]).push(arguments);},i[r].l=1*new Date();a=s.createElement(o),
@@ -104,67 +103,11 @@ var likes = {
             likes.likeBag(toteID);
         }
     },
-    favorite : function($heartWrap){
-        //make circle immediately magenta and heart white.
-        $heartWrap.css("background-color", "#D93182");
-        $heartWrap.find(".heart .inner-heart").css("opacity", "0");
-        $heartWrap.find(".heart .white").css("opacity", "1");
-        $heartWrap.find(".heart").css("opacity", "1");
-
-        // animate magenta circle/white heart to white circle / pink heart
-        TweenLite.to($heartWrap, 0.3, {
-            "backgroundColor" : "#fff",
-            ease : cssBezier,
-            delay : 0.1
-        });
-        TweenLite.to($heartWrap.find(".heart"), 0.15, {
-            alpha : 0,
-            scale : 1.1,
-            ease : cssBezier,
-            delay : 0.1,
-            onComplete : function(){
-                $heartWrap.find(".heart .inner-heart").css("opacity", "0");
-                $heartWrap.find(".heart .magenta").css("opacity", "1");
-                TweenLite.to($heartWrap.find(".heart"), 0.15, {
-                    alpha : 1,
-                    ease : cssBezier,
-                    onComplete : function(){
-                        $heartWrap.parents(".heart-outer-wrap").addClass("favorited");
-                    }
-                });
-            }
-        });
+    favorite : function($heartOuterWrap){        
+        $heartOuterWrap.addClass("favorited");
     },
-    unfavorite : function($heartWrap){
-        //make circle immediately magenta and heart white.
-        $heartWrap.css("background-color", "#D93182");
-        $heartWrap.find(".heart .inner-heart").css("opacity", "0");
-        $heartWrap.find(".heart .white").css("opacity", "1");
-        $heartWrap.find(".heart").css("opacity", "1");
-
-        // animate magenta circle/white heart to white circle / grey heart
-        TweenLite.to($heartWrap, 0.3, {
-            "backgroundColor" : "#fff",
-            ease : cssBezier,
-            delay : 0.1
-        });
-        TweenLite.to($heartWrap.find(".heart"), 0.15, {
-            alpha : 0,
-            scale : 1.1,
-            ease : cssBezier,
-            delay : 0.1,
-            onComplete : function(){
-                $heartWrap.find(".heart .inner-heart").css("opacity", "0");
-                $heartWrap.find(".heart .grey").css("opacity", "1");
-                TweenLite.to($heartWrap.find(".heart"), 0.15, {
-                    alpha : 1,
-                    ease : cssBezier,
-                    onComplete : function(){
-                        $heartWrap.parents(".heart-outer-wrap").removeClass("favorited");
-                    }
-                });
-            }
-        });
+    unfavorite : function($heartOuterWrap){
+        $heartOuterWrap.removeClass("favorited");
     }
 };
 
@@ -512,7 +455,7 @@ $(document).ready(function(){
         $.cookie("likes", "");
     }
 
-    $(document).hammer().on("tap", ".logo, button.close.createpage", function(){
+    $(document).hammer().on("tap, release", "button.close.createpage", function(){
         window.location.href = "/";
     });
 

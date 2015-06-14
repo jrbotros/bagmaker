@@ -1,23 +1,25 @@
 extends layout
 
 block content
-    script(type='text/javascript', src='/javascripts/create.js')
-    button.close.createpage
-    button.save
+    script(type='text/javascript', src='/javascripts/min/create.min.js')
+    button.close.text.createpage
+        span Close
+    button.save.text
+        span Create
     .content.create-page
         .bag-wrap
         .bottom-bar
             button.addTextfield
-            .bag-size-wrap.small
-                .selector
-                .big-bag.icon(data-size='big')
-                .small-bag.icon(data-size='small')
+            button.text.bag-size-wrap.small
+                //- .selector
+                //- .big-bag.icon(data-size='big')
+                //- .small-bag.icon(data-size='small')
             .color-control-wrap
                 button.color-control
                 .colors
-                    .color(rel='red')
+                    .color.selected(rel='black')
                         .color-wrap
-                    .color(rel='black')
+                    .color(rel='red')
                         .color-wrap
                     .color(rel='white')
                         .color-wrap

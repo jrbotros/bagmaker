@@ -109,7 +109,7 @@ var browse = {
                 if (callback && callback !== undefined){
                     callback();
                 }
-            }, elementNum * 20);
+            }, elementNum * 7);
             return;
         }
         else{
@@ -117,7 +117,7 @@ var browse = {
                 var output = browse.gridOrderHelper(ind);
                 $(".tote-grid-element").eq(output).addClass("start");
                 browse.animateOutHelper(ind-1, callback);
-            }, (elementNum - ind) * 10);
+            }, (elementNum - ind) * 7);
         }
     },
     loadMoreBags : function(){
@@ -182,19 +182,17 @@ var browse = {
                 var rendered = template(toteObj);
 
                 // marking which ones are favorited.
-                var heartWrap = "<div class='heart-outer-wrap'><div class='heart-wrap'>";
+                var heartWrap = "<button class='heart-outer-wrap'><div class='heart-wrap'>";
                 var toteID = toteObj.bags[0]._id;
                 if (likes.indexOf(toteID) > -1){
-                    heartWrap = "<div class='heart-outer-wrap favorited'><div class='heart-wrap'>";
+                    heartWrap = "<button class='heart-outer-wrap favorited'><div class='heart-wrap'>";
                 }
 
                 heartWrap += "<div class='heart-circle'></div>" +
                                 "<div class='heart'>" + 
-                                    "<div class='inner-heart grey'></div>" +
-                                    "<div class='inner-heart magenta'></div>" +
-                                    "<div class='inner-heart white'></div>" +
+                                    "<div class='inner-heart'></div>" +
                                 "</div>" +
-                            "</div></div>";
+                            "</div></button>";
 
                 var $tote = $("<div />", {
                     //id : "tote-" + tote._id,
@@ -244,6 +242,7 @@ var browse = {
             $.getJSON(currJsonURL, function( data ){
                 toteIdArray.push(toteId);
                 toteObjArray.push({bags : [data]});
+                $(".view-controls .heart-outer-wrap").attr("class", "heart-outer-wrap " + data.color);
             
                 $.getJSON(nextJsonURL, function( data ){
                     toteIdArray.push(data[0]._id);
@@ -261,7 +260,7 @@ var browse = {
                 
                 for (var i = 0; i < toteObjArray.length; i++){
                     var rendered = template(toteObjArray[i]);
-                
+                    
                     if (likes.indexOf(toteIdArray[i]) > -1){
                         // if its liked and its the middle one (the centered one), mark it as favorited.
                         if (i === 1){
@@ -321,6 +320,7 @@ var browse = {
             "class" : $tote.attr("class") + "",
             "html" : $tote.html()
         });
+        $dupe.find(".heart-outer-wrap").remove();
         $dupe.height(h);
         $dupe.width(w);
 
@@ -414,6 +414,7 @@ var browse = {
                     "class" : $tote.attr("class") + "",
                     "html" : $tote.html()
                 });
+                $dupe.find(".heart-outer-wrap").remove();
 
                 // get all them measurements.
                 w = $tote.outerWidth();
@@ -487,7 +488,7 @@ var browse = {
                             ease : gridBagBezier
                         });
                     }
-                });
+                }); 
                 TweenLite.to($tote, 1, {
                     rotation : "-5deg",
                     ease : gridBagBezier,
@@ -522,7 +523,7 @@ var browse = {
         if ( !$tote.hasClass("swinging") ){
             browse.swingOnce($tote);
             $tote.addClass("swinging");
-            browse.toteBags[index].swingTimer = setInterval(function(){ browse.swingOnce($tote); }, 1900);
+            browse.toteBags[index].swingTimer = setInterval(function(){ browse.swingOnce($tote); }, 1870);
         }
         // rolling over something thats already swinging
         else{
@@ -587,13 +588,18 @@ $(document).ready(function(){
         }
     });
 
+    $(".sort").hover(function(){
+        $(".sort").toggleClass("on-state");
+    });
     $(".sort ul li").hammer().on("tap", function(){
         browse.sort($(this));
     });
 
-    $(document).hammer().on("tap", ".heart-outer-wrap", function(e){
+    $(document).hammer().on("tap, release", "button.heart-outer-wrap", function(e){
         e.preventDefault();
         e.stopPropagation();
+
+        console.log("heart");
 
         var toteIndex;
         var toteID;
@@ -612,21 +618,21 @@ $(document).ready(function(){
 
         //likes.toggleLike(toteID);
         if ($(this).hasClass("favorited")){
-            likes.unfavorite($(this).find(".heart-wrap"));
+            likes.unfavorite($(this));
             likes.unlikeBag(toteID);
 
             // its in the view mode
             if ($(this).parents(".view-controls").length > 0){
-                likes.unfavorite($(".browse-tote-wrap .tote-grid-element").eq(toteIndex).find(".heart-wrap"));
+                likes.unfavorite($(".browse-tote-wrap .tote-grid-element").eq(toteIndex).find(".heart-outer-wrap"));
             }
         }
         else{
-            likes.favorite($(this).find(".heart-wrap"));
+            likes.favorite($(this));
             likes.likeBag(toteID);
 
             // its in the view mode
             if ($(this).parents(".view-controls").length > 0){
-                likes.favorite($(".browse-tote-wrap .tote-grid-element").eq(toteIndex).find(".heart-wrap"));
+                likes.favorite($(".browse-tote-wrap .tote-grid-element").eq(toteIndex).find(".heart-outer-wrap"));
             }
         }
     });
@@ -645,9 +651,11 @@ $(document).ready(function(){
         browse.stopSwing($(this));
     });
 
-    $(document).hammer().on("tap", ".browse-tote-wrap .tote-grid-element", function(e){
+    $(document).hammer().on("release", ".browse-tote-wrap .tote-grid-element", function(e){
         e.preventDefault();
         e.stopPropagation();
+
+        console.log("zoom");
 
         browse.viewZoomIn($(this));
     });

@@ -1,3 +1,19 @@
+@media screen and (max-width: $medBP) {
+    body .content.browse-page{
+        .view-carousel .view-controls{
+            .heart-outer-wrap{
+                width: $button-size-sml;
+                height: $button-size-sml;
+
+                .heart-wrap .heart{
+                    width: 22px;
+                    height: 20px;
+                }
+            }
+        }
+    }
+}
+
 #viewId{
     display: none;
 }
@@ -47,10 +63,6 @@ body .view-carousel{
 
         .view-carousel-wrap .tote-grid-element .tote-wrap .actual-tote .shadow-blur .tote-shadow{
             @include prefix (transform, translateY(0));
-        }
-        .close{
-            opacity: 1;
-            @include prefix (transform, scale(1));
         }
         .view-controls{
             @include prefix (transform, translateY(0));
@@ -118,34 +130,31 @@ body .view-carousel{
             }
         }
     }
-    .close{
-        opacity: 0;
-        @include prefix (transform, scale(0.3));
-        @include prefix (transition, 0.5s 0.5s $easing-curve);
-    }
     .view-controls{
         position: fixed;
-        bottom: 0;
-        left: 0;
+        top: 0;
+        right: 0;
         width: 100%;
+        z-index: $z-second-level;
         height: $body-padding-sml * 2 + $button-size;
-        background-color: rgba(0,0,0, 0.5);
-        // @include linear-gradient ( 90deg, rgba(0,0,0,0.4), rgba(0,0,0,0) );
-        text-align: center;
-        z-index: $z-first-level;
-        padding: $body-padding-sml 0;
+        text-align: right;
+        padding: $body-padding-sml;
         @include prefix (transition, 0.5s 0.5s $easing-curve);
-        @include prefix (transform, translateY(100%));
+        @include prefix (transform, translateY(-100%));
 
         & > *{
             display: inline-block;
             position: relative;
             vertical-align: middle;
-            margin-left: $body-padding;
+            margin-left: $body-padding/2;
 
             &:first-child{
                 margin-left: 0;
             }
+        }
+
+        .close{
+            position: absolute;
         }
 
         .heart-outer-wrap{

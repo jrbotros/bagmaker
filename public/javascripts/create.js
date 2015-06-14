@@ -2,23 +2,22 @@ var newBag;
 
 // currently, this function assumes that there is only one bag size toggle tool.
 // This seems like a pretty fair assumption to make...
-function toggleBagSizeUI( direction ){
-    // size of the wrap - size of selector = moveable space.
-    var threshold = $(".bag-size-wrap").outerWidth() - $(".bag-size-wrap .selector").outerWidth();
+function toggleBagSizeUI(){
+    var $toggle = $(".bag-size-wrap");
+    if ($toggle.hasClass("small")){
+        $toggle.removeClass("small");
+        setTimeout(function(){
+            $toggle.addClass("big");
+        }, 300);
 
-    var $par = $(".bag-size-wrap");
-    if ( (typeof direction === "undefined" && $par.hasClass("small")) || direction === "big" ){
-        $par.removeClass("small");
-        $par.addClass("big");
-
-        TweenLite.to(".bag-size-wrap .selector", 0.3, { x : threshold, ease : cssBezier });
         newBag.toggleSize("big");
     }
-    else if ( (typeof direction === "undefined" && $par.hasClass("big")) || direction === "small" ){
-        $par.removeClass("big");
-        $par.addClass("small");
+    else{
+        $toggle.removeClass("big");
+        setTimeout(function(){
+            $toggle.addClass("small");
+        }, 300);
 
-        TweenLite.to(".bag-size-wrap .selector", 0.3, { x : 0, ease : cssBezier });
         newBag.toggleSize("small");
     }
 }
@@ -40,61 +39,11 @@ $(document).ready(function(){
     });
 
     // bag size toggling
-    $(document).hammer().on("tap", ".bag-size-wrap > *", function(e){
+    $(document).hammer().on("tap", ".bag-size-wrap", function(e){
         e.preventDefault();
         e.stopPropagation();
 
         toggleBagSizeUI();
-    });
-    // drag controls for the slider
-    $(document).hammer().on("drag", ".bag-size-wrap .selector", function(e){
-        e.preventDefault();
-        e.stopPropagation();
-
-        // big can only move left. small can only move right
-        var isBig = $(this).parents(".bag-size-wrap").hasClass("big");
-
-        if (e.gesture.direction === "left" && isBig){
-            // x would default be at all the way to the right... for now, its 50px supposedly at start of every drag
-            var dragDist = e.gesture.deltaX;
-
-            // size of the wrap - size of selector = moveable space.
-            var threshold = $(".bag-size-wrap").outerWidth() - $(".bag-size-wrap .selector").outerWidth();
-            var dragAmt = threshold + dragDist;
-
-            // lowest limit
-            if (dragAmt < 0){
-                dragAmt = 0;
-            }
-
-            TweenLite.to($(this), 0, { x : dragAmt + "px" });
-        }
-        else if (e.gesture.direction === "right" && !isBig){
-            // x would default be at 0 supposedly at start of every drag
-            var dragDist = e.gesture.deltaX;
-
-            // highest limit
-            var threshold = $(this).parents(".bag-size-wrap").outerWidth() - $(this).outerWidth();
-            if (dragDist > threshold){
-                dragDist = threshold;
-            }
-
-            TweenLite.to($(this), 0, { x : dragDist + "px" });
-        }
-    });
-    // dragend - snapping to one side - controls for the slider
-    $(document).hammer().on("dragend", ".bag-size-wrap .selector", function(e){
-        e.preventDefault();
-        e.stopPropagation();
-
-        var isBig = $(this).parents(".bag-size-wrap").hasClass("big");
-
-        if (e.gesture.direction === "left" && isBig){
-            toggleBagSizeUI("small");
-        }
-        else if (e.gesture.direction === "right" && !isBig){
-            toggleBagSizeUI("big");
-        }
     });
 
     // expand and collapse color drawer
@@ -104,7 +53,7 @@ $(document).ready(function(){
 
         $(this).parents(".color-control-wrap").toggleClass("expand");
     });
-
+ 
     // selecting a color
     $(document).hammer().on("tap", ".color-control-wrap .colors .color-wrap", function(e){
         e.preventDefault();
@@ -112,6 +61,8 @@ $(document).ready(function(){
 
         var color = $(this).parents(".color").attr("rel");
         newBag.changeColor(color);
+        $(".colors .color.selected").removeClass("selected");
+        $(this).parent(".color").addClass("selected");
         $(this).parents(".color-control-wrap").removeClass("expand");
     });
 

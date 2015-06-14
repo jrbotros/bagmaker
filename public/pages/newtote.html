@@ -15,28 +15,25 @@
     <script type="text/javascript" src="/javascripts/libs/jquery.hammer.min.js"></script>
     <script type="text/javascript" src="/javascripts/libs/underscore.min.js"></script>
     <script type="text/javascript" src="/javascripts/libs/handlebars-v3.0.0.js"></script>
-    <script type="text/javascript" src="/javascripts/main.js"></script>
+    <script type="text/javascript" src="/javascripts/min/main.min.js"></script>
   </head>
   <body>
-    <script type="text/javascript" src="/javascripts/create.js"></script>
-    <button class="close createpage"></button>
-    <button class="save"></button>
+    <script type="text/javascript" src="/javascripts/min/create.min.js"></script>
+    <button class="close text createpage"><span>Close</span></button>
+    <button class="save text"><span>Create</span></button>
     <div class="content create-page">
       <div class="bag-wrap"></div>
       <div class="bottom-bar">
         <button class="addTextfield"></button>
-        <div class="bag-size-wrap small">
-          <div class="selector"></div>
-          <div data-size="big" class="big-bag icon"></div>
-          <div data-size="small" class="small-bag icon"></div>
-        </div>
+        <button class="text bag-size-wrap small">
+        </button>
         <div class="color-control-wrap">
           <button class="color-control"></button>
           <div class="colors">
-            <div rel="red" class="color">
+            <div rel="black" class="color selected">
               <div class="color-wrap"></div>
             </div>
-            <div rel="black" class="color">
+            <div rel="red" class="color">
               <div class="color-wrap"></div>
             </div>
             <div rel="white" class="color">

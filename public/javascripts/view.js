@@ -49,6 +49,7 @@ var viewPage = {
         var nextJsonURL = "/data/" + browse.currSort + "/" + toteId + "/next";
 
         $.getJSON(nextJsonURL, function( data ){
+
             viewPage.getToteGridHTML(data, function($nextTote, nextToteId){
                 
                 // if we know the one we're about to be on, but don't know the next loaded one,
@@ -57,6 +58,29 @@ var viewPage = {
                 if (nextToteId === -1 && typeof alreadyLoadedToteObj !== "undefined"){
                     browse.loadMoreBags();
                 }
+
+                // animating a swing with the carousel.
+                TweenLite.to(".view-carousel .tote-grid-element .actual-tote", 0.3, {
+                    rotation : "-10deg",
+                    ease : gridBagBezier,
+                    onComplete : function(){
+                        TweenLite.to(".view-carousel .tote-grid-element .actual-tote", 0.3, {
+                            rotation : "0deg",
+                            ease : gridBagBezier,
+                        });
+                    }
+                });
+                TweenLite.to(".view-carousel .tote-grid-element .tote-shadow", 0.3, {
+                    rotation : "10deg",
+                    scaleX : 0.9,
+                    ease : gridBagBezier,
+                    onComplete : function(){
+                        TweenLite.to(".view-carousel .tote-grid-element .tote-shadow", 0.3, {
+                            rotation : "0deg",
+                            ease : gridBagBezier,
+                        });
+                    }
+                });
             
                 TweenLite.to($carousel, 0.5, {
                     x : -dist,
@@ -73,12 +97,13 @@ var viewPage = {
                         // $("head title").html("View Tote | Maker | Huge inc.");
                         site.refreshTypeOnTotes();
                         $(".view-carousel-wrap .tote-grid-element .tote-shadow").css("opacity", "1");
+                        $(".view-controls .heart-outer-wrap").attr("class", "heart-outer-wrap " + alreadyLoadedToteObj.color);
                         viewPage.updateLikes();
                         bagObject.upViewCount(toteId);
                     }
                 });
             });
-        });
+        }); 
     },
     prevTote : function(){
         var $carousel = $(".view-carousel-wrap");
@@ -88,6 +113,32 @@ var viewPage = {
 
         $.getJSON(prevJsonURL, function( data ){
            viewPage.getToteGridHTML(data, function($prevTote, prevToteId){
+
+                var alreadyLoadedToteObj = _.findWhere(browse.toteBags, { "_id" : toteId });
+
+                // animation
+                TweenLite.to(".view-carousel .tote-grid-element .actual-tote", 0.3, {
+                    rotation : "10deg",
+                    ease : gridBagBezier,
+                    onComplete : function(){
+                        TweenLite.to(".view-carousel .tote-grid-element .actual-tote", 0.3, {
+                            rotation : "0deg",
+                            ease : gridBagBezier,
+                        });
+                    }
+                });
+                TweenLite.to(".view-carousel .tote-grid-element .tote-shadow", 0.3, {
+                    rotation : "-10deg",
+                    scaleX : 0.9,
+                    ease : gridBagBezier,
+                    onComplete : function(){
+                        TweenLite.to(".view-carousel .tote-grid-element .tote-shadow", 0.3, {
+                            rotation : "0deg",
+                            ease : gridBagBezier,
+                        });
+                    }
+                });
+
                 TweenLite.to($carousel, 0.5, {
                     x : dist,
                     ease: cssBezier,
@@ -103,6 +154,7 @@ var viewPage = {
                         // $("head title").html("View Tote | Maker | Huge inc.");
                         site.refreshTypeOnTotes();
                         $(".view-carousel-wrap .tote-grid-element .tote-shadow").css("opacity", "1");
+                        $(".view-controls .heart-outer-wrap").attr("class", "heart-outer-wrap " + alreadyLoadedToteObj.color);
                         viewPage.updateLikes();
                         bagObject.upViewCount(toteId);
                     }
@@ -116,11 +168,11 @@ var viewPage = {
         
         // user likes it and the button isn't already liked
         if (likes.indexOf(toteID) > -1 && !$(".view-controls .heart-outer-wrap").hasClass("favorited") ){
-            likes.favorite($(".view-controls .heart-outer-wrap .heart-wrap"));
+            likes.favorite($(".view-controls .heart-outer-wrap"));
         }
         // user doesnt like it and the button is liked.
         else if (likes.indexOf(toteID) === -1 && $(".view-controls .heart-outer-wrap").hasClass("favorited")) {
-            likes.unfavorite($(".view-controls .heart-outer-wrap .heart-wrap"));
+            likes.unfavorite($(".view-controls .heart-outer-wrap"));
         }
     }
 };
@@ -134,7 +186,7 @@ $(document).ready(function(){
         viewPage.nextTote();
     });
 
-    $(document).hammer().on("tap", ".view-carousel.on button.close", function(e){
+    $(document).hammer().on("tap, release", ".view-carousel.on button.close", function(e){
         e.preventDefault();
         e.stopPropagation();
         

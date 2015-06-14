@@ -5,44 +5,160 @@ button{
     &.close{
         top: $body-padding;
         left: $body-padding;
-        // @include prefix (box-shadow, none);
-        // background-color: transparent;
-
-        &:after{
-            width: 50%;
-            height: 50%;
-            background: url("/images/x-close.svg") center center no-repeat;
-            background-size: contain;
-            opacity: 0.3;
-            content: "";
-            @include centerAbsV;
-            @include centerAbsH;
-            @include prefix (transition, 0.3s $easing-curve);
-        }
-
-        &:hover:after{
-            opacity: 0.6;
-        }
     }
     &.save{
         top: $body-padding;
         right: $body-padding;
         background-color: $fadedRed;
-
-        &:after{
-            content: "";
-            position: absolute;
-            @include centerAbsV;
-            @include centerAbsH;
-            width: 50%;
-            height: 50%;
-            background: url("/images/check-white.svg") center center no-repeat;
-            background-size: contain;
-        }
+        color: #fff;
     }
 
 }
 
+@media screen and (max-width: $medBP) {
+    body button{
+        &.close{
+            top: $body-padding-sml;
+            left: $body-padding-sml;
+            width: $button-size-sml;
+
+            span{
+                display: none;
+            }
+
+            &:before, &:after{
+                content: "";
+                position: absolute;
+                @include centerAbsH;
+                @include centerAbsV;
+                background-color: $button-text;
+                @include prefix (border-radius, 2px);
+                @include prefix (transform, translateY(-50%) rotate(45deg));
+            }
+
+            &:before{
+                width: 3px;
+                height: 50%;
+            }
+
+            &:after{
+                height: 3px;
+                width: 50%;
+            }
+        }
+        &.save{
+            top: $body-padding-sml;
+            right: $body-padding-sml;
+            width: $button-size-sml;
+
+            span{
+                display: none;
+            }
+
+            &:after{
+                content: "";
+                position: absolute;
+                @include centerAbsV;
+                @include centerAbsH;
+                width: 50%;
+                height: 50%;
+                background: url("/images/check-white.svg") center center no-repeat;
+                background-size: contain;
+            }
+        }
+    }
+    body .content.create-page {
+        .bottom-bar{
+            height: $body-padding-sml * 2 + $button-size-sml;
+
+            .addTextfield{
+                left: $body-padding-sml;
+            }
+        }
+
+        .color-control-wrap{
+            width: $button-size-sml;
+            height: $button-size-sml;
+            right: $body-padding-sml;
+
+            &.expand{
+                height: ($button-size-sml + 15px) * 2 + $button-size-sml;
+                
+                .colors{
+                    @include prefix (transform, translateY(-#{$button-size-sml + 15px}));
+                    
+                    .color{
+                        width: $button-size-sml;
+                        height: $button-size-sml;
+
+                        &[rel=red]{
+                            @include prefix (transition, 0.3s 0.2s $easing-curve);
+                        }
+                        &[rel=black]{
+                            @include prefix (transition, 0.3s 0.15s $easing-curve);
+                        }
+                        &[rel=white]{
+                            @include prefix (transition, 0.3s 0.1s $easing-curve);
+                        }
+                    }
+                }
+                .color-control{
+                    @include prefix (transform, scale(0.5));
+                    background-color: #000;
+
+                    &:before{
+                        opacity: 0;
+                    }
+                    &:after{
+                        opacity: 1;
+                    }
+
+                    &:hover{
+                        @include prefix (transform, scale(0.65));
+                    }
+                }
+            }
+
+            button.color-control{
+                display: block;
+            }
+
+            .colors {
+                height: 100%;
+
+                .color{
+                    width: $button-size * 0.25;
+                    height: $button-size * 0.25;
+                    @include centerAbsH;
+
+                    &[rel=red]{
+                        top: 0;
+                    }
+                    &[rel=black]{
+                        bottom: 0;
+                    }
+                    &[rel=white]{
+                        @include prefix (transform, translateY(-50%));
+                        top: 50%;
+                    }
+                }
+            }
+        }
+        .addTextfield{
+            margin-top: -$button-size-sml/2;
+        }
+        .bag-size-wrap{
+            margin-top: -$button-size-sml/2;
+            width: 180px;
+            
+            &:after{
+                line-height: $button-size-sml !important;
+                font-size: 12px;
+                letter-spacing: 0.08em;
+            }
+        }
+    }
+}
 
 .content.create-page{
     position: relative;
@@ -333,6 +449,7 @@ button{
                             input[type=range]{
                                 width: 120px;
                                 margin-left: 15px;
+                                margin-right: 0;
                                 @include prefix (transform, translateY(5px));
                             }
 
@@ -402,7 +519,7 @@ button{
     // keep for when we want to make a bottom tool bar
     .bottom-bar{
         width: 100%;
-        height: $body-padding * 2 + $button-size;
+        height: $body-padding-sml * 2 + $button-size;
        
         //border-top: 1px solid $stroke-color;
         background-color: rgba(248, 248, 248, 0.9);
@@ -414,57 +531,15 @@ button{
     }
 
     .color-control-wrap{
+        @include prefix (transition, 0.3s $easing-curve); 
+        text-align: right;
         position: absolute;
-
-        bottom: $body-padding;
-        right: $body-padding;
-        width: $button-size;
-        height: $button-size;
-        @include prefix (transition, 0.3s $easing-curve);
-
-        &.expand{
-            height: ($button-size + 15px) * 2 + $button-size;
-            
-            .colors{
-                @include prefix (transform, translateY(-#{$button-size + 15px}));
-                
-                .color{
-                    width: $button-size;
-                    height: $button-size;
-
-                    &[rel=red]{
-                        @include prefix (transition, 0.3s 0.2s $easing-curve);
-                        border: 3px solid #fff;
-                    }
-                    &[rel=black]{
-                        @include prefix (transition, 0.3s 0.15s $easing-curve);
-                        border: 3px solid #fff;
-                    }
-                    &[rel=white]{
-                        @include prefix (transition, 0.3s 0.1s $easing-curve);
-                        border: 3px solid transparent;
-                    }
-                }
-            }
-            .color-control{
-                @include prefix (transform, scale(0.5));
-                background-color: #000;
-
-                &:before{
-                    opacity: 0;
-                }
-                &:after{
-                    opacity: 1;
-                }
-
-                &:hover{
-                    @include prefix (transform, scale(0.65));
-                }
-            }
-        }
+        bottom: $body-padding-sml;
+        right: $body-padding;      
     }
 
     .color-control{
+        display: none;
         bottom: 0;
         left: 0;
         position: absolute;
@@ -482,8 +557,8 @@ button{
         }
 
         &:before{
-            background: url("/images/color-wheel.svg") center center no-repeat;
-            background-size: 25px 25px;
+            background: url("/images/tri-color-wheel.svg") center center no-repeat;
+            background-size: 35px 35px;
         }
         &:after{
             background: url("/images/x-close-white.svg") center center no-repeat;
@@ -493,86 +568,125 @@ button{
         }
     }
     .colors{
-        height: 100%;
         @include prefix (transition, 0.3s $easing-curve);
         
         .color{
-            @include centerAbsH;
-            width: $button-size * 0.25;
-            height: $button-size * 0.25;
+            width: $button-size;
+            height: $button-size;
+            display: inline-block;
+            margin-left: $body-padding-sml;
             @include prefix (border-radius, 50%);
-            border: 3px solid transparent;
             @include prefix (transition, 0.15s $easing-curve);
             cursor: pointer;
-            @include prefix (box-shadow, 0 2px 4px 2px rgba(0,0,0,0.15));
+            @include prefix (box-shadow, inset 0 0 0 0px rgba(210,209,209, .4), 0 0 2px 0px rgba(1,1,1,.1), 0 2px 10px 0px rgba(1,1,1,.15));
+            position: relative;
+            opacity: 0.8;
 
-            &:hover .color-wrap{
-                @include prefix (box-shadow, 0 2px 6px 2px rgba(0,0,0,0.2));
+            &:hover{
+                @include prefix (box-shadow, inset 0 0 0 0px rgba(210,209,209, .4), 0 0 2px 0px rgba(1,1,1,.1), 0 2px 10px 0px rgba(1,1,1,.4));
+                opacity: 1;
+            }
+
+            &.selected{
+                &[rel=red], &[rel=black], &[rel=white]{
+                    background-color: #fff;
+                    border: 2px solid rgba(0,0,0,0.5);
+                    opacity: 1;
+                }
             }
 
             &[rel=red]{
                 background-color: $red;
-                top: 0;
+
+                .color-wrap{
+                    background-color: $red;
+                }
             }
             &[rel=black]{
                 background-color: #000;
-                bottom: 0;
+
+                .color-wrap{
+                    background-color: #000;
+                }
             }
             &[rel=white]{
                 background-color: #fff;
-                @include prefix (transform, translateY(-50%));
-                top: 50%;
+                border: 1px solid rgba(0,0,0,0.3);
+
+                .color-wrap{
+                    background-color: #fff;
+                }
             }
             .color-wrap{
                 @include prefix (transition, 0.3s $easing-curve);
-                width: 100%;
-                height: 100%;
-                position: absolute; 
-                top: 0;
-                left: 0;
+                width: 80%;
+                height: 80%;
+                @include centerAbsH;
+                @include centerAbsV;
                 @include prefix (border-radius, 50%);
             }
         }
     }
 
     .addTextfield{
-        @include centerAbsV;
+        position: absolute;
+        top: 50%;
+        margin-top: -$button-size/2;
         left: $body-padding;
 
-        &:not(.disabled):hover{
-            @include prefix (transform, translateY(-50%) scale(1.1));
-        }
-
-        &:before{
+        &:before, &:after{
             content: "";
             position: absolute;
             @include centerAbsH;
             @include centerAbsV;
-            background: url("/images/x-close.svg") center center no-repeat;
-            background-size: contain;
-            @include prefix (transform, translateY(-50%) rotate(45deg) );
-            width: 40%;
-            height: 40%;
+            background-color: $button-text;
+            @include prefix (border-radius, 2px);
+        }
+
+        &:before{
+            width: 3px;
+            height: 50%;
+        }
+
+        &:after{
+            height: 3px;
+            width: 50%;
         }
 
         &.disabled{
-            background-color: $grey;
+            background-color: $lightGrey;
             cursor: auto;
         }
     }
 
     .bag-size-wrap{
-        @include centerAbsV;
         @include centerAbsH;
-        @include prefix (border-top-right-radius, 25% 50%);
-        @include prefix (border-top-left-radius, 25% 50%);
-        @include prefix (border-bottom-left-radius, 25% 50%);
-        @include prefix (border-bottom-right-radius, 25% 50%);
-        height: $button-size;
-        width: $button-size * 2;
-        background-color: $lightGrey;
-        border: 1px solid $grey;
-        @include prefix (box-shadow, 0 1px 2px 1px rgba(0,0,0,0.2));
+        top: 50%;
+        margin-top: -$button-size/2;
+        width: 200px;
+
+        &:after{
+            line-height: $button-size;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 0.02em;
+            font-family: HugeAvantGarde;
+            color: $button-text;
+        }
+
+        &:before{
+            content: "";
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            z-index: $z-first-level;
+            position: absolute;
+            top: 0;
+            left: 0;
+            @include prefix (border-radius, #{$button-size/2} );
+            @include prefix (transition, 0.3s $easing-curve);
+        }
         
         .selector{
             width: $button-size;
@@ -598,11 +712,23 @@ button{
         }
 
         &.small{
+            &:after{
+                content: "Make it bigger."
+            }
+            &:before{
+                opacity: 0;
+            }
             .icon.small-bag{
                 opacity: 0.5;
             }
         }
         &.big{
+            &:after{
+                content: "Make it smaller."
+            }
+            &:before{
+                opacity: 0;
+            }
             .icon.big-bag{
                 opacity: 0.5;
             }

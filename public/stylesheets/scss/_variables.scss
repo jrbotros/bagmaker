@@ -10,15 +10,22 @@ $darkGrey     :   #3c3c3c;
 $grey         :   #ccc;
 $lightGrey    :   #e3e3e3;
 $lightestGrey :   #f8f8f8;
+$button-text  :   #A3A3A3;
 $stroke-color :   rgba(0,0,0,0.2);
 
-$easing-curve :   cubic-bezier(.7,0,.3,1);
-$navHeight    :   80px;
-$body-padding-sml : 15px;
-$body-padding :   25px;
-$button-size  :   50px;
+$easing-curve :   cubic-bezier(.7, 0, 0.3, 1);
+$heart-curve  :   cubic-bezier(.83, -0.47, 0.55, 4);
+
+$navHeight    :   100px;
+$navHeight-sml :  80px;
+
+$body-padding-sml : 20px;
+$body-padding :   30px;
+
+$button-size  :   65px;
+$button-size-sml  :   50px;
 
 $maxWidth   :   1400px;
-$lrgBP    :   1280px;
+$lrgBP      :   1280px;
 $medBP      :   940px;
-$smlBP    :   640px;
+$smlBP      :   640px;

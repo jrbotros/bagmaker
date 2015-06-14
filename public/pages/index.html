@@ -15,11 +15,11 @@
     <script type="text/javascript" src="/javascripts/libs/jquery.hammer.min.js"></script>
     <script type="text/javascript" src="/javascripts/libs/underscore.min.js"></script>
     <script type="text/javascript" src="/javascripts/libs/handlebars-v3.0.0.js"></script>
-    <script type="text/javascript" src="/javascripts/main.js"></script>
+    <script type="text/javascript" src="/javascripts/min/main.min.js"></script>
   </head>
   <body>
-    <script type="text/javascript" src="/javascripts/browse.js"></script>
-    <script type="text/javascript" src="/javascripts/view.js"></script>
+    <script type="text/javascript" src="/javascripts/min/browse.min.js"></script>
+    <script type="text/javascript" src="/javascripts/min/view.min.js"></script>
     <nav class="hidden">
       <div class="sort">
         <div class="selected-sort"><span class="name">Newest</span>
@@ -31,7 +31,7 @@
         </ul>
       </div>
       <div class="create">
-        <button>Create</button>
+        <button class="text">New Bag</button>
       </div>
     </nav>
     <div class="content browse-page">
@@ -44,20 +44,18 @@
       <div class="view-carousel">
         <div class="view-carousel-wrap"></div>
         <div class="view-controls">
-          <button class="arrow left"></button>
-          <div class="heart-outer-wrap">
+          <button class="heart-outer-wrap">
             <div class="heart-wrap">
               <div class="heart-circle"></div>
               <div class="heart">
-                <div class="inner-heart grey"></div>
-                <div class="inner-heart magenta"></div>
-                <div class="inner-heart white"></div>
+                <div class="inner-heart"></div>
               </div>
             </div>
-          </div>
+          </button>
+          <button class="arrow left"></button>
           <button class="arrow right"></button>
+          <button class="close text"><span>Close</span></button>
         </div>
-        <button class="close"></button>
       </div>
     </div>
   </body>
