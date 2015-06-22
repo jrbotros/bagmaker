@@ -5,9 +5,8 @@
                 width: $button-size-sml;
                 height: $button-size-sml;
 
-                .heart-wrap .heart{
-                    width: 22px;
-                    height: 20px;
+                .heart svg path{
+                    @include prefix (transform, translate3d(13%, 10%, 0) scale(0.65));
                 }
             }
         }
@@ -139,7 +138,7 @@ body .view-carousel{
         height: $body-padding-sml * 2 + $button-size;
         text-align: right;
         padding: $body-padding-sml;
-        @include prefix (transition, 0.5s 0.5s $easing-curve);
+        @include prefix (transition, 0.5s $easing-curve);
         @include prefix (transform, translateY(-100%));
 
         & > *{
@@ -160,12 +159,37 @@ body .view-carousel{
         .heart-outer-wrap{
             width: $button-size;
             height: $button-size;
+
+            .heart svg path{
+                @include prefix (transform, translate3d(20%, 20%, 0) scale(0.8));
+            }
+
+            &.black{
+                svg path{
+                    @include prefix (fill, rgba(26, 25, 25, .2));
+                }
+            }
+            &.white{
+                .heart svg path{
+                    @include prefix (fill, rgba(254, 67, 68, 1));
+                }
+            }
+            &.red{
+                .heart svg path{
+                    @include prefix (fill, rgba(60, 60, 60, 1));
+                }
+            }
+            &.favorited{
+                .heart svg path{
+                    @include prefix (fill, rgba(255, 255, 255, 1));
+                }
+            }
         }
 
         button.arrow{
             &:after{
-                width: 50%;
-                height: 50%;
+                width: 40%;
+                height: 40%;
                 background-position: center center;
                 background-repeat: no-repeat;
                 background-size: contain;
@@ -175,11 +199,9 @@ body .view-carousel{
                 @include centerAbsH;
                 @include prefix (transition, 0.3s $easing-curve);
             }
-
             &:hover:after{
-                opacity: 0.6;
+                opacity: 0.5;
             }
-
             &.left:after{
                 background-image: url("/images/left-black-arrow.svg");
             }

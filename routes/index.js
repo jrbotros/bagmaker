@@ -34,8 +34,10 @@ function getSortAttributeNextFromSort(sort){
         sortAttribute.timestamp = -1; // desc
     else if (sort === "oldest") 
         sortAttribute.timestamp = 1; // asc, oldest
-    else if (sort === "popular")
+    else if (sort === "popular"){
         sortAttribute.likes = -1;
+        sortAttribute._id = -1;
+    }
     else if (sort === "views")
         sortAttribute.views = -1;
 
@@ -125,15 +127,16 @@ router.get("/data/:sort/:id/next", function(req, res){
 
         // find all the totebags that have been made AFTER this one, limit 1, sort by oldest
         var query = {};
-        query[sortField] = { $lt : selValue };
-        if (sortName === "oldest"){
+        if (sortName === "newest"){
+            query[sortField] = { $lt : selValue };
+        }
+        else if (sortName === "oldest"){
             query[sortField] = { $gt : selValue };
         }
-
-        if (sortField !== "timestamp"){
-            var timeValue = totebag.timestamp[0];
+        else if (sortName === "popular"){
+            var id = totebag._id;
             query[sortField] = { $lte : selValue };
-            query.timestamp = { $lt : timeValue };
+            query._id = { $gt : id };
         }
 
         Totebag.find( query, null, {
@@ -172,15 +175,16 @@ router.get("/data/:sort/:id/prev", function(req, res){
 
         // find all the totebags that have been made AFTER this one, limit 1, sort by oldest
         var query = {};
-        query[sortField] = { $gt : selValue };
-        if (sortName === "oldest"){
+        if (sortName === "newest"){
+            query[sortField] = { $gt : selValue };
+        }
+        else if (sortName === "oldest"){
             query[sortField] = { $lt : selValue };
         }
-
-        if (sortField !== "timestamp"){
-            var timeValue = totebag.timestamp[0];
+        else if (sortName === "popular"){
+            var id = totebag._id;
             query[sortField] = { $gte : selValue };
-            query.timestamp = { $gt : timeValue };
+            query._id = { $gt : id };
         }
 
         Totebag.find(query, null, {

@@ -455,7 +455,7 @@ $(document).ready(function(){
         $.cookie("likes", "");
     }
 
-    $(document).hammer().on("tap, release", "button.close.createpage", function(){
+    $(document).hammer().on("tap", "button.close.createpage", function(){
         window.location.href = "/";
     });
 

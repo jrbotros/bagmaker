@@ -1,7 +1,13 @@
 .tote-grid-element{
-    &.red button.heart-outer-wrap .heart-wrap .heart .inner-heart{
-        &:after, &:before{
-            background-color: $darkGrey;
+    &.red button.heart-outer-wrap {
+        .heart-wrap .heart .inner-heart{
+            &:after, &:before{
+                background-color: $darkGrey;
+            }
+        }
+
+        svg path{
+            @include prefix (fill, rgba(60, 60, 60, 1));
         }
     }
     &.white button.heart-outer-wrap {
@@ -9,6 +15,10 @@
             &:after, &:before{
                 background-color: $fadedRed;
             }
+        }
+
+        svg path{
+            @include prefix (fill, rgba(254, 67, 68, 1));
         }
 
         &.favorited{
@@ -19,9 +29,15 @@
             }
         }
     }
-    &.black button.heart-outer-wrap .heart-wrap .heart .inner-heart{
-        &:after, &:before{
-            background-color: $grey;
+    &.black button.heart-outer-wrap {
+        .heart-wrap .heart .inner-heart{
+            &:after, &:before{
+                background-color: $grey;
+            }
+        }
+        
+        svg path{
+            @include prefix (fill, rgba(26, 25, 25, .2));
         }
     }
 }
@@ -45,6 +61,10 @@ button.heart-outer-wrap{
                         background-color: #fff !important;
                         @include prefix (transition, 0.3s 0.2s $easing-curve);
                     }
+                }
+
+                svg path{
+                    fill: rgba(255,255,255,1);
                 }
             }
 
@@ -98,11 +118,15 @@ button.heart-outer-wrap{
     align-items:center;
 
     .heart{
-        width: 27px;
-        height: 23px;
-        margin: 0 auto;
         @include prefix (transition, 0.5s $heart-curve);
-        
+        width: 100%;
+        height: 100%;
+
+        svg{
+            width: 100%;
+            height: 100%;
+        }
+
         .inner-heart{
             width: 100%;
             height: 100%;
@@ -293,9 +317,9 @@ button.heart-outer-wrap{
             }
         }
 
-        .heart-wrap .heart{
-            width: 20px;
-            height: 18px;
+        .heart svg path{
+            @include prefix (transition, 0.3s $easing-curve);
+            @include prefix (transform, translate3d(12%, 8%, 0) scale(0.65));
         }
     }
     .tote-wrap{

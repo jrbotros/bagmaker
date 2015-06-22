@@ -589,8 +589,8 @@ body .tote-wrap{
                 border: solid 0.1em transparent;
                 width: 0;
                 height: 0;
-                border-left: solid 0.1em #fff;
-                border-bottom: solid 0.1em #fff;
+                border-left: solid 0.1em $lightestGrey;
+                border-bottom: solid 0.1em $lightestGrey;
                 z-index: 1;
                 @include prefix (transition, 0.5s $easing-curve);
                 @include prefix (transition-property, border-color);

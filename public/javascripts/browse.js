@@ -190,7 +190,7 @@ var browse = {
 
                 heartWrap += "<div class='heart-circle'></div>" +
                                 "<div class='heart'>" + 
-                                    "<div class='inner-heart'></div>" +
+                                    '<svg width="32px" height="29px" ><path d="M39.9504969,20.4285714 C37.4437267,20.4285714 34.8843478,21.6982109 33,24.6490918 C31.1163354,21.6982109 28.5562733,20.4292823 26.0495031,20.4285714 C21.5825466,20.4285714 17.2857143,24.4592857 17.2857143,30.186881 C17.2857143,36.2365068 22.5158385,40.5508639 26.4539752,43.8067143 C30.5410559,47.1905238 31.688882,47.9113605 33,49.2812347 C34.311118,47.9113605 35.4589441,47.1905238 39.5460248,43.8067143 C43.4841615,40.5508639 48.7142857,36.2365068 48.7142857,30.186881 C48.7142857,24.4592857 44.4167702,20.4285714 39.9504969,20.4285714"></path></svg>'+
                                 "</div>" +
                             "</div></button>";
 
@@ -599,8 +599,6 @@ $(document).ready(function(){
         e.preventDefault();
         e.stopPropagation();
 
-        console.log("heart");
-
         var toteIndex;
         var toteID;
 
@@ -655,7 +653,9 @@ $(document).ready(function(){
         e.preventDefault();
         e.stopPropagation();
 
-        console.log("zoom");
+        // if its meant to scroll
+        if ( Math.abs(e.gesture.deltaX) > 10 || Math.abs(e.gesture.deltaY) > 10 )
+            return;
 
         browse.viewZoomIn($(this));
     });

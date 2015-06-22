@@ -186,7 +186,7 @@ $(document).ready(function(){
         viewPage.nextTote();
     });
 
-    $(document).hammer().on("tap, release", ".view-carousel.on button.close", function(e){
+    $(document).hammer().on("tap", ".view-carousel.on button.close", function(e){
         e.preventDefault();
         e.stopPropagation();
         
