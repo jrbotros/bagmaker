@@ -258,6 +258,7 @@ $(document).ready(function(){
     });
 
     $(document).hammer().on("tap", "button.save", function(){
+        console.log('huh?');
         newBag.saveAs();
     });
 });

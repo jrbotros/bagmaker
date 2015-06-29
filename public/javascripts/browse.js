@@ -4,6 +4,7 @@ var browse = {
     numPerPage : 24,
     currSort : "newest",
     loadedAll : false,
+    totalBags : -1,
     currentlyBuilding : false,
 
     getToteObj : function(toteID, callback){
@@ -17,6 +18,16 @@ var browse = {
         else{
             var index = _.indexOf(browse.toteBags, tote);
             callback(tote, index);
+        }
+    },
+
+    getToteObjFromIndex : function(index, callback){
+        if (browse.toteBags.length >= index)
+            callback([browse.toteBags[index]]);
+        else{
+            $.getJSON("/data/" + browse.currSort + "/" + index, function( data ){
+                callback(data);
+            });
         }
     },
 
@@ -134,7 +145,7 @@ var browse = {
         browse.currentlyBuilding = true;
 
         if (browse.toteBags === null){
-            $.getJSON('/data/' + browse.currSort + '/' + browse.currPage, function( data ){
+            $.getJSON('/data/' + browse.currSort + '/page/' + browse.currPage, function( data ){
                 // sort it by time - newest
                 browse.toteBags = data;
 
@@ -150,7 +161,7 @@ var browse = {
             }
 
             browse.currPage = browse.currPage + 1;
-            $.getJSON('/data/' + browse.currSort + '/' + browse.currPage, function( data ){
+            $.getJSON('/data/' + browse.currSort + '/page/' + browse.currPage, function( data ){
                 // we need to check data to see if its [] and then flag it as the end.
                 if (data.length < browse.numPerPage){
                     browse.loadedAll = true;
@@ -229,31 +240,36 @@ var browse = {
     // positions the view carousel with the $tote centered.
     view : function(toteId){
         // grab all the data.
-        var prevJsonURL = "/data/" + browse.currSort + "/" + toteId + "/prev";
-        var nextJsonURL = "/data/" + browse.currSort + "/" + toteId + "/next";
-        var currJsonURL = "/data/tote/" + toteId;
+        var currJsonURL = "/data/" + browse.currSort + "/tote/" + toteId;
         var toteObjArray = [];
         var toteIdArray = [];
+        var currBag, nextBag, prevBag;
 
-        $.getJSON(prevJsonURL, function( data ){
-            toteIdArray.push(data[0]._id);
-            toteObjArray.push({bags : data});
-
-            $.getJSON(currJsonURL, function( data ){
-                toteIdArray.push(toteId);
-                toteObjArray.push({bags : [data]});
-                $(".view-controls .heart-outer-wrap").attr("class", "heart-outer-wrap " + data.color);
+        $.getJSON(currJsonURL, function( data ){
+            // toteIdArray.push(toteId);
+            currBag = {bags : [data]};
+            $(".view-controls .heart-outer-wrap").attr("class", "heart-outer-wrap " + data.color);
             
-                $.getJSON(nextJsonURL, function( data ){
-                    toteIdArray.push(data[0]._id);
-                    toteObjArray.push({bags : data});
+            var currIndex = data.index;
+            var prevIndex = data.prevIndex;
+            var nextIndex = data.nextIndex;
+            browse.totalBags = data.totalBags;
 
+            $(".view-carousel").attr("data-index", currIndex);
+
+            browse.getToteObjFromIndex(prevIndex, function(prevData){
+                prevBag = {bags : prevData};
+
+                browse.getToteObjFromIndex(nextIndex, function(nextData){
+                    nextBag = {bags : nextData};
+
+                    toteObjArray = [prevBag, currBag, nextBag];
+                    toteIdArray = [prevBag.bags[0]._id, currBag.bags[0]._id, nextBag.bags[0]._id];
                     loadToteViews();
                 });
             });
-            
         });
-
+        
         function loadToteViews(){
             $.get("/templates/_bag.html", function(html) {
                 var template = Handlebars.compile(html);
@@ -301,7 +317,7 @@ var browse = {
                 }
                 $(".view-carousel-wrap").scrollTop( scrollAmount );
 
-                window.history.pushState("html", "Title", "/totes/" + toteId);
+                window.history.pushState("html", "Title", "/" + browse.currSort + "/" + toteId);
                 bagObject.upViewCount(toteId);
 
                 $("head title").html("View Tote | Totebag Maker | Huge inc.");

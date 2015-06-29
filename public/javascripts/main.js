@@ -429,7 +429,9 @@ var bagObject = {
 };
 
 function resizeHelper(){
-    site.refreshTypeOnTotes();
+    setTimeout(function(){
+        site.refreshTypeOnTotes();
+    }, 200);
 
     if (site.breakpt() !== "sml"){
         TweenLite.to("nav", 0, { y : 0 });

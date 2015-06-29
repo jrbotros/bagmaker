@@ -44,18 +44,25 @@ var viewPage = {
     },
     nextTote : function(){
         var $carousel = $(".view-carousel-wrap");
-        var dist = $carousel.find(".tote-grid-element").outerWidth();
+        var currIndex = parseInt($(".view-carousel").attr("data-index"));
         var toteId = $(".view-carousel .tote-grid-element:last-child").attr("data-id");
-        var nextJsonURL = "/data/" + browse.currSort + "/" + toteId + "/next";
+        var dist = $carousel.find(".tote-grid-element").outerWidth();
+        
+        var loadNextIndex = currIndex + 2;
+        var nextIndex = currIndex + 1;
+        if (currIndex >= browse.totalBags - 2){
+            loadNextIndex = 2 - (browse.totalBags - currIndex);
+        }
+        if (nextIndex >= browse.totalBags){
+            nextIndex = 0;
+        }
 
-        $.getJSON(nextJsonURL, function( data ){
+        browse.getToteObjFromIndex(loadNextIndex, animateNextTote);
 
+        function animateNextTote(data){
             viewPage.getToteGridHTML(data, function($nextTote, nextToteId){
-                
-                // if we know the one we're about to be on, but don't know the next loaded one,
-                // we then know we're in order and should load more.
-                var alreadyLoadedToteObj = _.findWhere(browse.toteBags, { "_id" : toteId });
-                if (nextToteId === -1 && typeof alreadyLoadedToteObj !== "undefined"){
+    
+                if ($(".browse-tote-wrap .tote-grid-element").length < loadNextIndex){
                     browse.loadMoreBags();
                 }
 
@@ -91,30 +98,40 @@ var viewPage = {
                         $carousel.find(".tote-grid-element:first-child").remove();
                         TweenLite.to($carousel, 0, { x : 0 });
 
-                        $carousel.parents(".view-carousel").attr("data-display", toteId );
-                        window.history.pushState("html", "Title", "/totes/" + toteId);
+                        $(".view-carousel").attr("data-display", toteId ).attr("data-index", nextIndex);
 
+                        window.history.pushState("html", "Title", "/" + browse.currSort + "/" + toteId);
                         // $("head title").html("View Tote | Maker | Huge inc.");
                         site.refreshTypeOnTotes();
                         $(".view-carousel-wrap .tote-grid-element .tote-shadow").css("opacity", "1");
+                        var alreadyLoadedToteObj = _.findWhere(browse.toteBags, { "_id" : toteId });
                         $(".view-controls .heart-outer-wrap").attr("class", "heart-outer-wrap " + alreadyLoadedToteObj.color);
                         viewPage.updateLikes();
                         bagObject.upViewCount(toteId);
                     }
                 });
             });
-        }); 
+        }
     },
     prevTote : function(){
         var $carousel = $(".view-carousel-wrap");
-        var dist = $carousel.find(".tote-grid-element").outerWidth();
+        var currIndex = parseInt($(".view-carousel").attr("data-index"));
         var toteId = $(".view-carousel .tote-grid-element:first-child").attr("data-id");
-        var prevJsonURL = "/data/" + browse.currSort + "/" + toteId + "/prev";
+        var dist = $carousel.find(".tote-grid-element").outerWidth();
 
-        $.getJSON(prevJsonURL, function( data ){
+        var loadPrevIndex = currIndex - 2;
+        var prevIndex = currIndex - 1;
+        if (currIndex <= 1){
+            loadPrevIndex = browse.totalBags - (2 - currIndex);
+        }
+        if (prevIndex < 0){
+            prevIndex = browse.totalBags - 1;
+        }
+
+        browse.getToteObjFromIndex(loadPrevIndex, animatePrevTote);
+
+        function animatePrevTote(data){
            viewPage.getToteGridHTML(data, function($prevTote, prevToteId){
-
-                var alreadyLoadedToteObj = _.findWhere(browse.toteBags, { "_id" : toteId });
 
                 // animation
                 TweenLite.to(".view-carousel .tote-grid-element .actual-tote", 0.3, {
@@ -148,20 +165,20 @@ var viewPage = {
                         $carousel.find(".tote-grid-element:last-child").remove();
                         TweenLite.to($carousel, 0, { x : 0 });
 
-                        $carousel.parents(".view-carousel").attr("data-display", toteId );
-                        window.history.pushState("html", "Title", "/totes/" + toteId);
+                        $carousel.parents(".view-carousel").attr("data-display", toteId ).attr("data-index", prevIndex);;
+                        window.history.pushState("html", "Title", "/" + browse.currSort + "/" + toteId);
 
                         // $("head title").html("View Tote | Maker | Huge inc.");
                         site.refreshTypeOnTotes();
                         $(".view-carousel-wrap .tote-grid-element .tote-shadow").css("opacity", "1");
+                        var alreadyLoadedToteObj = _.findWhere(browse.toteBags, { "_id" : toteId });
                         $(".view-controls .heart-outer-wrap").attr("class", "heart-outer-wrap " + alreadyLoadedToteObj.color);
                         viewPage.updateLikes();
                         bagObject.upViewCount(toteId);
                     }
                 });
             });
-        });
-        
+        }
     },
     updateLikes : function(){
         var toteID = $(".view-carousel").attr("data-display");

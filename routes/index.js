@@ -73,6 +73,18 @@ router.param('sort', function(req, res, next, sort){
         next();
 });
 
+// validates all uses of the "id" variable.
+router.param('id', function(req, res, next, id){
+    Totebag.findById(id, function (err, found) {
+        // if you can't find this id, take them to the index page.
+        if (found === null || typeof found === "undefined")
+            handle404(req, res);
+        // valid id
+        else
+            next();
+    });    
+});
+
 router.get('/:sort', function(req, res) {
     var sort = req.params.sort;
     
@@ -95,6 +107,87 @@ router.get('/:sort', function(req, res) {
     });
 });
 
+router.get('/:sort/:id', function(req, res) {
+    var sort = req.params.sort;
+    var id = req.params.id;
+    
+    var sortName;
+    if (sort === "newest")
+        sortName = "Newest";
+    else if (sort === "oldest")
+        sortName = "Oldest";
+    else if (sort === "popular")
+        sortName = "Popular";
+    else if (sort === "views")
+        sortName = "Most Views";
+
+    if (typeof sortName === "undefined")
+        next();
+
+    res.render('index', {
+        title : 'View Tote | Totebag Maker | Huge inc.',
+        toteID : id,
+        sort : sort
+    });
+});
+
+// return a single tote json based on sort and index (not id).
+router.get("/data/:sort/:index", function(req, res){
+    var skip = req.params.index;
+    var sort = req.params.sort;
+    var sortAttribute = getSortAttributeNextFromSort(sort);
+
+    Totebag.find({},null,{
+        skip: skip,
+        limit: 1,
+        sort: sortAttribute
+    }, function(err, totebag) {
+        if(err) {
+          console.log(err);
+          return res.status(500).json("Internal Server Error");  
+        }
+        return res.status(200).json(totebag);
+    });
+});
+
+// return a single tote json based on sort and id (not index).
+router.get("/data/:sort/tote/:id", function(req, res){
+    var id = req.params.id;
+    var sort = req.params.sort;
+
+    var sortAttribute = getSortAttributeNextFromSort(sort);
+
+    Totebag.find({}, null, {
+        sort: sortAttribute
+    }, function(err, totebags) {
+        if(err) {
+            console.log(err);
+            return res.status(500).json("Internal Server Error"); 
+        }
+        for (var i = 0; i < totebags.length; i++){
+            if (("" + totebags[i]._id) === id){
+                var clone = JSON.parse(JSON.stringify(totebags[i]));
+                
+                var prevIndex = i - 1;
+                if (prevIndex < 0){
+                    prevIndex = totebags.length - 1;
+                }
+                var nextIndex = i + 1;
+                if (nextIndex >= totebags.length){
+                    nextIndex = 0;
+                }
+                clone.index = i;
+                clone.nextIndex = nextIndex;
+                clone.prevIndex = prevIndex;
+                clone.totalBags = totebags.length;
+
+                return res.status(200).json(clone);
+            }
+        }
+    });
+
+});
+
 // get a single bag's json
 router.get('/data/tote/:id', function(req, res){
     var toteToUpdate = req.params.id;
@@ -108,103 +201,8 @@ router.get('/data/tote/:id', function(req, res){
     });
 });
 
-// get the tote bag that was made after this one
-router.get("/data/:sort/:id/next", function(req, res){
-    var toteToUpdate = req.params.id;
-    var sortName = req.params.sort;
-
-    // find the tote its in reference to
-    Totebag.findOne({_id: toteToUpdate}, function(err, totebag) {
-        if(err){
-            console.log(err);
-            return res.status(500).json("Internal Server Error");  
-        }
-
-        // save the current value
-        var sortField = getSortFieldFromSort(sortName);
-        var selValue = totebag[sortField][0];
-        var sortAttribute = getSortAttributeNextFromSort(sortName);
-
-        // find all the totebags that have been made AFTER this one, limit 1, sort by oldest
-        var query = {};
-        if (sortName === "newest"){
-            query[sortField] = { $lt : selValue };
-        }
-        else if (sortName === "oldest"){
-            query[sortField] = { $gt : selValue };
-        }
-        else if (sortName === "popular"){
-            var id = totebag._id;
-            query[sortField] = { $lte : selValue };
-            query._id = { $gt : id };
-        }
-
-        Totebag.find( query, null, {
-            limit : 1,
-            sort : sortAttribute
-        }, function(err, next){
-            if (next.length === 0){
-                Totebag.find({}, null, { limit : 1, sort : sortAttribute }, function(err, least){
-                    return res.status(200).json(least);
-                });
-            }
-            // return it.
-            else{
-                return res.status(200).json(next);
-            }
-        });
-    });
-});
-
-// get the tote bag that was made before this one
-router.get("/data/:sort/:id/prev", function(req, res){
-    var toteToUpdate = req.params.id;
-    var sortName = req.params.sort;
-
-    // find the tote its in reference to
-    Totebag.findOne({_id: toteToUpdate}, function(err, totebag) {
-        if(err){
-            console.log(err);
-            return res.status(500).json("Internal Server Error");  
-        }
-
-        // save the date
-        var sortField = getSortFieldFromSort(sortName);
-        var selValue = totebag[sortField][0];
-        var sortAttribute = getSortAttributePrevFromSort(sortName);
-
-        // find all the totebags that have been made AFTER this one, limit 1, sort by oldest
-        var query = {};
-        if (sortName === "newest"){
-            query[sortField] = { $gt : selValue };
-        }
-        else if (sortName === "oldest"){
-            query[sortField] = { $lt : selValue };
-        }
-        else if (sortName === "popular"){
-            var id = totebag._id;
-            query[sortField] = { $gte : selValue };
-            query._id = { $gt : id };
-        }
-
-        Totebag.find(query, null, {
-            limit : 1,
-            sort : sortAttribute
-        }, function(err, prev){
-            if (prev.length === 0){
-                Totebag.find({}, null, { limit : 1, sort : sortAttribute }, function(err, biggest){
-                    return res.status(200).json(biggest);
-                });
-            }
-            else{
-                return res.status(200).json(prev);
-            }
-        });
-    });
-});
-
 /* JSON return for all sort and pagination. */
-router.get('/data/:sort/:page', function(req, res) {
+router.get('/data/:sort/page/:page', function(req, res) {
     var page = req.params.page - 1; //we want index
     var sort = req.params.sort;
     var loadSize = 24;
