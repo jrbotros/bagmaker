@@ -139,6 +139,9 @@ var site = {
         }
         return breakptval;
     },
+    isTouch : function() {
+        return !!('ontouchstart' in window);
+    },
     refreshTypeOnTotes : function(){
         _.each($(".actual-tote"), function(tote){
             var width = $(tote).find(".bag-body").width();
@@ -307,9 +310,17 @@ var bagObject = {
         var textFieldID = $field.attr("id");
         var $clone = $textarea.siblings(".clone-text-wrap").find(".clone-text");
         var content = $textarea.val();
-    
+
+        $("button.save").removeClass("disabled");
+        $(".clone-text-wrap").removeClass("invisible");
+
+        console.log($textarea.val());
+
         if (content === ""){
             content = "Type Something.";
+
+            $("button.save").addClass("disabled");
+            $(".clone-text-wrap").addClass("invisible");
         }
         //.replace(/\s{2}/g, ' &nbsp;')
         var contentFormatted = content.replace(/\n/g, '<br/>');
@@ -445,10 +456,12 @@ function resizeHelper(){
 function scrollHelper(){
     var scroll = $("body").scrollTop();
 
-    // when it gets one tile away from the end, it will load more.
-    var distToEnd = $(document).height() - $(window).height() - scroll;
-    if (distToEnd < $(".browse-tote-wrap .tote-grid-element").outerHeight()) {
-        browse.loadMoreBags();
+    if ($(".content").hasClass("browse-page")){
+        // when it gets one tile away from the end, it will load more.
+        var distToEnd = $(document).height() - $(window).height() - scroll;
+        if (distToEnd < $(".browse-tote-wrap .tote-grid-element").outerHeight()) {
+            browse.loadMoreBags();
+        }
     }
 }
 

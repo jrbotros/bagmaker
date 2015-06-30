@@ -149,12 +149,19 @@ button{
         }
         .bag-size-wrap{
             margin-top: -$button-size-sml/2;
-            width: 180px;
+            width: 120px;
             
             &:after{
                 line-height: $button-size-sml !important;
                 font-size: 12px;
                 letter-spacing: 0.08em;
+            }
+
+            &.small:after{
+                content: "Bigger."
+            }
+            &.big:after{
+                content: "Smaller."
             }
         }
     }
@@ -486,7 +493,7 @@ button{
                     text-align: inherit;
 
                     @include prefix (touch-callout, none);
-                    @include prefix (user-select, none);
+                    @include prefix (user-select, auto);
 
 
                     cursor: move;
@@ -590,7 +597,7 @@ button{
             &.selected{
                 &[rel=red], &[rel=black], &[rel=white]{
                     background-color: #fff;
-                    border: 2px solid rgba(0,0,0,0.5);
+                    border: 2px solid rgba(0,0,0,0.3);
                     opacity: 1;
                 }
             }

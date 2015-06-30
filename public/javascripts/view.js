@@ -240,6 +240,10 @@ $(document).ready(function(){
         e.preventDefault();
         e.stopPropagation();
 
+        if (site.isTouch()){
+            $(".view-carousel-wrap").css("overflow", "hidden");
+        }
+
         var dir = e.gesture.direction;
         if (dir === "left" || dir === "right"){
             TweenLite.to($(this), 0, { "x" : e.gesture.deltaX });
@@ -251,6 +255,10 @@ $(document).ready(function(){
         e.stopPropagation();
 
         var dir = e.gesture.direction;
+
+        if (site.isTouch()){
+            $(".view-carousel-wrap").css("overflow", "auto");
+        }
 
         if (dir === "left"){
             viewPage.nextTote();

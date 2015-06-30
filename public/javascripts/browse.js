@@ -113,10 +113,21 @@ var browse = {
     // Animate grid out is the opposite of animateIn. Also, recursive.
     animateOut : function(callback){
         var totalGridElements = $(".tote-grid-element").length;
-        // if (totalGridElements >= loadChunk){
-        //     totalGridElements = loadChunk;
-        // }
-        browse.animateOutHelper( totalGridElements - 1, callback );
+        
+        if (totalGridElements > 48){
+            TweenLite.to(".browse-tote-wrap", 0.3, {
+                alpha: 0,
+                ease: cssBezier,
+                onComplete : function(){
+                    $(".browse-tote-wrap").empty();
+                    $(".browse-tote-wrap").css("opacity", "1");
+                    callback();
+                }
+            });
+        }
+        else{
+            browse.animateOutHelper( totalGridElements - 1, callback );
+        }
     },
     animateOutHelper : function(ind, callback){
         var elementNum = $(".tote-grid-element").length;

@@ -28,6 +28,10 @@
                 &.on-state ul{
                     height: $navHeight-sml * 3;
                 }
+
+                .sort-option{
+                    margin: 0 $body-padding-sml;
+                }
             }
             .create button{
                 right: $body-padding-sml;
@@ -60,12 +64,18 @@ html, body{
         &.hidden{
             display: none;
         }
+
+        &.invisible{
+            opacity: 0;
+        }
     }
 }
 
 body.lock-scroll{
     height: 100%;
     overflow: hidden;
+    position: fixed;
+    width: 100%;
 }
 
 button{
@@ -105,6 +115,16 @@ button{
         color: $button-text;
         padding: 0 $body-padding;
         line-height: $button-size;
+    }
+
+    &.disabled, &.disabled.save{
+        cursor: auto;
+        background-color: $grey;
+
+        &:hover{
+            @include prefix (box-shadow, inset 0 0 0 0px rgba(210,209,209, .4), 0 0 2px 0px rgba(1,1,1,.1), 0 2px 10px 0px rgba(1,1,1,.15));
+            @include prefix (transform, scale(1));
+        }
     }
 }
 
@@ -669,4 +689,26 @@ body .tote-wrap{
 .clearfix{
     clear: both;
     float: none;
+}
+
+.lrg {display: block;}
+.lrg-med {display: block;}
+.med {display: none;}
+.med-sml {display: none;}
+.sml {display: none;}
+
+@media screen and (max-width: $medBP) {
+    .lrg{display: none;}
+    .lrg-med {display: block;}
+    .med {display: block;}
+    .med-sml {display: block;}
+    .sml {display: none;}
+}
+
+@media screen and (max-width: $smlBP) {
+    .lrg{display: none;}
+    .lrg-med {display: none;}
+    .med {display: none;}
+    .med-sml {display: block;}
+    .sml {display: block;}
 }

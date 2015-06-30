@@ -29,6 +29,9 @@
   body nav .sort.on-state ul {
     height: 240px;
   }
+  body nav .sort .sort-option {
+    margin: 0 20px;
+  }
   body nav .create button {
     right: 20px;
     top: 15px;
@@ -57,10 +60,15 @@ html *.instant, body *.instant {
 html *.hidden, body *.hidden {
   display: none;
 }
+html *.invisible, body *.invisible {
+  opacity: 0;
+}
 
 body.lock-scroll {
   height: 100%;
   overflow: hidden;
+  position: fixed;
+  width: 100%;
 }
 
 button {
@@ -103,6 +111,18 @@ button.text {
   color: #a3a3a3;
   padding: 0 30px;
   line-height: 65px;
+}
+button.disabled, button.disabled.save {
+  cursor: auto;
+  background-color: #cccccc;
+}
+button.disabled:hover, button.disabled.save:hover {
+  -ms-box-shadow: inset 0 0 0 0px rgba(210, 209, 209, 0.4), 0 0 2px 0px rgba(1, 1, 1, 0.1), 0 2px 10px 0px rgba(1, 1, 1, 0.15);
+  -o-box-shadow: inset 0 0 0 0px rgba(210, 209, 209, 0.4), 0 0 2px 0px rgba(1, 1, 1, 0.1), 0 2px 10px 0px rgba(1, 1, 1, 0.15);
+  box-shadow: inset 0 0 0 0px rgba(210, 209, 209, 0.4), 0 0 2px 0px rgba(1, 1, 1, 0.1), 0 2px 10px 0px rgba(1, 1, 1, 0.15);
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
 }
 
 nav {
@@ -561,6 +581,68 @@ body .tote-wrap .actual-tote .shadow-blur .tote-shadow {
   float: none;
 }
 
+.lrg {
+  display: block;
+}
+
+.lrg-med {
+  display: block;
+}
+
+.med {
+  display: none;
+}
+
+.med-sml {
+  display: none;
+}
+
+.sml {
+  display: none;
+}
+
+@media screen and (max-width: 940px) {
+  .lrg {
+    display: none;
+  }
+
+  .lrg-med {
+    display: block;
+  }
+
+  .med {
+    display: block;
+  }
+
+  .med-sml {
+    display: block;
+  }
+
+  .sml {
+    display: none;
+  }
+}
+@media screen and (max-width: 640px) {
+  .lrg {
+    display: none;
+  }
+
+  .lrg-med {
+    display: none;
+  }
+
+  .med {
+    display: none;
+  }
+
+  .med-sml {
+    display: block;
+  }
+
+  .sml {
+    display: block;
+  }
+}
 button {
   position: fixed;
   z-index: 200;
@@ -718,12 +800,18 @@ button.save {
   }
   body .content.create-page .bag-size-wrap {
     margin-top: -25px;
-    width: 180px;
+    width: 120px;
   }
   body .content.create-page .bag-size-wrap:after {
     line-height: 50px !important;
     font-size: 12px;
     letter-spacing: 0.08em;
+  }
+  body .content.create-page .bag-size-wrap.small:after {
+    content: "Bigger.";
+  }
+  body .content.create-page .bag-size-wrap.big:after {
+    content: "Smaller.";
   }
 }
 .content.create-page {
@@ -1021,10 +1109,10 @@ button.save {
   -ms-touch-callout: none;
   -o-touch-callout: none;
   touch-callout: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
   cursor: move;
   cursor: -webkit-grab;
 }
@@ -1132,7 +1220,7 @@ button.save {
 }
 .content.create-page .colors .color.selected[rel=red], .content.create-page .colors .color.selected[rel=black], .content.create-page .colors .color.selected[rel=white] {
   background-color: #fff;
-  border: 2px solid rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(0, 0, 0, 0.3);
   opacity: 1;
 }
 .content.create-page .colors .color[rel=red] {
@@ -1729,7 +1817,7 @@ body .view-carousel .view-carousel-wrap {
   overflow: auto;
 }
 body .view-carousel .view-carousel-wrap .tote-grid-element {
-  width: 33.33%;
+  width: 100vw;
   padding-bottom: 0;
   height: 150vh;
   top: 0;

@@ -93,7 +93,7 @@ $(document).ready(function(){
     });
 
     // update the size of the text field in the UI as you type
-    $(document).on("keyup", ".editable-field textarea", function(){
+    $(document).on("keyup, keypress", ".editable-field textarea", function(e){
         newBag.updateTextAreaSize($(this));
     });
 
@@ -197,6 +197,11 @@ $(document).ready(function(){
             return;
         }
 
+        if (site.isTouch()){
+            var scrollVal = $("body").scrollTop();
+            $("body:not(.lock-scroll)").addClass("lock-scroll").css("top", -scrollVal);
+        }
+
         var $field = $(this);
         if ($(this).hasClass("corner")){
             $field = $(this).parents(".editable-field");
@@ -229,6 +234,10 @@ $(document).ready(function(){
             return;
         }
 
+        if (site.isTouch()){
+            $("body.lock-scroll").removeClass("lock-scroll").css("top", "");
+        }
+
         var $field = $(this);
         if ($(this).parents(".editable-field").length !== 0){
             $field = $(this).parents(".editable-field");
@@ -257,7 +266,7 @@ $(document).ready(function(){
         }
     });
 
-    $(document).hammer().on("tap", "button.save", function(){
+    $(document).hammer().on("tap", "button.save:not(.disabled)", function(){
         console.log('huh?');
         newBag.saveAs();
     });
