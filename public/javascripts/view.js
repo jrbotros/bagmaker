@@ -272,4 +272,13 @@ $(document).ready(function(){
             viewPage.prevTote();
         }
     });
+
+    // i have no idea why this bug is happening, but here's a fix...
+    $(".view-carousel-wrap").scroll(function(){
+        var scroll = $(".view-carousel-wrap").scrollTop();
+        var carouselHeight = $(".view-carousel-wrap").height();
+
+        if (scroll > (carouselHeight/2))
+            $(".view-carousel-wrap").scrollTop(carouselHeight / 2);
+    });
 });
