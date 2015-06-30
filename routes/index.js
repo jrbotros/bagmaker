@@ -3,20 +3,20 @@ var router = express.Router();
 
 var mongoose = require('mongoose');
 var Totebag = mongoose.model('Totebag');
-var sorts = ["newest", "oldest", "popular", "views"];
+var sorts = ["latest", "oldest", "popular", "views"];
 
 
 function handle404(req, res){
     console.log("\n\n\n\n404\n\n\n\n");
     res.render('index', {
-        title : 'Newest | Totebag Maker | Huge inc.',
-        sort : "newest"
+        title : 'Latest | Totebag Maker | Huge inc.',
+        sort : "latest"
     });
 }
 
 function getSortAttributePrevFromSort(sort){
     var sortAttribute = {};    
-    if (sort === "newest")
+    if (sort === "latest")
         sortAttribute.timestamp = 1; // desc
     else if (sort === "oldest") 
         sortAttribute.timestamp = -1; // asc, oldest
@@ -30,7 +30,7 @@ function getSortAttributePrevFromSort(sort){
 
 function getSortAttributeNextFromSort(sort){
     var sortAttribute = {};    
-    if (sort === "newest")
+    if (sort === "latest")
         sortAttribute.timestamp = -1; // desc
     else if (sort === "oldest") 
         sortAttribute.timestamp = 1; // asc, oldest
@@ -54,11 +54,11 @@ function getSortFieldFromSort(sort){
     return sortField;
 }
 
-/* GET home page. Default: newest */
+/* GET home page. Default: latest */
 router.get('/', function(req, res) {
     res.render('index', {
-        title : 'Newest | Totebag Maker | Huge inc.',
-        sort : "newest"
+        title : 'Latest | Totebag Maker | Huge inc.',
+        sort : "latest"
     });
 });
 
@@ -89,8 +89,8 @@ router.get('/:sort', function(req, res) {
     var sort = req.params.sort;
     
     var sortName;
-    if (sort === "newest")
-        sortName = "Newest";
+    if (sort === "latest")
+        sortName = "Latest";
     else if (sort === "oldest")
         sortName = "Oldest";
     else if (sort === "popular")
@@ -112,8 +112,8 @@ router.get('/:sort/tote/:id', function(req, res) {
     var id = req.params.id;
     
     var sortName;
-    if (sort === "newest")
-        sortName = "Newest";
+    if (sort === "latest")
+        sortName = "Latest";
     else if (sort === "oldest")
         sortName = "Oldest";
     else if (sort === "popular")

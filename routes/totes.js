@@ -43,8 +43,8 @@ router.get('/deletetote/:id', function(req, res) {
         if(err) return res.status(500).json("Internal Server Error");
         
         res.render('index', {
-            title : 'Newest | Totebag Maker | Huge inc.',
-            sort : "newest"
+            title : 'Latest | Totebag Maker | Huge inc.',
+            sort : "latest"
         });
     });
 });
@@ -77,14 +77,14 @@ router.get('/:id', function(req, res) {
     Totebag.findOne({_id: toteToUpdate}, function(err, totebag) {
         if(err){
             res.render('index', {
-                title : 'Newest | Totebag Maker | Huge inc.',
-                sort : "newest"
+                title : 'Latest | Totebag Maker | Huge inc.',
+                sort : "latest"
             });
         }
         res.render("index", {
             title: 'View Tote | Totebag Maker | Huge inc.',
             toteID : toteToUpdate,
-            sort : "newest"
+            sort : "latest"
         });
     });
 });

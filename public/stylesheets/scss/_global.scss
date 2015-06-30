@@ -142,6 +142,30 @@ nav{
         float: left;
         font-size: 28px;
         line-height: $navHeight;
+        
+        .sort-option{
+            display: inline-block;
+            margin: 0 $body-padding;
+            color: $lightGrey;
+            @include prefix (transition, 0.3s $easing-curve);
+            cursor: pointer;
+
+            &:after{
+                content: ".";
+            }
+
+            &:hover{
+                color: $grey;
+            }
+
+            &:nth-child(odd){
+                margin-right: 0;
+            }
+
+            &.sel{
+                color: #000;
+            }
+        }
 
         &:hover, &.on-state{
             .selected-sort{

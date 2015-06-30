@@ -6,13 +6,20 @@ block content
 
     nav.hidden
         .sort
-            .selected-sort
-                //- span.sortTitle Sort:
-                span.name Newest
-            ul
-                li.item(data-attr='timestamp', data-dir='desc') Newest
-                li.item(data-attr='timestamp', data-dir='asc') Oldest
-                li.item(data-attr='likes', data-dir='desc') Popular
+            .sort-option(data-attr='timestamp', data-dir='desc', data-name='latest') Latest
+            .sort-option(data-attr='likes', data-dir='desc', data-name='popular') Popular
+
+            //--------------------------------------------//
+            //---- CODE FOR MAKING A DROPDOWN VERSION ----//
+            //--------------------------------------------//
+
+            //- .selected-sort
+            //-     //- span.sortTitle Sort:
+            //-     span.name Latest
+            //- ul
+            //-     li.item(data-attr='timestamp', data-dir='desc') Latest
+            //-     li.item(data-attr='timestamp', data-dir='asc') Oldest
+            //-     li.item(data-attr='likes', data-dir='desc') Popular
         .create
             button.text New Bag
     .content.browse-page

@@ -128,6 +128,25 @@ nav .sort {
   font-size: 28px;
   line-height: 100px;
 }
+nav .sort .sort-option {
+  display: inline-block;
+  margin: 0 30px;
+  color: #e3e3e3;
+  transition: 0.3s cubic-bezier(0.7, 0, 0.3, 1);
+  cursor: pointer;
+}
+nav .sort .sort-option:after {
+  content: ".";
+}
+nav .sort .sort-option:hover {
+  color: #cccccc;
+}
+nav .sort .sort-option:nth-child(odd) {
+  margin-right: 0;
+}
+nav .sort .sort-option.sel {
+  color: #000;
+}
 nav .sort:hover .selected-sort, nav .sort.on-state .selected-sort {
   background-color: #d93182;
   color: #fff;

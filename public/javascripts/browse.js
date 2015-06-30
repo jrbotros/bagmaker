@@ -2,7 +2,7 @@ var browse = {
     toteBags : null, // array of tote objects
     currPage : 1,
     numPerPage : 24,
-    currSort : "newest",
+    currSort : "latest",
     loadedAll : false,
     totalBags : -1,
     currentlyBuilding : false,
@@ -30,7 +30,6 @@ var browse = {
             });
         }
     },
-
     sort : function($li){
         var attr = $li.attr("data-attr");
         var dir = $li.attr("data-dir");
@@ -38,7 +37,7 @@ var browse = {
         var newSort;
 
         $("nav .sort .name").html( sortName );
-        if (sortName === "Newest") { newSort = "newest"; }
+        if (sortName === "Latest") { newSort = "latest"; }
         else if (sortName === "Oldest") { newSort = "oldest"; }
         else if (sortName === "Popular") { newSort = "popular"; }
         else if (sortName === "Most Views") { newSort = "views"; }
@@ -54,6 +53,12 @@ var browse = {
                 $(".browse-tote-wrap").empty();
                 browse.toteBags = null;
                 browse.loadedAll = false;
+
+                if ($li.hasClass("sort-option")){
+                    $(".sort-option").removeClass("sel");
+                    $li.addClass("sel");
+                }
+
                 browse.loadBags( function(){
                     browse.buildBagGrid();
                 });
@@ -87,7 +92,7 @@ var browse = {
                 if (callback && callback !== undefined){
                     callback();
                 }
-            }, ind * 20);
+            }, ind * 7);
             return;
         }
         else{
@@ -102,7 +107,7 @@ var browse = {
                 $(".tote-grid-element").eq(output).removeClass("start");
                 browse.animateInHelper(ind+1, callback);
 
-            }, ind * 20);
+            }, ind * 7);
         }
     },
     // Animate grid out is the opposite of animateIn. Also, recursive.
@@ -573,13 +578,14 @@ var browse = {
 
         // update the UI on the sort button.
         var sortName;
-        if (browse.currSort === "newest") { sortName = "Newest"; }
+        if (browse.currSort === "latest") { sortName = "Latest"; }
         else if (browse.currSort === "oldest") { sortName = "Oldest"; }
         else if (browse.currSort === "popular") { sortName = "Popular"; }
         else if (browse.currSort === "views") { sortName = "Most Views"; }
-        else { sortName = "Newest"; }
+        else { sortName = "Latest"; }
         
         $("nav .sort .selected-sort .name").html(sortName);
+        $(".sort-option[data-name='" + browse.currSort + "']").addClass("sel");
     }
 };
 
@@ -607,7 +613,7 @@ $(document).ready(function(){
     $(".sort").hover(function(){
         $(".sort").toggleClass("on-state");
     });
-    $(".sort ul li").hammer().on("tap", function(){
+    $(".sort ul li, .sort .sort-option").hammer().on("tap", function(){
         browse.sort($(this));
     });
 
