@@ -1301,6 +1301,10 @@ button.save {
   right: 6px;
 }
 
+.browse-tote-wrap, .content.browse-page {
+  background-color: #f8f8f8;
+}
+
 .tote-grid-element.red button.heart-outer-wrap .heart-wrap .heart .inner-heart:after, .tote-grid-element.red button.heart-outer-wrap .heart-wrap .heart .inner-heart:before {
   background-color: #3c3c3c;
 }

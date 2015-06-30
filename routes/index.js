@@ -107,7 +107,7 @@ router.get('/:sort', function(req, res) {
     });
 });
 
-router.get('/:sort/:id', function(req, res) {
+router.get('/:sort/tote/:id', function(req, res) {
     var sort = req.params.sort;
     var id = req.params.id;
     

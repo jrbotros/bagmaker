@@ -317,7 +317,7 @@ var browse = {
                 }
                 $(".view-carousel-wrap").scrollTop( scrollAmount );
 
-                window.history.pushState("html", "Title", "/" + browse.currSort + "/" + toteId);
+                window.history.pushState("html", "Title", "/" + browse.currSort + "/tote/" + toteId);
                 bagObject.upViewCount(toteId);
 
                 $("head title").html("View Tote | Totebag Maker | Huge inc.");
@@ -511,7 +511,7 @@ var browse = {
                     onComplete : function(){
                         // swing back to 0
                         TweenLite.to($shadow, 0.5, {
-                            rotation : "0deg",
+                            rotation : "0.1deg",
                             scaleX : 1,
                             ease : gridBagBezier,
                             onComplete : function(){
@@ -519,7 +519,7 @@ var browse = {
                             }
                         });
                         TweenLite.to($tote, 0.5, {
-                            rotation : "0deg",
+                            rotation : "-0.1deg",
                             ease : gridBagBezier
                         });
                     }
