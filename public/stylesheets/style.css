@@ -1809,7 +1809,7 @@ body .view-carousel.no-transition {
   transition: none;
 }
 body .view-carousel .view-carousel-wrap {
-  width: 300%;
+  width: 302vw;
   position: absolute;
   top: 0;
   left: -100%;

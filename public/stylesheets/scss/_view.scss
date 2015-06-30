@@ -72,7 +72,7 @@ body .view-carousel{
         @include prefix (transition, none);
     }
     .view-carousel-wrap{
-        width: 300%;
+        width: 302vw; // should be 300, for some reason, it needs to be more for the grid elements to fit on the page.
         position: absolute;
         top: 0;
         left: -100%;
