@@ -233,6 +233,11 @@ $(document).ready(function(){
                 var currScroll = $(".view-carousel-wrap").scrollTop();
                 $(".view-carousel-wrap").scrollTop(currScroll + 10);
             }
+
+            // escape
+            else if (e.keyCode === 27){
+                browse.viewZoomOut();
+            }
         }
     });
 
