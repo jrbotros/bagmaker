@@ -269,7 +269,7 @@ $(document).ready(function(){
         }
     });
 
-    $(document).hammer().on("tap", "button.save:not(.disabled)", function(){
+    $(document).hammer().on("tap", "button.save:not(.disabled), button.save:not(.disabled) span", function(){
         newBag.saveAs();
     });
 });

@@ -470,7 +470,7 @@ $(document).ready(function(){
         $.cookie("likes", "");
     }
 
-    $(document).hammer().on("tap", "button.close.createpage", function(){
+    $(document).hammer().on("tap", "button.close.createpage, button.close.createpage span", function(){
         window.location.href = "/";
     });
 
@@ -483,7 +483,7 @@ $(document).ready(function(){
         scrollHelper();
     });
 
-    $(document).hammer().on("tap", ".create", function(){
+    $(document).hammer().on("tap", ".creat button, .create button span", function(){
         window.location.href = "/totes/newtote";
     });
 
