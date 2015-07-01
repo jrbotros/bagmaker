@@ -270,7 +270,6 @@ $(document).ready(function(){
     });
 
     $(document).hammer().on("tap", "button.save:not(.disabled)", function(){
-        console.log('huh?');
         newBag.saveAs();
     });
 });

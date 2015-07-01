@@ -92,7 +92,7 @@ var browse = {
                 if (callback && callback !== undefined){
                     callback();
                 }
-            }, ind * 15);
+            }, (ind % browse.numPerPage) * 15);
             return;
         }
         else{
@@ -107,7 +107,7 @@ var browse = {
                 $(".tote-grid-element").eq(output).removeClass("start");
                 browse.animateInHelper(ind+1, callback);
 
-            }, ind * 15);
+            }, (ind % browse.numPerPage) * 15);
         }
     },
     // Animate grid out is the opposite of animateIn. Also, recursive.
@@ -401,7 +401,7 @@ var browse = {
 
                 $(".zoomAnimationWrapper").animate({
                     scrollTop : scrollAmount
-                }, (scrollAmount/2), function(){
+                }, 300, function(){
                     var toteIndex = $tote.index();
                     var toteId = browse.toteBags[toteIndex]._id;
                     browse.view(toteId);

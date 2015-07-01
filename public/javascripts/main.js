@@ -314,8 +314,6 @@ var bagObject = {
         $("button.save").removeClass("disabled");
         $(".clone-text-wrap").removeClass("invisible");
 
-        console.log($textarea.val());
-
         if (content === ""){
             content = "Type Something.";
 
