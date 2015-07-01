@@ -578,14 +578,11 @@ var browse = {
     },
     syncSortView : function(){
         // update sort from URL.
+        // browse.currSort = $("#sort").html();
         browse.currSort = $("#sort").html();
         $("#sort").remove();
 
-        // if the url doesn't have that sort name in it, update the url.
-        // example: totes.hugeinc.com -> totes.hugeinc.com/new
-        if ($("#viewId").html() === "" && window.location.href.indexOf(browse.currSort) === -1){
-            window.history.pushState("html", "Title", "/" + browse.currSort);
-        }
+        window.history.pushState("html", "Title", "/" + browse.currSort);
 
         // update the UI on the sort button.
         var sortName;
