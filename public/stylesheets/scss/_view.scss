@@ -64,7 +64,8 @@ body .view-carousel{
             @include prefix (transform, translateY(0));
         }
         .view-controls{
-            @include prefix (transform, translateY(0));
+            // @include prefix (transform, translateY(0));
+            opacity: 1;
         }
     }
 
@@ -137,7 +138,7 @@ body .view-carousel{
         text-align: right;
         padding: $body-padding-sml;
         @include prefix (transition, 0.5s $easing-curve);
-        @include prefix (transform, translateY(-100%));
+        opacity: 0;
 
         & > *{
             display: inline-block;
@@ -152,6 +153,7 @@ body .view-carousel{
 
         .close{
             position: absolute;
+            left: 0;
         }
 
         .heart-outer-wrap{

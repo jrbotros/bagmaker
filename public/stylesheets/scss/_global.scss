@@ -20,6 +20,7 @@
 
             .sort{
                 line-height: $navHeight-sml;
+                font-size: 24px;
 
                 .selected-sort{
                     padding-left: $body-padding-sml;
@@ -36,6 +37,26 @@
             .create button{
                 right: $body-padding-sml;
                 top: ($navHeight-sml - $button-size-sml)/2;
+                width: $button-size-sml;
+
+                &:before, &:after{
+                    content: "";
+                    position: absolute;
+                    @include centerAbsH;
+                    @include centerAbsV;
+                    background-color: #fff;
+                    @include prefix (border-radius, 2px);
+                }
+
+                &:before{
+                    width: 3px;
+                    height: 40%;
+                }
+
+                &:after{
+                    height: 3px;
+                    width: 40%;
+                }
             }
         }
         .content{
@@ -74,8 +95,6 @@ html, body{
 body.lock-scroll{
     height: 100%;
     overflow: hidden;
-    position: fixed;
-    width: 100%;
 }
 
 button{

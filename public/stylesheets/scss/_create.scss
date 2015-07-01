@@ -75,6 +75,15 @@ button{
                 left: $body-padding-sml;
             }
         }
+        
+        .tote-wrap .actual-tote .bag-body .editable-field{
+            &.selected, &.selected:hover{
+                .corner:not(.tr){
+                    @include prefix (transform, scale(0.5));
+
+                }
+            }
+        }
 
         .color-control-wrap{
             width: $button-size-sml;
@@ -167,8 +176,17 @@ button{
     }
 }
 
-.content.create-page{
+.content-wrap{
     position: relative;
+    height: 100vh;
+    width: 100%;
+    overflow: auto;
+}
+
+.content.create-page{
+    position: absolute;
+    top: 0;
+    left: 0;
     min-height: 100vh;
     background-color: $lightestGrey;
 
@@ -652,12 +670,12 @@ button{
 
         &:before{
             width: 3px;
-            height: 50%;
+            height: 40%;
         }
 
         &:after{
             height: 3px;
-            width: 50%;
+            width: 40%;
         }
 
         &.disabled{

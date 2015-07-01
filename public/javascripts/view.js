@@ -245,13 +245,63 @@ $(document).ready(function(){
         e.preventDefault();
         e.stopPropagation();
 
-        if (site.isTouch()){
-            $(".view-carousel-wrap").css("overflow", "hidden");
-        }
-
         var dir = e.gesture.direction;
         if (dir === "left" || dir === "right"){
+            if (site.isTouch()){
+                // locks scroll on drag
+                $(".view-carousel-wrap").css("overflow", "hidden");
+            }
+
             TweenLite.to($(this), 0, { "x" : e.gesture.deltaX });
+        
+            if (dir === "left"){
+                // animating a swing with the carousel.
+                TweenLite.to(".view-carousel .tote-grid-element .actual-tote", 0.3, {
+                    rotation : "-3deg",
+                    ease : gridBagBezier,
+                    onComplete : function(){
+                        TweenLite.to(".view-carousel .tote-grid-element .actual-tote", 0.3, {
+                            rotation : "0deg",
+                            ease : gridBagBezier,
+                        });
+                    }
+                });
+                TweenLite.to(".view-carousel .tote-grid-element .tote-shadow", 0.3, {
+                    rotation : "3deg",
+                    scaleX : 0.9,
+                    ease : gridBagBezier,
+                    onComplete : function(){
+                        TweenLite.to(".view-carousel .tote-grid-element .tote-shadow", 0.3, {
+                            rotation : "0deg",
+                            ease : gridBagBezier,
+                        });
+                    }
+                });
+            }
+            else{
+                // animating a swing with the carousel.
+                TweenLite.to(".view-carousel .tote-grid-element .actual-tote", 0.3, {
+                    rotation : "3deg",
+                    ease : gridBagBezier,
+                    onComplete : function(){
+                        TweenLite.to(".view-carousel .tote-grid-element .actual-tote", 0.3, {
+                            rotation : "0deg",
+                            ease : gridBagBezier,
+                        });
+                    }
+                });
+                TweenLite.to(".view-carousel .tote-grid-element .tote-shadow", 0.3, {
+                    rotation : "-3deg",
+                    scaleX : 0.9,
+                    ease : gridBagBezier,
+                    onComplete : function(){
+                        TweenLite.to(".view-carousel .tote-grid-element .tote-shadow", 0.3, {
+                            rotation : "0deg",
+                            ease : gridBagBezier,
+                        });
+                    }
+                });
+            }
         }
     });
 
@@ -261,7 +311,8 @@ $(document).ready(function(){
 
         var dir = e.gesture.direction;
 
-        if (site.isTouch()){
+        if (site.isTouch() && (dir === "left" || dir === "right")) {
+            // unlocks scroll on release.
             $(".view-carousel-wrap").css("overflow", "auto");
         }
 

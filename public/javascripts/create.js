@@ -198,8 +198,9 @@ $(document).ready(function(){
         }
 
         if (site.isTouch()){
-            var scrollVal = $("body").scrollTop();
-            $("body:not(.lock-scroll)").addClass("lock-scroll").css("top", -scrollVal);
+            // locks scroll on drag.
+            $(".content-wrap").css("overflow", "hidden");
+            $("body").addClass("lock-scroll");
         }
 
         var $field = $(this);
@@ -235,7 +236,9 @@ $(document).ready(function(){
         }
 
         if (site.isTouch()){
-            $("body.lock-scroll").removeClass("lock-scroll").css("top", "");
+            // unlocks scroll on release.
+            $(".content-wrap").css("overflow", "auto");
+            $("body").removeClass("lock-scroll");
         }
 
         var $field = $(this);

@@ -92,7 +92,7 @@ var browse = {
                 if (callback && callback !== undefined){
                     callback();
                 }
-            }, ind * 7);
+            }, ind * 15);
             return;
         }
         else{
@@ -107,14 +107,14 @@ var browse = {
                 $(".tote-grid-element").eq(output).removeClass("start");
                 browse.animateInHelper(ind+1, callback);
 
-            }, ind * 7);
+            }, ind * 15);
         }
     },
     // Animate grid out is the opposite of animateIn. Also, recursive.
     animateOut : function(callback){
         var totalGridElements = $(".tote-grid-element").length;
         
-        if (totalGridElements > 48){
+        if (totalGridElements > 24){
             TweenLite.to(".browse-tote-wrap", 0.3, {
                 alpha: 0,
                 ease: cssBezier,
@@ -136,7 +136,7 @@ var browse = {
                 if (callback && callback !== undefined){
                     callback();
                 }
-            }, elementNum * 7);
+            }, elementNum * 5);
             return;
         }
         else{
@@ -144,7 +144,7 @@ var browse = {
                 var output = browse.gridOrderHelper(ind);
                 $(".tote-grid-element").eq(output).addClass("start");
                 browse.animateOutHelper(ind-1, callback);
-            }, (elementNum - ind) * 7);
+            }, (elementNum - ind) * 5);
         }
     },
     loadMoreBags : function(){
@@ -199,12 +199,12 @@ var browse = {
         var endIndex = startIndex + browse.numPerPage;
         var subsetTotes = browse.toteBags.slice(startIndex, endIndex);
 
-        _.each(subsetTotes, function(tote){
-            tote.swingTimer = null;
-            var toteObj = {bags : [tote]};
+        // create a slightly modified bag template html for each (add favoriting)
+        $.get("/templates/_bag.html", function(html) {
+            _.each(subsetTotes, function(tote){
+                tote.swingTimer = null;
+                var toteObj = {bags : [tote]};
 
-            // create a slightly modified bag template html for each (add favoriting)
-            $.get("/templates/_bag.html", function(html) {
                 var template = Handlebars.compile(html);
                 var rendered = template(toteObj);
 
@@ -232,11 +232,11 @@ var browse = {
                 if ( tote === browse.toteBags[browse.toteBags.length-1] ){
                     $('.browse-page.content .browse-tote-wrap .clearfix').remove();
                     $('.browse-page.content .browse-tote-wrap').append("<div class='clearfix'></div>");
-                    site.refreshTypeOnTotes();
-
+    
                     if (animate){
                         browse.animateIn(startIndex, function(){
                             browse.currentlyBuilding = false;
+                            site.refreshTypeOnTotes();
                         });
                     }
                     else{
@@ -245,13 +245,13 @@ var browse = {
                     }
 
                     $("nav.hidden").removeClass("hidden");
-
+                    site.refreshTypeOnTotes();
                     if (typeof callback !== "undefined"){
                         callback();
                     }
                 }
             });
-        });        
+        });      
     },
     // positions the view carousel with the $tote centered.
     view : function(toteId){
@@ -282,6 +282,8 @@ var browse = {
                     toteObjArray = [prevBag, currBag, nextBag];
                     toteIdArray = [prevBag.bags[0]._id, currBag.bags[0]._id, nextBag.bags[0]._id];
                     loadToteViews();
+
+                    $(".view-carousel").addClass("on");
                 });
             });
         });
@@ -306,8 +308,6 @@ var browse = {
                         "html" :  rendered
                     }).appendTo(".view-carousel-wrap");
                 }
-
-                $(".view-carousel").addClass("on");
 
                 // stop it from swinging.
                 TweenLite.to(".view-carousel-wrap .tote-grid-element .actual-tote, .view-carousel-wrap .tote-grid-element .tote-shadow", 0, { rotation : "0deg" });
@@ -408,7 +408,7 @@ var browse = {
 
                     setTimeout(function(){
                         $("#zoomAnimation").remove();
-                    }, 1000);
+                    }, 500);
                 });
             }
         });
