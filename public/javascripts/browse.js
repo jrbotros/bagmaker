@@ -408,7 +408,7 @@ var browse = {
 
                     setTimeout(function(){
                         $("#zoomAnimation").remove();
-                    }, 750);
+                    }, 1000);
                 });
             }
         });
