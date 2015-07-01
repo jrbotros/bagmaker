@@ -33,8 +33,8 @@ $(document).ready(function(){
 
         // scroll down
         setTimeout(function(){
-            var scrollAmt = $(document).height() - $(window).height();
-            $("body").animate({scrollTop : scrollAmt}, "slow");
+            var scrollAmt = $(".content.create-page").height() - $(window).height();
+            $(".content-wrap").animate({scrollTop : scrollAmt}, "fast");
         }, 100);
     });
 
