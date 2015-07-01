@@ -483,7 +483,7 @@ $(document).ready(function(){
         scrollHelper();
     });
 
-    $(document).hammer().on("tap", ".creat button, .create button span", function(){
+    $(document).hammer().on("tap", ".create button, .create button span", function(){
         window.location.href = "/totes/newtote";
     });
 
