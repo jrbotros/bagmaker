@@ -32,6 +32,12 @@ var likes = {
             // sets the cookie to not expire for 30 days.
             $.cookie("likes", likes.userLikes, { expires : 30 });
 
+            // synchronizing the grid if like is coming from view page.
+            if ( $(".view-carousel").hasClass("on") ){
+                var toteIndex = parseInt($(".view-carousel").attr("data-index"));
+                likes.favorite($(".browse-tote-wrap .tote-grid-element").eq(toteIndex).find(".heart-outer-wrap"));
+            }
+
             browse.getToteObj(toteID, function(tote, bagIndex){
                 tote.likes = parseInt(tote.likes) + 1;
 
@@ -63,6 +69,12 @@ var likes = {
         if (toteIndex > -1){
             likes.userLikes.splice(toteIndex, 1);
             $.cookie("likes", likes.userLikes, { expires : 30 });
+
+            // synchronizing the grid if like is coming from view page.
+            if ( $(".view-carousel").hasClass("on") ){
+                var toteIndex = parseInt($(".view-carousel").attr("data-index"));
+                likes.unfavorite($(".browse-tote-wrap .tote-grid-element").eq(toteIndex).find(".heart-outer-wrap"));
+            }
 
             browse.getToteObj(toteID, function(tote, bagIndex){
                 tote.likes = parseInt(tote.likes) - 1;
@@ -103,6 +115,15 @@ var likes = {
             likes.likeBag(toteID);
         }
     },
+
+    /******************************************************************
+        this is sort of legacy from a previous favoriting animation
+        but we should leave these functions here in case we want to
+        make a new favoriting animation utilizing TweenLite.
+
+        Essentially, its purpose is to be the function for the
+        animation and currently we just need to toggle a class.
+    *******************************************************************/
     favorite : function($heartOuterWrap){        
         $heartOuterWrap.addClass("favorited");
     },
