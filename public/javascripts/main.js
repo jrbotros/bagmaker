@@ -444,6 +444,16 @@ var bagObject = {
         });
     },
     saveAs : function(){
+        
+        // double checks before we save it.
+        if (this.data.textfields.length === 0 || this.data.textfields.length > 4)
+            return;
+        for (var i = 0; i < this.data.textfields.length; i++){
+            if (this.data.textfields[i].text.length > site.textfieldMaxLength){
+                this.data.textfields[i].text.substr(0, site.textfieldMaxLength);
+            }
+        }
+
         var bagData = _.extend({}, this.data);
         delete bagData.editMode;
         bagData.timestamp = Math.round(new Date().getTime() / 1000);
