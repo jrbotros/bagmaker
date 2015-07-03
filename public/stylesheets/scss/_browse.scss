@@ -335,6 +335,10 @@ button.heart-outer-wrap{
         .actual-tote{
             @include prefix (transition, 0s $easing-curve);
             @include prefix (transform-origin, top center);
+
+            .textfields-wrap{
+                overflow: hidden;
+            }
             
             .shadow-blur{
                 opacity: 0;

@@ -509,7 +509,6 @@ body .tote-wrap .actual-tote .bag-body .textfields-wrap {
   left: 0;
   width: 80%;
   height: 80%;
-  overflow: hidden;
 }
 body .tote-wrap .actual-tote .bag-body .textfields-wrap * {
   color: #fff;
@@ -1757,6 +1756,9 @@ button.heart-outer-wrap.black .heart-wrap .heart .inner-heart:after, button.hear
   -webkit-transform-origin: top center;
   -ms-transform-origin: top center;
   transform-origin: top center;
+}
+.tote-grid-element .tote-wrap .actual-tote .textfields-wrap {
+  overflow: hidden;
 }
 .tote-grid-element .tote-wrap .actual-tote .shadow-blur {
   opacity: 0;
