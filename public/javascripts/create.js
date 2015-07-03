@@ -89,11 +89,29 @@ $(document).ready(function(){
         e.stopPropagation();
 
         var id = $(this).parents(".editable-field").attr("id");
-        newBag.deleteTextField(id);
+        newBag.deleteTextField(id, function(){
+            if (newBag.data.textfields.length === 0)
+                $("button.save").addClass("disabled");
+        });
+    });
+
+    // enforce character limit
+    $(document).on("keypress, keydown", ".editable-field textarea", function(e){
+        if ($(this).val().length >= site.textfieldMaxLength){
+            $(this).val($(this).val().substr(0, site.textfieldMaxLength));
+        }
     });
 
     // update the size of the text field in the UI as you type
-    $(document).on("keyup, keypress", ".editable-field textarea", function(e){
+    $(document).on("keypress, keyup", ".editable-field textarea", function(e){
+
+        if ($(this).val().length >= site.textfieldMaxLength){
+            var $textarea = $(this);
+            setTimeout(function(){
+                $textarea.val($textarea.val().substr(0, site.textfieldMaxLength));
+            }, 20);
+        }
+
         newBag.updateTextAreaSize($(this));
     });
 

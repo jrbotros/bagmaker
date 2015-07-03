@@ -1176,6 +1176,7 @@ button.save {
 }
 .content.create-page .tote-wrap .actual-tote .bag-body .clone-text-wrap .clone-text {
   color: transparent;
+  word-wrap: break-word;
 }
 .content.create-page .tote-wrap .actual-tote .bag-bottom .bl-corner, .content.create-page .tote-wrap .actual-tote .bag-bottom .br-corner {
   border-left-color: #f8f8f8;

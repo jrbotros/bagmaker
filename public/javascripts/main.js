@@ -134,6 +134,7 @@ var likes = {
 
 var site = {
     colors : ["black", "white", "red"],
+    textfieldMaxLength : 50,
     chars : "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz".split(''),
     randomString : function(length){
         var string = '';
@@ -348,6 +349,11 @@ var bagObject = {
         if (bag.data && bag.data.textfields){
             var theTextField = _.findWhere(bag.data.textfields, { "domid" : textFieldID });
             theTextField.text = content;
+
+            // double checking for character limit.
+            if (theTextField.text.length >= site.textfieldMaxLength){
+                theTextField.text = theTextField.text.substr(0, site.textfieldMaxLength);
+            }
 
             if ($textarea.val() === ""){
                 $field.addClass("new");
