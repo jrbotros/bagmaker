@@ -30,6 +30,7 @@ var browse = {
             });
         }
     },
+
     sort : function($li){
         var attr = $li.attr("data-attr");
         var dir = $li.attr("data-dir");
@@ -204,6 +205,11 @@ var browse = {
             _.each(subsetTotes, function(tote){
                 tote.swingTimer = null;
                 var toteObj = {bags : [tote]};
+                
+                // Handlebars.registerHelper("textToHTML", function(text){
+                //     return text;
+                //     // return site.textToHTML(text);
+                // });
 
                 var template = Handlebars.compile(html);
                 var rendered = template(toteObj);

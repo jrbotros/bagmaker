@@ -1757,8 +1757,14 @@ button.heart-outer-wrap.black .heart-wrap .heart .inner-heart:after, button.hear
   -ms-transform-origin: top center;
   transform-origin: top center;
 }
-.tote-grid-element .tote-wrap .actual-tote .textfields-wrap {
+.tote-grid-element .tote-wrap .actual-tote .bag-body .textfields-wrap {
   overflow: hidden;
+  box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  width: 60%;
+  height: 60%;
+  padding: 10%;
 }
 .tote-grid-element .tote-wrap .actual-tote .shadow-blur {
   opacity: 0;

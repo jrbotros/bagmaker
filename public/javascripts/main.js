@@ -134,7 +134,7 @@ var likes = {
 
 var site = {
     colors : ["black", "white", "red"],
-    textfieldMaxLength : 50,
+    validTextfieldRegex : /\S+/,
     chars : "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz".split(''),
     randomString : function(length){
         var string = '';
@@ -163,6 +163,15 @@ var site = {
     },
     isTouch : function() {
         return !!('ontouchstart' in window);
+    },
+    textToHTML : function(str){
+        // order matters. HTML strip + hardcoding whitespace.
+        str = str.replace(/[<]/g, "&lt;")
+                 .replace(/[>]/g, "&gt;")
+                 .replace(/\n/g, "<br/>")
+                 .replace(/[ ]{2}/g, " &nbsp;");
+                 
+        return str;
     },
     refreshTypeOnTotes : function(){
         _.each($(".actual-tote"), function(tote){
@@ -336,24 +345,38 @@ var bagObject = {
         $("button.save").removeClass("disabled");
         $(".clone-text-wrap").removeClass("invisible");
 
-        if (content === ""){
-            content = "Type Something.";
-
+        if (content === "" || !site.validTextfieldRegex.test(content) ){
             $("button.save").addClass("disabled");
             $(".clone-text-wrap").addClass("invisible");
+
+            if (content === ""){
+                content = "Type something.";
+            }
+
         }
-        //.replace(/\s{2}/g, ' &nbsp;')
-        var contentFormatted = content.replace(/\n/g, '<br/>');
+        var contentFormatted = site.textToHTML(content);
         $clone.html(contentFormatted);
 
-        if (bag.data && bag.data.textfields){
-            var theTextField = _.findWhere(bag.data.textfields, { "domid" : textFieldID });
-            theTextField.text = content;
+        while ($clone.height() > $clone.parents(".textfields-wrap").height()){
+            content = content.substr(0, content.length-1);
+            contentFormatted = site.textToHTML(content);
+            $clone.html(contentFormatted);
 
-            // double checking for character limit.
-            if (theTextField.text.length >= site.textfieldMaxLength){
-                theTextField.text = theTextField.text.substr(0, site.textfieldMaxLength);
+            if ($clone.height() < $clone.parents(".textfields-wrap").height()){
+                $textarea.val(content);
             }
+        }
+
+
+        if (bag.data && bag.data.textfields){
+            // saving it.
+            var theTextField = _.findWhere(bag.data.textfields, { "domid" : textFieldID });
+            theTextField.text = contentFormatted;
+
+            // // double checking for character limit.
+            // if (theTextField.text.length >= site.textfieldMaxLength){
+            //     theTextField.text = theTextField.text.substr(0, site.textfieldMaxLength);
+            // }
 
             if ($textarea.val() === ""){
                 $field.addClass("new");
@@ -448,9 +471,11 @@ var bagObject = {
         // double checks before we save it.
         if (this.data.textfields.length === 0 || this.data.textfields.length > 4)
             return;
+
         for (var i = 0; i < this.data.textfields.length; i++){
-            if (this.data.textfields[i].text.length > site.textfieldMaxLength){
-                this.data.textfields[i].text.substr(0, site.textfieldMaxLength);
+            // refuse any empty space text fields.
+            if ( !site.validTextfieldRegex.test(this.data.textfields[i].text) ){
+                return;
             }
         }
 
