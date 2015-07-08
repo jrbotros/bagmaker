@@ -206,10 +206,10 @@ var browse = {
                 tote.swingTimer = null;
                 var toteObj = {bags : [tote]};
                 
-                // Handlebars.registerHelper("textToHTML", function(text){
-                //     return text;
-                //     // return site.textToHTML(text);
-                // });
+                Handlebars.registerHelper("textToHTML", function(text){
+                    // return text;
+                    return site.textToHTML(text);
+                });
 
                 var template = Handlebars.compile(html);
                 var rendered = template(toteObj);

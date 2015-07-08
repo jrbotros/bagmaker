@@ -173,6 +173,14 @@ var site = {
                  
         return str;
     },
+    htmlToText : function(str){
+        // order matters. HTML strip + hardcoding whitespace.
+        str = str.replace(/(&lt;)/g, "<")
+                 .replace(/(&gt;)/g, ">")
+                 .replace(/(<br\/>)/g, "<br/>")
+                 .replace(/( &nbsp;){2}/g, "  ");
+        return str;
+    },
     refreshTypeOnTotes : function(){
         _.each($(".actual-tote"), function(tote){
             var width = $(tote).find(".bag-body").width();
@@ -371,7 +379,7 @@ var bagObject = {
         if (bag.data && bag.data.textfields){
             // saving it.
             var theTextField = _.findWhere(bag.data.textfields, { "domid" : textFieldID });
-            theTextField.text = contentFormatted;
+            theTextField.text = content;
 
             // // double checking for character limit.
             // if (theTextField.text.length >= site.textfieldMaxLength){
