@@ -20,8 +20,14 @@ var likes = {
         var userLikes = $.cookie("likes");
         likes.userLikes = userLikes.split(",");
 
+        // catch a weird bug.
+        var indexOfBlank = likes.userLikes.indexOf("");
+        if (indexOfBlank !== -1){
+            likes.userLikes.splice(indexOfBlank, 1)
+        }
+
         // refresh their likes every time they come to the site, causing infinitely long saved cookies
-        $.cookie("likes", likes.userLikes, { expires : 30 });
+        $.cookie("likes", likes.userLikes.toString(), { expires : 30 });
     },
     likeBag : function(toteID){
         if (likes.indexOf(toteID) > -1){
@@ -30,7 +36,7 @@ var likes = {
         else{
             likes.userLikes.push(toteID);
             // sets the cookie to not expire for 30 days.
-            $.cookie("likes", likes.userLikes, { expires : 30 });
+            $.cookie("likes", likes.userLikes.toString(), { expires : 30 });
 
             // synchronizing the grid if like is coming from view page.
             if ( $(".view-carousel").hasClass("on") ){
@@ -68,7 +74,7 @@ var likes = {
 
         if (toteIndex > -1){
             likes.userLikes.splice(toteIndex, 1);
-            $.cookie("likes", likes.userLikes, { expires : 30 });
+            $.cookie("likes", likes.userLikes.toString(), { expires : 30 });
 
             // synchronizing the grid if like is coming from view page.
             if ( $(".view-carousel").hasClass("on") ){
@@ -225,6 +231,11 @@ var site = {
     },
     render : function(obj, tpl, target, onComplete) {
         $.get("/templates/_"+tpl+".html", function(html) {
+            
+            Handlebars.registerHelper("textToHTML", function(text){
+                return site.textToHTML(text);
+            });
+
             var template = Handlebars.compile(html);
             var rendered = template(obj);
 
@@ -281,7 +292,8 @@ var bagObject = {
     },
 
     upViewCount : function(toteID){
-        var toteJsonURL = "/data/tote/" + toteID;
+        var toteJsonURL = "/data/latest/tote/" + toteID;
+        ga('send', 'pageview'); // count the view page.
         var tote;
 
         $.getJSON(toteJsonURL, function( data ){
@@ -366,7 +378,7 @@ var bagObject = {
             var contentFormatted = site.textToHTML(content);
             $clone.html(contentFormatted);
         }
-        
+
         while (content !== "" && $clone.height() > $clone.parents(".textfields-wrap").height()){
             content = content.substr(0, content.length-1);
             contentFormatted = site.textToHTML(content);
@@ -541,6 +553,18 @@ $(document).ready(function(){
     if ($.cookie("likes") === undefined){
         $.cookie("likes", "");
     }
+
+    window.onpopstate = function(event) {
+        var loc = document.location;
+        // if we're in a view page, zoom out
+        if ( $(".view-carousel").hasClass("on") ){
+            browse.viewZoomOut();
+        }
+
+        else{
+            window.location.href = "/";
+        }
+    };
 
     $(document).hammer().on("tap", "button.close.createpage, button.close.createpage span", function(){
         window.location.href = "/";

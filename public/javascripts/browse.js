@@ -207,7 +207,6 @@ var browse = {
                 var toteObj = {bags : [tote]};
                 
                 Handlebars.registerHelper("textToHTML", function(text){
-                    // return text;
                     return site.textToHTML(text);
                 });
 
@@ -296,6 +295,10 @@ var browse = {
         
         function loadToteViews(){
             $.get("/templates/_bag.html", function(html) {
+                Handlebars.registerHelper("textToHTML", function(text){
+                    return site.textToHTML(text);
+                });
+                    
                 var template = Handlebars.compile(html);
                 
                 for (var i = 0; i < toteObjArray.length; i++){
