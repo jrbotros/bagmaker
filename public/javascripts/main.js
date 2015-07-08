@@ -358,14 +358,16 @@ var bagObject = {
             $(".clone-text-wrap").addClass("invisible");
 
             if (content === ""){
-                content = "Type something.";
+                $clone.html("Type something.");
             }
 
         }
-        var contentFormatted = site.textToHTML(content);
-        $clone.html(contentFormatted);
-
-        while ($clone.height() > $clone.parents(".textfields-wrap").height()){
+        else{
+            var contentFormatted = site.textToHTML(content);
+            $clone.html(contentFormatted);
+        }
+        
+        while (content !== "" && $clone.height() > $clone.parents(".textfields-wrap").height()){
             content = content.substr(0, content.length-1);
             contentFormatted = site.textToHTML(content);
             $clone.html(contentFormatted);
