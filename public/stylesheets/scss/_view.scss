@@ -1,6 +1,35 @@
+@media screen and (max-width: $smlBP) {
+    body .content.browse-page{
+        .view-carousel .view-controls{
+            top: auto;
+            bottom: 0;
+            width: ($button-size-sml * 3) + ($body-padding-sml * 2);
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            text-align: center;
+            
+            & > *{
+                position: absolute;
+                margin-left: 0;
+            }
+
+            .arrow.left{
+                left: 0;
+            }
+            .arrow.right{
+                right: 0;
+            }
+            .heart-outer-wrap{
+                @include centerAbsH;
+            }
+        }
+    }
+}
 @media screen and (max-width: $medBP) {
     body .content.browse-page{
         .view-carousel .view-controls{
+
             .heart-outer-wrap{
                 width: $button-size-sml;
                 height: $button-size-sml;
@@ -127,6 +156,11 @@ body .view-carousel{
             }
         }
     }
+    button.close{
+        position: absolute;
+        top: $body-padding-sml;
+        left: $body-padding-sml;
+    }
     .view-controls{
         position: fixed;
         top: 0;
@@ -148,11 +182,6 @@ body .view-carousel{
             &:first-child{
                 margin-left: 0;
             }
-        }
-
-        .close{
-            position: absolute;
-            left: 0;
         }
 
         .heart-outer-wrap{

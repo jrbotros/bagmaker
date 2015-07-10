@@ -1789,6 +1789,33 @@ button.heart-outer-wrap.black .heart-wrap .heart .inner-heart:after, button.hear
     padding-bottom: 100%;
   }
 }
+@media screen and (max-width: 640px) {
+  body .content.browse-page .view-carousel .view-controls {
+    top: auto;
+    bottom: 0;
+    width: 190px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    text-align: center;
+  }
+  body .content.browse-page .view-carousel .view-controls > * {
+    position: absolute;
+    margin-left: 0;
+  }
+  body .content.browse-page .view-carousel .view-controls .arrow.left {
+    left: 0;
+  }
+  body .content.browse-page .view-carousel .view-controls .arrow.right {
+    right: 0;
+  }
+  body .content.browse-page .view-carousel .view-controls .heart-outer-wrap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+  }
+}
 @media screen and (max-width: 940px) {
   body .content.browse-page .view-carousel .view-controls .heart-outer-wrap {
     width: 50px;
@@ -1890,6 +1917,11 @@ body .view-carousel .view-carousel-wrap .tote-grid-element:hover .tote-wrap {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
+body .view-carousel button.close {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
 body .view-carousel .view-controls {
   position: fixed;
   top: 0;
@@ -1910,10 +1942,6 @@ body .view-carousel .view-controls > * {
 }
 body .view-carousel .view-controls > *:first-child {
   margin-left: 0;
-}
-body .view-carousel .view-controls .close {
-  position: absolute;
-  left: 0;
 }
 body .view-carousel .view-controls .heart-outer-wrap {
   width: 65px;
