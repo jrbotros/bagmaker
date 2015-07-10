@@ -211,6 +211,8 @@ $(document).ready(function(){
         e.preventDefault();
         e.stopPropagation();
         
+        console.log("clicked");
+
         browse.viewZoomOut();
     });
 
