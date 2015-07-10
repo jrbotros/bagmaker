@@ -298,7 +298,7 @@ var browse = {
                 Handlebars.registerHelper("textToHTML", function(text){
                     return site.textToHTML(text);
                 });
-                    
+
                 var template = Handlebars.compile(html);
                 
                 for (var i = 0; i < toteObjArray.length; i++){
@@ -625,6 +625,20 @@ $(document).ready(function(){
                 browse.buildBagGrid(false);
             }, 500);
         }
+
+        
+        window.onpopstate = function(event) {
+            var loc = document.location;
+            // if we're in a view page, zoom out
+            if ( $(".view-carousel").hasClass("on") ){
+                browse.viewZoomOut();
+            }
+
+            else{
+                window.location.href = "/";
+            }
+        };
+
     });
 
     $(".sort").hover(function(){

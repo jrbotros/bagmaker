@@ -554,18 +554,6 @@ $(document).ready(function(){
         $.cookie("likes", "");
     }
 
-    window.onpopstate = function(event) {
-        var loc = document.location;
-        // if we're in a view page, zoom out
-        if ( $(".view-carousel").hasClass("on") ){
-            browse.viewZoomOut();
-        }
-
-        else{
-            window.location.href = "/";
-        }
-    };
-
     $(document).hammer().on("tap", "button.close.createpage, button.close.createpage span", function(){
         window.location.href = "/";
     });
