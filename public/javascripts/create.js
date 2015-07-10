@@ -27,9 +27,6 @@ $(document).ready(function(){
     newBag.data.editMode = true;
     newBag.newTextField();
 
-    
-    console.log('hi');
-
     newBag.draw($(".content.create-page .bag-wrap"), function(){
         $(".editable-field").eq(0).addClass("selected");
         $(".editable-field").eq(0).find("textarea").focus();

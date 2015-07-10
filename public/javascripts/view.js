@@ -210,8 +210,6 @@ $(document).ready(function(){
     $(document).hammer().on("tap", ".view-carousel.on button.close, .view-carousel.on button.close span", function(e){
         e.preventDefault();
         e.stopPropagation();
-        
-        console.log("clicked");
 
         browse.viewZoomOut();
     });

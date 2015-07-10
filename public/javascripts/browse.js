@@ -10,8 +10,6 @@ var browse = {
     getToteObj : function(toteID, callback){
         var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
 
-        console.log(tote);
-
         if (typeof tote === "undefined"){    
             $.getJSON('/data/' + browse.currSort + '/tote/' + toteID, function( data ){
                 callback(data, -1);
@@ -428,7 +426,6 @@ var browse = {
         // find which tote in the grid it is.
         var toteID = $(".view-carousel").attr("data-display");
         var x,y,w,ratio,inverseRatio;
-        console.log(toteID);
 
         // zooming out
         function zoomOutAnimate($dupe){
@@ -448,7 +445,6 @@ var browse = {
         }
 
         browse.getToteObj(toteID, function(tote, bagIndex){
-            console.log(bagIndex);
 
             // if its in the grid DOM.
             if (bagIndex > -1){
