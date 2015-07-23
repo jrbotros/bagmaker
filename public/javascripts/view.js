@@ -15,6 +15,10 @@ var viewPage = {
             var toteObj = { bags : [data] };
 
             $.get("/templates/_bag.html", function(html) {
+                Handlebars.registerHelper("textToHTML", function(text){
+                    return site.textToHTML(text);
+                });
+
                 var template = Handlebars.compile(html);
                 var rendered = template(toteObj);
 
@@ -206,7 +210,7 @@ $(document).ready(function(){
     $(document).hammer().on("tap", ".view-carousel.on button.close, .view-carousel.on button.close span", function(e){
         e.preventDefault();
         e.stopPropagation();
-        
+
         browse.viewZoomOut();
     });
 

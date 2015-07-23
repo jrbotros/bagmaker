@@ -336,8 +336,12 @@ button.heart-outer-wrap{
             @include prefix (transition, 0s $easing-curve);
             @include prefix (transform-origin, top center);
 
-            .textfields-wrap{
+            .bag-body .textfields-wrap{
                 overflow: hidden;
+                @include contentBox;
+                width: 60%;
+                height: 60%;
+                padding: 10%;
             }
             
             .shadow-blur{

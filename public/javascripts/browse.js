@@ -11,7 +11,7 @@ var browse = {
         var tote = _.findWhere(browse.toteBags, {"_id" : toteID});
 
         if (typeof tote === "undefined"){    
-            $.getJSON('/data/tote/' + toteID, function( data ){
+            $.getJSON('/data/' + browse.currSort + '/tote/' + toteID, function( data ){
                 callback(data, -1);
             });
         }
@@ -30,6 +30,7 @@ var browse = {
             });
         }
     },
+
     sort : function($li){
         var attr = $li.attr("data-attr");
         var dir = $li.attr("data-dir");
@@ -204,6 +205,10 @@ var browse = {
             _.each(subsetTotes, function(tote){
                 tote.swingTimer = null;
                 var toteObj = {bags : [tote]};
+                
+                Handlebars.registerHelper("textToHTML", function(text){
+                    return site.textToHTML(text);
+                });
 
                 var template = Handlebars.compile(html);
                 var rendered = template(toteObj);
@@ -290,6 +295,10 @@ var browse = {
         
         function loadToteViews(){
             $.get("/templates/_bag.html", function(html) {
+                Handlebars.registerHelper("textToHTML", function(text){
+                    return site.textToHTML(text);
+                });
+
                 var template = Handlebars.compile(html);
                 
                 for (var i = 0; i < toteObjArray.length; i++){
@@ -436,6 +445,7 @@ var browse = {
         }
 
         browse.getToteObj(toteID, function(tote, bagIndex){
+
             // if its in the grid DOM.
             if (bagIndex > -1){
                 var $tote = $(".browse-tote-wrap .tote-grid-element").eq(bagIndex);
@@ -616,6 +626,20 @@ $(document).ready(function(){
                 browse.buildBagGrid(false);
             }, 500);
         }
+
+
+        window.onpopstate = function(event) {
+            var loc = document.location;
+            // if we're in a view page, zoom out
+            if ( $(".view-carousel").hasClass("on") ){
+                browse.viewZoomOut();
+            }
+
+            else{
+                window.location.href = "/";
+            }
+        };
+
     });
 
     $(".sort").hover(function(){

@@ -20,8 +20,14 @@ var likes = {
         var userLikes = $.cookie("likes");
         likes.userLikes = userLikes.split(",");
 
+        // catch a weird bug.
+        var indexOfBlank = likes.userLikes.indexOf("");
+        if (indexOfBlank !== -1){
+            likes.userLikes.splice(indexOfBlank, 1)
+        }
+
         // refresh their likes every time they come to the site, causing infinitely long saved cookies
-        $.cookie("likes", likes.userLikes, { expires : 30 });
+        $.cookie("likes", likes.userLikes.toString(), { expires : 30 });
     },
     likeBag : function(toteID){
         if (likes.indexOf(toteID) > -1){
@@ -30,7 +36,7 @@ var likes = {
         else{
             likes.userLikes.push(toteID);
             // sets the cookie to not expire for 30 days.
-            $.cookie("likes", likes.userLikes, { expires : 30 });
+            $.cookie("likes", likes.userLikes.toString(), { expires : 30 });
 
             // synchronizing the grid if like is coming from view page.
             if ( $(".view-carousel").hasClass("on") ){
@@ -68,7 +74,7 @@ var likes = {
 
         if (toteIndex > -1){
             likes.userLikes.splice(toteIndex, 1);
-            $.cookie("likes", likes.userLikes, { expires : 30 });
+            $.cookie("likes", likes.userLikes.toString(), { expires : 30 });
 
             // synchronizing the grid if like is coming from view page.
             if ( $(".view-carousel").hasClass("on") ){
@@ -134,7 +140,7 @@ var likes = {
 
 var site = {
     colors : ["black", "white", "red"],
-    textfieldMaxLength : 50,
+    validTextfieldRegex : /\S+/,
     chars : "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz".split(''),
     randomString : function(length){
         var string = '';
@@ -163,6 +169,23 @@ var site = {
     },
     isTouch : function() {
         return !!('ontouchstart' in window);
+    },
+    textToHTML : function(str){
+        // order matters. HTML strip + hardcoding whitespace.
+        str = str.replace(/[<]/g, "&lt;")
+                 .replace(/[>]/g, "&gt;")
+                 .replace(/\n/g, "<br/>")
+                 .replace(/[ ]{2}/g, " &nbsp;");
+                 
+        return str;
+    },
+    htmlToText : function(str){
+        // order matters. HTML strip + hardcoding whitespace.
+        str = str.replace(/(&lt;)/g, "<")
+                 .replace(/(&gt;)/g, ">")
+                 .replace(/(<br\/>)/g, "<br/>")
+                 .replace(/( &nbsp;){2}/g, "  ");
+        return str;
     },
     refreshTypeOnTotes : function(){
         _.each($(".actual-tote"), function(tote){
@@ -208,6 +231,11 @@ var site = {
     },
     render : function(obj, tpl, target, onComplete) {
         $.get("/templates/_"+tpl+".html", function(html) {
+            
+            Handlebars.registerHelper("textToHTML", function(text){
+                return site.textToHTML(text);
+            });
+
             var template = Handlebars.compile(html);
             var rendered = template(obj);
 
@@ -264,7 +292,8 @@ var bagObject = {
     },
 
     upViewCount : function(toteID){
-        var toteJsonURL = "/data/tote/" + toteID;
+        var toteJsonURL = "/data/latest/tote/" + toteID;
+        ga('send', 'pageview'); // count the view page.
         var tote;
 
         $.getJSON(toteJsonURL, function( data ){
@@ -336,24 +365,40 @@ var bagObject = {
         $("button.save").removeClass("disabled");
         $(".clone-text-wrap").removeClass("invisible");
 
-        if (content === ""){
-            content = "Type Something.";
-
+        if (content === "" || !site.validTextfieldRegex.test(content) ){
             $("button.save").addClass("disabled");
             $(".clone-text-wrap").addClass("invisible");
+
+            if (content === ""){
+                $clone.html("Type something.");
+            }
+
         }
-        //.replace(/\s{2}/g, ' &nbsp;')
-        var contentFormatted = content.replace(/\n/g, '<br/>');
-        $clone.html(contentFormatted);
+        else{
+            var contentFormatted = site.textToHTML(content);
+            $clone.html(contentFormatted);
+        }
+
+        while (content !== "" && $clone.height() > $clone.parents(".textfields-wrap").height()){
+            content = content.substr(0, content.length-1);
+            contentFormatted = site.textToHTML(content);
+            $clone.html(contentFormatted);
+
+            if ($clone.height() < $clone.parents(".textfields-wrap").height()){
+                $textarea.val(content);
+            }
+        }
+
 
         if (bag.data && bag.data.textfields){
+            // saving it.
             var theTextField = _.findWhere(bag.data.textfields, { "domid" : textFieldID });
             theTextField.text = content;
 
-            // double checking for character limit.
-            if (theTextField.text.length >= site.textfieldMaxLength){
-                theTextField.text = theTextField.text.substr(0, site.textfieldMaxLength);
-            }
+            // // double checking for character limit.
+            // if (theTextField.text.length >= site.textfieldMaxLength){
+            //     theTextField.text = theTextField.text.substr(0, site.textfieldMaxLength);
+            // }
 
             if ($textarea.val() === ""){
                 $field.addClass("new");
@@ -448,9 +493,11 @@ var bagObject = {
         // double checks before we save it.
         if (this.data.textfields.length === 0 || this.data.textfields.length > 4)
             return;
+
         for (var i = 0; i < this.data.textfields.length; i++){
-            if (this.data.textfields[i].text.length > site.textfieldMaxLength){
-                this.data.textfields[i].text.substr(0, site.textfieldMaxLength);
+            // refuse any empty space text fields.
+            if ( !site.validTextfieldRegex.test(this.data.textfields[i].text) ){
+                return;
             }
         }
 

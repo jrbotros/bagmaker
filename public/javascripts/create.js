@@ -97,21 +97,26 @@ $(document).ready(function(){
 
     // enforce character limit
     $(document).on("keypress, keydown", ".editable-field textarea", function(e){
-        if ($(this).val().length >= site.textfieldMaxLength){
-            $(this).val($(this).val().substr(0, site.textfieldMaxLength));
+        var $textarea = $(this);
+        var content = $textarea.val();
+        var $clone = $textarea.siblings(".clone-text-wrap").find(".clone-text");
+
+        var contentFormatted = site.textToHTML(content);
+        $clone.html(contentFormatted);
+
+        while ($clone.height() > $clone.parents(".textfields-wrap").height()){
+            content = content.substr(0, content.length-1);
+            contentFormatted = site.textToHTML(content);
+            $clone.html(contentFormatted);
+
+            if ($clone.height() < $clone.parents(".textfields-wrap").height()){
+                $textarea.val(content);
+            }
         }
     });
 
     // update the size of the text field in the UI as you type
     $(document).on("keypress, keyup", ".editable-field textarea", function(e){
-
-        if ($(this).val().length >= site.textfieldMaxLength){
-            var $textarea = $(this);
-            setTimeout(function(){
-                $textarea.val($textarea.val().substr(0, site.textfieldMaxLength));
-            }, 20);
-        }
-
         newBag.updateTextAreaSize($(this));
     });
 
