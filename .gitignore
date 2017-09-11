@@ -3,6 +3,12 @@
 node_modules
 bag-maker-key.pem
 data/*
+data/**/*
+data/*/*
 npm-debug.log
 min/
 bin/www
+.DS_Store
+public/.DS_Store
+routes/.DS_Store
+setup
