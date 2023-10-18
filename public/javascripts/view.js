@@ -14,22 +14,22 @@ var viewPage = {
         if (typeof alreadyLoaded === "undefined"){
             var toteObj = { bags : [data] };
 
-            $.get("/templates/_bag.html", function(html) {
-                Handlebars.registerHelper("textToHTML", function(text){
-                    return site.textToHTML(text);
-                });
-
-                var template = Handlebars.compile(html);
-                var rendered = template(toteObj);
-
-                var $renderedTote = $("<div />", {
-                    "class" : "tote-grid-element view " + toteObj.bags[0].color,
-                    "data-id" : toteObj.bags[0]._id,
-                    "html" :  rendered
-                });
-
-                callback($renderedTote, -1);
+            // $.get("/templates/_bag.html", function(html) {
+            Handlebars.registerHelper("textToHTML", function(text){
+                return site.textToHTML(text);
             });
+
+            var template = Handlebars.compile(browse.bagTemplate);
+            var rendered = template(toteObj);
+
+            var $renderedTote = $("<div />", {
+                "class" : "tote-grid-element view " + toteObj.bags[0].color,
+                "data-id" : toteObj.bags[0]._id,
+                "html" :  rendered
+            });
+
+            callback($renderedTote, -1);
+            // });
         }
 
         // if we have already rendered it before, just grab the existing html.

@@ -1,4 +1,74 @@
+window.history.pushState = () => {};
+
+const bagTemplate = `
+{{#bags}}
+    <div class="tote-wrap {{size}} {{color}}" {{#_id}}data-id="{{_id}}"{{/_id}}>
+        <div class="actual-tote">
+            <div class="handle"></div>
+            <div class="bag-body">
+                <div class="textfields-wrap">
+                    {{#if editMode}}
+                        {{#each textfields}}
+                            <div id="{{domid}}" class="editable-field {{#if strikethrough}}{{strikethrough}}{{/if}}" style="text-align: {{justify}}; font-size: {{fontSize}}em; letter-spacing: {{kerning}}em; line-height: {{leading}}em; width: {{width}}">
+                                <div class="border"></div>
+                                <div class="corner tl"></div>
+                                <div class="corner tr"></div>
+                                <div class="corner bl"></div>
+                                <div class="corner br"></div>
+                                <textarea spellcheck="false" placeholder="Type something.">{{{text}}}</textarea>
+                                <div class='clone-text-wrap invisible'>
+                                    <div class="clone-text">{{^text}}Type something.{{/text}}{{{text}}}</div>
+                                </div>
+                                
+                                <div class="text-controls">
+                                    <div class="top-controls">
+                                        <div class="justification">
+                                            <div class="justify-left sel"></div>
+                                            <div class="justify-center"></div>
+                                            <div class="justify-right"></div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="strikethrough {{#if strikethrough}}sel{{/if}}"></div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="type-control-wrap">
+                                        <div class="type-control size">
+                                            <div class="icon"></div>
+                                            <input type="range" min="0.1" max="0.5" step="0.02" value="0.3" />
+                                        </div>
+                                        <div class="type-control kerning">
+                                            <div class="icon"></div>
+                                            <input type="range" min="-0.1" max="0.1" step="0.01" value="-0.03" />
+                                        </div>
+                                        <div class="type-control leading">
+                                            <div class="icon"></div>
+                                            <input type="range" min="0.5" max="1.5" step="0.01" value="1" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/each}} 
+                    {{else}}
+                        {{#each textfields}}
+                            <div data-id="{{_id}}" data-x="{{x}}" data-y="{{y}}" class="text {{#if strikethrough}}{{strikethrough}}{{/if}}" style="text-align: {{justify}}; font-size: {{fontSize}}em; letter-spacing: {{kerning}}em; line-height: {{leading}}em; width: {{width}}">{{{textToHTML text}}}{{#if strikethrough}}<div class="strike"><div class="inner-strike">{{{textToHTML text}}}</div></div>{{/if}}</div>
+                        {{/each}}
+                    {{/if}}                    
+                </div>
+            </div>
+            <div class="bag-bottom">
+                <div class="bl-corner"></div>
+                <div class="bottom"></div>
+                <div class="br-corner"></div>
+            </div>
+            <div class="shadow-blur"><div class="tote-shadow"></div></div>
+
+        </div>
+    </div>
+{{/bags}}
+`;
+
 var browse = {
+    bagTemplate : bagTemplate,
     toteBags : null, // array of tote objects
     currPage : 1,
     numPerPage : 24,
@@ -162,35 +232,59 @@ var browse = {
         browse.currentlyBuilding = true;
 
         if (browse.toteBags === null){
-            $.getJSON('/data/' + browse.currSort + '/page/' + browse.currPage, function( data ){
-                // sort it by time - newest
-                browse.toteBags = data;
+            // $.getJSON('/data/' + browse.currSort + '/page/' + browse.currPage, function( data ){
+            //     // sort it by time - newest
+            //     browse.toteBags = data;
 
-                // build grid.
-                if (typeof callback !== "undefined"){
-                    callback();
-                }
-            });
+            //     // build grid.
+            //     if (typeof callback !== "undefined"){
+            //         callback();
+            //     }
+            // });
+
+            // TODO: Create JSON file with all the data
+            browse.toteBags = [{
+              color: 'red',
+              likes: 123,
+              views: 456,
+              size: 'big',
+              timestamp: Date.now(),
+              textfields: [{
+                  text: 'The Amazhang Site',
+                  x: 0,
+                  y: 0,
+                  leading: 1,
+                  kerning: 0.2,
+                  fontSize: 0.2,
+                  justify: 'center',
+                  strikethrough: '',
+                  width: 0.1,
+              }]
+            }];
+            browse.loadedAll = true;
+
+            if (typeof callback !== "undefined"){
+                callback();
+            }          
         }
-        else{
-            if (browse.loadedAll){
-                return;
-            }
+        // else{
+        //     if (browse.loadedAll){
+        //         return;
+        //     }
 
-            browse.currPage = browse.currPage + 1;
-            $.getJSON('/data/' + browse.currSort + '/page/' + browse.currPage, function( data ){
-                // we need to check data to see if its [] and then flag it as the end.
-                if (data.length < browse.numPerPage){
-                    browse.loadedAll = true;
-                }
+        //     browse.currPage = browse.currPage + 1;
+        //     $.getJSON('/data/' + browse.currSort + '/page/' + browse.currPage, function( data ){
+        //         // we need to check data to see if its [] and then flag it as the end.
+        //         if (data.length < browse.numPerPage){
+        //             browse.loadedAll = true;
+        //         }
 
-                browse.toteBags = browse.toteBags.concat(data);
-                if (typeof callback !== "undefined"){
-                    callback();
-                }
-            });
-        }
-
+        //         browse.toteBags = browse.toteBags.concat(data);
+        //         if (typeof callback !== "undefined"){
+        //             callback();
+        //         }
+        //     });
+        // }
     },
     buildBagGrid : function(animate, callback){
         if (typeof animate === "undefined"){
@@ -201,62 +295,60 @@ var browse = {
         var subsetTotes = browse.toteBags.slice(startIndex, endIndex);
 
         // create a slightly modified bag template html for each (add favoriting)
-        $.get("/templates/_bag.html", function(html) {
-            _.each(subsetTotes, function(tote){
-                tote.swingTimer = null;
-                var toteObj = {bags : [tote]};
-                
-                Handlebars.registerHelper("textToHTML", function(text){
-                    return site.textToHTML(text);
-                });
-
-                var template = Handlebars.compile(html);
-                var rendered = template(toteObj);
-
-                // marking which ones are favorited.
-                var heartWrap = "<button class='heart-outer-wrap'><div class='heart-wrap'>";
-                var toteID = toteObj.bags[0]._id;
-                if (likes.indexOf(toteID) > -1){
-                    heartWrap = "<button class='heart-outer-wrap favorited'><div class='heart-wrap'>";
-                }
-
-                heartWrap += "<div class='heart-circle'></div>" +
-                                "<div class='heart'>" + 
-                                    '<svg width="32px" height="29px" ><path d="M39.9504969,20.4285714 C37.4437267,20.4285714 34.8843478,21.6982109 33,24.6490918 C31.1163354,21.6982109 28.5562733,20.4292823 26.0495031,20.4285714 C21.5825466,20.4285714 17.2857143,24.4592857 17.2857143,30.186881 C17.2857143,36.2365068 22.5158385,40.5508639 26.4539752,43.8067143 C30.5410559,47.1905238 31.688882,47.9113605 33,49.2812347 C34.311118,47.9113605 35.4589441,47.1905238 39.5460248,43.8067143 C43.4841615,40.5508639 48.7142857,36.2365068 48.7142857,30.186881 C48.7142857,24.4592857 44.4167702,20.4285714 39.9504969,20.4285714"></path></svg>'+
-                                "</div>" +
-                            "</div></button>";
-
-                var $tote = $("<div />", {
-                    //id : "tote-" + tote._id,
-                    class : "tote-grid-element start " + toteObj.bags[0].color,
-                    html :  heartWrap + rendered
-                });
-                $tote.appendTo(".browse-page.content .browse-tote-wrap");
-
-                // on the last one, update the type sizing and animate it in.
-                if ( tote === browse.toteBags[browse.toteBags.length-1] ){
-                    $('.browse-page.content .browse-tote-wrap .clearfix').remove();
-                    $('.browse-page.content .browse-tote-wrap').append("<div class='clearfix'></div>");
-    
-                    if (animate){
-                        browse.animateIn(startIndex, function(){
-                            browse.currentlyBuilding = false;
-                            site.refreshTypeOnTotes();
-                        });
-                    }
-                    else{
-                        $(".tote-grid-element.start").addClass("noAnimate").removeClass("start").removeClass("noAnimate");
-                        browse.currentlyBuilding = false;
-                    }
-
-                    $("nav.hidden").removeClass("hidden");
-                    site.refreshTypeOnTotes();
-                    if (typeof callback !== "undefined"){
-                        callback();
-                    }
-                }
+        _.each(subsetTotes, function(tote){
+            tote.swingTimer = null;
+            var toteObj = {bags : [tote]};
+            
+            Handlebars.registerHelper("textToHTML", function(text){
+                return site.textToHTML(text);
             });
-        });      
+
+            var template = Handlebars.compile(bagTemplate);
+            var rendered = template(toteObj);
+
+            // marking which ones are favorited.
+            var heartWrap = "<button class='heart-outer-wrap'><div class='heart-wrap'>";
+            var toteID = toteObj.bags[0]._id;
+            if (likes.indexOf(toteID) > -1){
+                heartWrap = "<button class='heart-outer-wrap favorited'><div class='heart-wrap'>";
+            }
+
+            heartWrap += "<div class='heart-circle'></div>" +
+                            "<div class='heart'>" + 
+                                '<svg width="32px" height="29px" ><path d="M39.9504969,20.4285714 C37.4437267,20.4285714 34.8843478,21.6982109 33,24.6490918 C31.1163354,21.6982109 28.5562733,20.4292823 26.0495031,20.4285714 C21.5825466,20.4285714 17.2857143,24.4592857 17.2857143,30.186881 C17.2857143,36.2365068 22.5158385,40.5508639 26.4539752,43.8067143 C30.5410559,47.1905238 31.688882,47.9113605 33,49.2812347 C34.311118,47.9113605 35.4589441,47.1905238 39.5460248,43.8067143 C43.4841615,40.5508639 48.7142857,36.2365068 48.7142857,30.186881 C48.7142857,24.4592857 44.4167702,20.4285714 39.9504969,20.4285714"></path></svg>'+
+                            "</div>" +
+                        "</div></button>";
+
+            var $tote = $("<div />", {
+                //id : "tote-" + tote._id,
+                class : "tote-grid-element start " + toteObj.bags[0].color,
+                html :  heartWrap + rendered
+            });
+            $tote.appendTo(".browse-page.content .browse-tote-wrap");
+
+            // on the last one, update the type sizing and animate it in.
+            if ( tote === browse.toteBags[browse.toteBags.length-1] ){
+                $('.browse-page.content .browse-tote-wrap .clearfix').remove();
+                $('.browse-page.content .browse-tote-wrap').append("<div class='clearfix'></div>");
+
+                if (animate){
+                    browse.animateIn(startIndex, function(){
+                        browse.currentlyBuilding = false;
+                        site.refreshTypeOnTotes();
+                    });
+                }
+                else{
+                    $(".tote-grid-element.start").addClass("noAnimate").removeClass("start").removeClass("noAnimate");
+                    browse.currentlyBuilding = false;
+                }
+
+                $("nav.hidden").removeClass("hidden");
+                site.refreshTypeOnTotes();
+                if (typeof callback !== "undefined"){
+                    callback();
+                }
+            }
+        });
     },
     // positions the view carousel with the $tote centered.
     view : function(toteId){
@@ -294,61 +386,60 @@ var browse = {
         });
         
         function loadToteViews(){
-            $.get("/templates/_bag.html", function(html) {
-                Handlebars.registerHelper("textToHTML", function(text){
-                    return site.textToHTML(text);
-                });
-
-                var template = Handlebars.compile(html);
-                
-                for (var i = 0; i < toteObjArray.length; i++){
-                    var rendered = template(toteObjArray[i]);
-                    
-                    if (likes.indexOf(toteIdArray[i]) > -1){
-                        // if its liked and its the middle one (the centered one), mark it as favorited.
-                        if (i === 1){
-                            $(".view-controls .heart-outer-wrap").addClass("favorited");
-                        }
-                    }
-
-                    var $tote = $("<div />", {
-                        "class" : "tote-grid-element view " + toteObjArray[i].bags[0].color,
-                        "data-id" : toteIdArray[i],
-                        "html" :  rendered
-                    }).appendTo(".view-carousel-wrap");
-                }
-
-                // stop it from swinging.
-                TweenLite.to(".view-carousel-wrap .tote-grid-element .actual-tote, .view-carousel-wrap .tote-grid-element .tote-shadow", 0, { rotation : "0deg" });
-                TweenLite.to(".view-carousel-wrap .tote-grid-element .tote-shadow", 0.5, {
-                    "alpha" : 1,
-                    "ease" : cssBezier
-                });
-                $(".view-carousel-wrap .tote-grid-element.swinging").removeClass("swinging");
-                
-                //update bag size / favorites
-                site.refreshTypeOnTotes();
-
-                // scroll user to center the bag.
-                var $tote = $(".view-carousel-wrap .tote-grid-element").eq(1);
-                var viewToteHeight = $tote.find(".tote-wrap").height();
-                var viewGridHeight = $tote.height();
-
-                // scroll to the center if the bag height is smaller than the window height
-                var scrollAmount = ((viewGridHeight - $(window).height()) / 2);
-                // if the bag height is larger than the window height, scroll to the bottom.
-                if (viewToteHeight > $(window).height()){
-                    scrollAmount = viewToteHeight;
-                }
-                $(".view-carousel-wrap").scrollTop( scrollAmount );
-
-                window.history.pushState("html", "Title", "/" + browse.currSort + "/tote/" + toteId);
-                bagObject.upViewCount(toteId);
-
-                $("head title").html("View Tote | Totebag Maker | Huge inc.");
-                $("body").addClass("lock-scroll");
-                $(".view-carousel").attr("data-display", toteId);
+            // $.get("/templates/_bag.html", function(html) {
+            Handlebars.registerHelper("textToHTML", function(text){
+                return site.textToHTML(text);
             });
+
+            var template = Handlebars.compile(browse.bagTemplate);
+            
+            for (var i = 0; i < toteObjArray.length; i++){
+                var rendered = template(toteObjArray[i]);
+                
+                if (likes.indexOf(toteIdArray[i]) > -1){
+                    // if its liked and its the middle one (the centered one), mark it as favorited.
+                    if (i === 1){
+                        $(".view-controls .heart-outer-wrap").addClass("favorited");
+                    }
+                }
+
+                var $tote = $("<div />", {
+                    "class" : "tote-grid-element view " + toteObjArray[i].bags[0].color,
+                    "data-id" : toteIdArray[i],
+                    "html" :  rendered
+                }).appendTo(".view-carousel-wrap");
+            }
+
+            // stop it from swinging.
+            TweenLite.to(".view-carousel-wrap .tote-grid-element .actual-tote, .view-carousel-wrap .tote-grid-element .tote-shadow", 0, { rotation : "0deg" });
+            TweenLite.to(".view-carousel-wrap .tote-grid-element .tote-shadow", 0.5, {
+                "alpha" : 1,
+                "ease" : cssBezier
+            });
+            $(".view-carousel-wrap .tote-grid-element.swinging").removeClass("swinging");
+            
+            //update bag size / favorites
+            site.refreshTypeOnTotes();
+
+            // scroll user to center the bag.
+            var $tote = $(".view-carousel-wrap .tote-grid-element").eq(1);
+            var viewToteHeight = $tote.find(".tote-wrap").height();
+            var viewGridHeight = $tote.height();
+
+            // scroll to the center if the bag height is smaller than the window height
+            var scrollAmount = ((viewGridHeight - $(window).height()) / 2);
+            // if the bag height is larger than the window height, scroll to the bottom.
+            if (viewToteHeight > $(window).height()){
+                scrollAmount = viewToteHeight;
+            }
+            $(".view-carousel-wrap").scrollTop( scrollAmount );
+
+            window.history.pushState("html", "Title", "/" + browse.currSort + "/tote/" + toteId);
+            bagObject.upViewCount(toteId);
+
+            $("head title").html("View Tote | Totebag Maker | Huge inc.");
+            $("body").addClass("lock-scroll");
+            $(".view-carousel").attr("data-display", toteId);
         }
     },
     viewZoomIn : function($tote){

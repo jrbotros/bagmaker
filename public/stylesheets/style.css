@@ -2,8 +2,8 @@
   font-family: HugeAvantGarde;
   font-weight: normal;
   font-style: normal;
-  src: url("/fonts/huge_agb_v5.eot");
-  src: url("/fonts/huge_agb_v5.eot?#iefix") format("embedded-opentype"), url("/fonts/huge_agb_v5.woff") format("woff"), url("/fonts/huge_agb_v5.ttf") format("truetype"), url("/fonts/huge_agb_v5.svg#HugeAvantGarde") format("svg");
+  src: url("../fonts/huge_agb_v5.eot");
+  src: url("../fonts/huge_agb_v5.eot?#iefix") format("embedded-opentype"), url("../fonts/huge_agb_v5.woff") format("woff"), url("../fonts/huge_agb_v5.ttf") format("truetype"), url("../fonts/huge_agb_v5.svg#HugeAvantGarde") format("svg");
 }
 @media screen and (max-width: 940px) {
   body button {

@@ -5,42 +5,42 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/bagmaker');
+// var mongoose = require('mongoose');
+// mongoose.connect('mongodb://localhost:27017/bagmaker');
 
-var Totebag = mongoose.model('Totebag', {
-    color: String,
-    likes: { type : [Number], index : true },
-    views: Number, // { type : [Number], index : true }
-    size: String,
-    timestamp: { type : [Date], index : true },
-    textfields: [{
-        text: String,
-        x: Number,
-        y: Number,
-        domid: String,
-        leading: Number,
-        kerning: Number,
-        fontSize: Number,
-        justify: String,
-        strikethrough: String,
-        width: String
-    }]
-});
+// var Totebag = mongoose.model('Totebag', {
+//     color: String,
+//     likes: { type : [Number], index : true },
+//     views: Number, // { type : [Number], index : true }
+//     size: String,
+//     timestamp: { type : [Date], index : true },
+//     textfields: [{
+//         text: String,
+//         x: Number,
+//         y: Number,
+//         domid: String,
+//         leading: Number,
+//         kerning: Number,
+//         fontSize: Number,
+//         justify: String,
+//         strikethrough: String,
+//         width: String
+//     }]
+// });
 
-Totebag.schema.path('color').validate(function(value) {
-    return /red|black|white/i.test(value);
-}, 'Invalid color');
+// Totebag.schema.path('color').validate(function(value) {
+//     return /red|black|white/i.test(value);
+// }, 'Invalid color');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var totes = require('./routes/totes');
+// var routes = require('./routes/index');
+// var users = require('./routes/users');
+// var totes = require('./routes/totes');
 
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 app.use(favicon(__dirname + '/public/images/favicon.png'));
@@ -57,17 +57,17 @@ app.use(express.static(path.join(__dirname, 'public')));
     // next();
 // });
 
-app.use('/', routes);
-app.use('/users', users);
-app.use('/totes', totes);
+// app.use('/', routes);
+// app.use('/users', users);
+// app.use('/totes', totes);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
+// // catch 404 and forward to error handler
+// app.use(function(req, res, next) {
+//     var err = new Error('Not Found');
+//     err.status = 404;
 
-    next(err);
-});
+//     next(err);
+// });
 
 // error handlers
 

@@ -18,7 +18,7 @@ var likes = {
     userLikes : [],
     fetchUserLikes : function(){
         var userLikes = $.cookie("likes");
-        likes.userLikes = userLikes.split(",");
+        likes.userLikes = userLikes ? userLikes.split(",") : [];
 
         // catch a weird bug.
         var indexOfBlank = likes.userLikes.indexOf("");
@@ -568,7 +568,7 @@ $(document).ready(function(){
     });
 
     $(document).hammer().on("tap", ".create button, .create button span", function(){
-        window.location.href = "/totes/newtote";
+        window.location.href = "./newtote.html";
     });
 
     ga('send', 'pageview');
